@@ -1,0 +1,642 @@
+{
+  "services": {
+    "lead-generation": {
+      "slug": "lead-generation",
+      "title": "AI-Orchestrated Lead Generation for Consistent Pipeline Growth",
+      "metaDescription": "Generate consistent, high-quality B2B leads with Axieonex's AI-Orchestrated Sales Engine. Combining AI sourcing with human verification.",
+      "description": "Inconsistent lead quality and volume kill revenue growth. Designed for B2B SaaS, tech, and high-ticket service providers, our system replaces manual prospecting with a precise, AI-driven engine.",
+      "whatWeDo": [
+        "Multi-channel sourcing across LinkedIn, verified databases, and intent signals.",
+        "AI-powered scoring to prioritize prospects most likely to convert.",
+        "Human verification layer to ensure data accuracy and relevance.",
+        "Seamless CRM integration to pipe leads directly into your workflow.",
+        "End-to-end tracking from initial contact to qualified opportunity."
+      ],
+      "whyThisWorksHeading": "Why This Works",
+      "whyThisWorks": "We combine the infinite scale of AI data processing with the nuanced judgment of human experts. This \"Hybrid Sales System\" ensures you never miss a signal while maintaining the high quality necessary for enterprise deals.",
+      "whoThisIsForHeading": "Who This Is For",
+      "whoThisIsFor": "Ideal for B2B SaaS companies, enterprise technology vendors, and high-ticket service firms who need a reliable, scalable flow of qualified leads without the overhead of hiring and training a massive internal research team.",
+      "badge": "Human-Executed, AI-Orchestrated",
+      "ctaHeading": "Ready to build a consistent pipeline?",
+      "ctaButton": "Start Your Campaign"
+    },
+    "appointment-setting": {
+      "slug": "appointment-setting",
+      "title": "AI-Orchestrated Appointment Setting for Predictable Pipeline Growth",
+      "metaDescription": "Fill your calendar with qualified meetings. Axieonex's AI-Orchestrated Appointment Setting service reduces no-shows and increases lead-to-meeting conversion.",
+      "description": "High no-show rates and low lead-to-meeting conversion drain sales productivity. We fix this by automating the chase and personalizing the coordination.",
+      "whatWeDo": [
+        "Intelligent sequencing to engage prospects at the optimal time.",
+        "Multi-touch outreach across email, phone, and LinkedIn.",
+        "Seamless calendar management to book meetings directly into rep schedules.",
+        "Automated confirmation flows to drastically reduce no-show rates.",
+        "Real-time follow-up on engaged leads to maximize conversion speed."
+      ],
+      "whyThisWorksHeading": "Why This Works",
+      "whyThisWorks": "We use AI to identify the perfect moment to reach out, while our human team builds the relationship and handles the scheduling logistics. This ensures your sales team focuses only on closing, not chasing.",
+      "whoThisIsForHeading": "Who This Is For",
+      "whoThisIsFor": "Perfect for sales teams, B2B SaaS companies, and enterprise organizations that have leads but struggle to convert them into confirmed sales appointments efficiently.",
+      "badge": "Stop Chasing, Start Closing",
+      "ctaHeading": "Ready to fill your calendar?",
+      "ctaButton": "Start Your Campaign"
+    },
+    "hybrid-sdr": {
+      "slug": "hybrid-sdr",
+      "title": "Hybrid SDR Service: AI-Orchestrated, Human-Executed Outbound",
+      "metaDescription": "The best of both worlds: Axieonex's Hybrid SDR service combines AI-driven research with human-executed outreach for maximum efficiency and personalization.",
+      "description": "In-house SDR teams are expensive to hire and train, while pure automation lacks the human touch. Our hybrid model delivers the scale of AI with the conversion power of elite human reps.",
+      "whatWeDo": [
+        "AI prospect research to identify decision-makers with active intent.",
+        "Human-led outreach to ensure every message is relevant and compelling.",
+        "Expert objection handling by trained SDRs, not rigid scripts.",
+        "Relationship building that nurtures prospects until they are ready to buy.",
+        "Comprehensive performance tracking to optimize the AI-human feedback loop."
+      ],
+      "whyThisWorksHeading": "Why This Works",
+      "whyThisWorks": "AI handles the drudgery—data entry, research, and initial sorting. Humans handle the influence—conversation, empathy, and negotiation. It’s significantly more efficient than traditional SDR teams.",
+      "whoThisIsForHeading": "Who This Is For",
+      "whoThisIsFor": "Ideal for growth-stage SaaS companies and scaling organizations that need to ramp up outbound sales quickly without the delay and risk of building a large internal team from scratch.",
+      "badge": "The Future of Sales Development",
+      "ctaHeading": "Ready to upgrade your sales team?",
+      "ctaButton": "Start Your Campaign"
+    },
+    "cold-email": {
+      "slug": "cold-email",
+      "title": "Cold Email & Messaging: AI-Orchestrated Campaigns with Human Touch",
+      "metaDescription": "Break through the inbox noise with Axieonex's AI-Orchestrated cold email campaigns. Personalized at scale, delivered by humans.",
+      "description": "Generic templates get deleted. To succeed in modern inboxes, you need hyper-personalization at scale. We solve this by combining AI research with human creativity.",
+      "whatWeDo": [
+        "AI personalization that references specific prospect news, posts, and company updates.",
+        "Human-written copy that is conversational, relevant, and persuasive.",
+        "Intelligent sequencing that adapts based on prospect behavior and engagement.",
+        "Rigorous A/B testing to constantly refine subject lines and value propositions.",
+        "Deliverability management to ensure your messages actually hit the primary inbox."
+      ],
+      "whyThisWorksHeading": "Why This Works",
+      "whyThisWorks": "AI allows us to find the specific \"hooks\" for thousands of leads instantly, while our human copywriters craft the message so it feels like a 1-to-1 email from a colleague, not a robot.",
+      "whoThisIsForHeading": "Who This Is For",
+      "whoThisIsFor": "Built for B2B SaaS startups, digital agencies, and high-ticket service providers who need to start conversations with decision-makers without being ignored or marked as spam.",
+      "badge": "Personalization at Scale",
+      "ctaHeading": "Ready to get replies?",
+      "ctaButton": "Start Your Campaign"
+    },
+    "linkedin-outreach": {
+      "slug": "linkedin-outreach",
+      "title": "LinkedIn Outreach: AI-Orchestrated Campaigns for Decision-Maker Engagement",
+      "metaDescription": "Engage key decision-makers on the world's largest professional network. Axieonex's AI-Orchestrated LinkedIn campaigns drive real conversations.",
+      "description": "LinkedIn is the most powerful B2B channel, but manual outreach is too slow and generic bots get banned. We use a compliant, hybrid approach to build genuine connections.",
+      "whatWeDo": [
+        "AI-driven targeting to identify the exact profiles matching your Ideal Customer Profile (ICP).",
+        "Human-crafted connection requests and messages that feel personal and authentic.",
+        "Active conversation management to pivot from casual chat to business interest.",
+        "Strategic follow-up sequences that respect the platform's social nature.",
+        "Profile optimization to ensure your rep looks like an authority, not a spammer."
+      ],
+      "whyThisWorksHeading": "Why This Works",
+      "whyThisWorks": "AI finds the right people faster than any human could, but humans are essential for building the trust required to get a response on a social platform. Our hybrid model maximizes both.",
+      "whoThisIsForHeading": "Who This Is For",
+      "whoThisIsFor": "Essential for B2B SaaS, enterprise sales teams, and professional services where the buyer is active on LinkedIn and relationships matter more than volume.",
+      "badge": "Connect with Decision Makers",
+      "ctaHeading": "Ready to expand your network?",
+      "ctaButton": "Start Your Campaign"
+    },
+    "cold-calling": {
+      "slug": "cold-calling",
+      "title": "Cold Calling: AI-Orchestrated, Human-Executed Sales Conversations",
+      "metaDescription": "Revive the most direct sales channel. Axieonex's AI-Orchestrated Cold Calling service combines data-driven prep with expert human execution.",
+      "description": "Scaling cold calling is notoriously difficult. Quality callers are expensive, and poor ones burn leads. We provide a managed, data-backed calling engine that delivers results.",
+      "whatWeDo": [
+        "AI prospect research to arm callers with relevant talking points before they dial.",
+        "Smart call timing optimization based on historical answer rate data.",
+        "Expert human callers trained in consultative selling, not robotic script reading.",
+        "Real-time coaching and quality assurance to maintain high performance.",
+        "Detailed CRM logging of every interaction for full transparency."
+      ],
+      "whyThisWorksHeading": "Why This Works",
+      "whyThisWorks": "Success in cold calling comes from preparation and execution. AI handles the preparation at lightning speed, allowing our human experts to focus entirely on the execution of the conversation.",
+      "whoThisIsForHeading": "Who This Is For",
+      "whoThisIsFor": "Best suited for complex B2B sales, enterprise solution providers, and high-ticket service companies where a live conversation is often the only way to break through.",
+      "badge": "Direct Human Connection",
+      "ctaHeading": "Ready to pick up the phone?",
+      "ctaButton": "Start Your Campaign"
+    },
+    "presales-gtm": {
+      "slug": "presales-gtm",
+      "title": "Pre-Sales & Go-To-Market Strategy: Foundation for Outbound Success",
+      "metaDescription": "Don't launch blindly. Axieonex's Pre-Sales & GTM Strategy service builds the foundation for outbound success with clear ICPs, messaging, and positioning.",
+      "description": "Many companies launch outbound campaigns without clear positioning, messaging, or ICP definition—and fail. We build the strategic foundation that makes execution profitable.",
+      "whatWeDo": [
+        "Deep market research to validate demand and identify untapped opportunities.",
+        "Precise Ideal Customer Profile (ICP) definition to focus your resources.",
+        "Offer positioning that differentiates you from competitors immediately.",
+        "Messaging framework development for consistent, compelling communication.",
+        "Sales enablement assets to arm your team (or ours) for the launch.",
+        "Competitive analysis to understand exactly how to win in your niche."
+      ],
+      "whyThisWorksHeading": "Why This Works",
+      "whyThisWorks": "Execution without strategy is just noise. Strategic clarity leads to higher conversion rates and faster scaling because every message lands with the right person at the right time.",
+      "whoThisIsForHeading": "Who This Is For",
+      "whoThisIsFor": "Crucial for early-stage SaaS startups, companies launching new products, or established firms expanding into new markets who need to get it right the first time.",
+      "badge": "Preparation for Execution",
+      "ctaHeading": "Ready to define your strategy?",
+      "ctaButton": "Start Your Campaign"
+    }
+  },
+  "articles": {
+    "about-axon": {
+      "slug": "about-axon",
+      "title": "How Axieonex Builds Predictable Revenue Using an AI + Human Hybrid Model",
+      "category": "HOW WE WORK",
+      "readTime": "5–7 MINUTES READ",
+      "metaDescription": "A modern approach to outbound sales that replaces fragmented tools and traditional SDR teams with scalable, intelligent systems.",
+      "description": "A modern approach to outbound sales that replaces fragmented tools and traditional SDR teams with scalable, intelligent systems.",
+      "leadParagraphs": [
+        "The traditional approach to outbound sales is often inefficient. Companies hire expensive SDR teams, burn through leads with generic messaging, and suffer from high turnover. Axieonex was built to fix this fundamental flaw in the B2B growth engine."
+      ],
+      "sections": [
+        {
+          "heading": "What Axieonex Is — And Why We Built It",
+          "paragraphs": [
+            "Axieonex is a complete outbound sales infrastructure. We replace the manual process of building an internal SDR team with a unified system that runs on autopilot but is guided by expert human strategy.",
+            "We built Axieonex because we saw B2B companies struggling with the same cycle:",
+            "Spending months hiring and training SDRs who ramp slowly.",
+            "Buying expensive, disconnected data tools.",
+            "Seeing results plateau as soon as a top performer leaves.",
+            "We realized that the problem wasn't the people—it was the model. Machines should do the heavy lifting, and humans should do the closing.",
+            "The Old Way vs. The Axieonex Way",
+            "Traditional models rely on human volume. Axieonex relies on system precision. We shift the burden from headcount to compute power."
+          ]
+        },
+        {
+          "heading": "What Axieonex Actually Does",
+          "paragraphs": [
+            "We build, manage, and optimize your entire outbound revenue pipeline. When you partner with Axieonex, we install a system.",
+            "1. We Build Your Audience (Data & Targeting)",
+            "Our system aggregates data from multiple live sources to identify companies that are actually in-market for your solution. We look for buying signals—funding news, hiring spikes, tech stack changes—not just job titles.",
+            "2. We Craft Your Message (Strategy & Copy)",
+            "AI writes the drafts, but our strategists design the architecture. We create multi-touch sequences that sound human, relevant, and helpful.",
+            "3. We Launch & Optimize (Execution)",
+            "Our system handles the sending, the follow-ups, and the channel orchestration (Email, LinkedIn, etc.). We constantly A/B test subject lines, value props, and send times to maximize positive reply rates."
+          ]
+        },
+        {
+          "heading": "Who Axieonex Is Built For",
+          "paragraphs": [
+            "Axieonex is designed for B2B companies selling high-value solutions ($10k+ ACV) who need consistent pipeline growth without the operational headache of managing a large sales team.",
+            "Founders & CEOs",
+            "Who are tired of relying on founder-led sales and need a system that scales beyond their personal network.",
+            "VP of Sales / CROs",
+            "Who want their AEs focused on closing deals, not wasting time researching prospects.",
+            "From Chaos to Clarity",
+            "We turn the chaotic art of prospecting into a predictable science. Input qualified leads -> Process with AI Strategy -> Output revenue opportunities."
+          ]
+        },
+        {
+          "heading": "Why Axieonex Is Different",
+          "paragraphs": [
+            "Axieonex is a Hybrid Partner.",
+            "Transparency: You own the data. You see the metrics. You approve the messaging.",
+            "Technology + Talent: We don't just give you a login. We give you a dedicated campaign strategist backed by our proprietary AI stack.",
+            "Outcome-Focused: We measure success in qualified meetings and pipeline revenue."
+          ]
+        },
+        {
+          "heading": "The Outcome We Focus On",
+          "paragraphs": [
+            "Our goal is simple: Predictable Revenue.",
+            "By removing the variability of human burnout and manual error, we create a sales channel that you can forecast with confidence."
+          ]
+        },
+        {
+          "heading": "Our Philosophy",
+          "paragraphs": [
+            "\"Sales is not about tricking people into a meeting. It's about identifying a problem you can solve and starting a conversation with the person who has that problem.\"",
+            "We believe that automation shouldn't feel robotic. It should feel helpful. We use AI to enable scale, but we use human empathy to build connection. That is the Axieonex difference."
+          ]
+        }
+      ]
+    },
+    "how-we-work": {
+      "slug": "how-we-work",
+      "title": "How We Work: The AI + Human Hybrid Model That Replaces Traditional Sales Teams",
+      "category": "HOW WE WORK",
+      "readTime": "6–8 MINUTES READ",
+      "metaDescription": "Understanding the hybrid approach that replaces traditional SDR teams with intelligent, scalable systems.",
+      "description": "Understanding the hybrid approach that replaces traditional SDR teams with intelligent, scalable systems.",
+      "leadParagraphs": [
+        "The B2B sales landscape has shifted. The tactics that worked five years ago—mass cold calling, generic email blasts, and hiring armies of junior SDRs—are yielding diminishing returns. At Axieonex, we've engineered a new way to work: a hybrid model that fuses AI scalability with human strategic oversight."
+      ],
+      "sections": [
+        {
+          "heading": "Why Traditional Sales Teams Break at Scale",
+          "paragraphs": [
+            "Scaling a human-only sales team is linear and expensive. To double your output, you usually have to double your headcount. This brings massive overhead: recruiting costs, training time, management layers, and the inevitable churn.",
+            "Furthermore, humans are inconsistent. A bad day, burnout, or a lack of motivation directly impacts pipeline generation. In the traditional model, your revenue growth is capped by how many calls your team can physically make in a day.",
+            "The Efficiency Gap",
+            "A human SDR can research and personalize ~50 emails a day. Axieonex's system can research and personalize 5,000+ with the same level of relevance."
+          ]
+        },
+        {
+          "heading": "Why AI Alone Is Not the Answer",
+          "paragraphs": [
+            "Conversely, fully automated \"spam cannons\" damage your brand. If you let an AI run wild without supervision, it will hallucinate, misinterpret context, and send tone-deaf messages.",
+            "Buyers are savvy. They can smell a generic, AI-generated email from a mile away. Pure automation lacks nuance. It lacks the ability to understand complex business context or navigate a sensitive reply."
+          ]
+        },
+        {
+          "heading": "Axieonex's Hybrid Approach",
+          "paragraphs": [
+            "We sit right in the middle. We treat AI as the \"engine\" and humans as the \"drivers.\"",
+            "1. AI Handles the Data & Research",
+            "Our systems scrape the web, enrich contact data, and identify buying signals (funding, hiring, news) at a speed no human can match.",
+            "2. AI Drafts the Outreach",
+            "LLMs generate personalized messaging based on the research. It references specific pain points relevant to that prospect's industry and role.",
+            "3. Humans Validate & Strategize",
+            "This is the critical step. Our expert campaign managers review the strategy, tweak the messaging frameworks, and monitor the AI's performance to ensure quality control.",
+            "Orchestration is Key",
+            "It's not just email. Our hybrid model orchestrates touchpoints across LinkedIn, Email, and even Cold Calls, ensuring a cohesive buyer journey."
+          ]
+        },
+        {
+          "heading": "How This Replaces Traditional SDR Teams",
+          "paragraphs": [
+            "Instead of hiring 3 SDRs, you hire Axieonex. We become your outbound department.",
+            "No ramping time: We plug in our system and start prospecting in days, not months.",
+            "No management overhead: You don't need to motivate or manage our AI. It just works.",
+            "Continuous Learning: Unlike a rep who might leave and take their knowledge with them, our system retains data. Every \"no\" teaches the AI how to get a \"yes\" next time."
+          ]
+        },
+        {
+          "heading": "Why This Model Works Long-Term",
+          "paragraphs": [
+            "Sales is becoming more data-driven. The companies that win will be the ones who can process the most data to find the highest-intent prospects. Our hybrid model is future-proof because it adapts. As AI models get better, our system gets smarter. As market conditions change, our human strategists pivot the approach."
+          ]
+        },
+        {
+          "heading": "What Clients Experience",
+          "paragraphs": [
+            "Clients experience silence, then results.",
+            "You don't hear the grinding gears of prospecting. You don't see the thousands of emails sent or the data being enriched. You just see qualified meetings appearing on your calendar and a pipeline report that grows week over week. It's outbound sales, simplified."
+          ]
+        },
+        {
+          "heading": "The Axieonex Standard",
+          "paragraphs": [
+            "We hold ourselves to a standard of \"Revenue Intelligence.\" We are not just appointment setters; we are revenue architects. We build the systems that build your business."
+          ]
+        }
+      ]
+    },
+    "ai-human-hybrid-model": {
+      "slug": "ai-human-hybrid-model",
+      "title": "How We Use an AI + Human Hybrid Model to Build Predictable Revenue",
+      "category": "STRATEGY",
+      "readTime": "6 MIN READ",
+      "metaDescription": "Why the best results come from man and machine working together.",
+      "description": "Why the best results come from man and machine working together.",
+      "leadParagraphs": [
+        "Pure automation feels robotic. Pure manual work is unscalable. The sweet spot is in the middle.",
+        "We leverage LLMs to draft hyper-personalized emails, but a human reviews the strategy to ensure tone and relevance remain high."
+      ],
+      "sections": []
+    },
+    "ai-vs-traditional-teams": {
+      "slug": "ai-vs-traditional-teams",
+      "title": "AI-Powered Sales Systems vs. Traditional Human Teams — Why the Future of Lead Generation Is Hybrid",
+      "category": "INDUSTRY TRENDS",
+      "readTime": "5 MIN READ",
+      "metaDescription": "A comparative analysis of efficiency, cost, and results.",
+      "description": "A comparative analysis of efficiency, cost, and results.",
+      "leadParagraphs": [
+        "Traditional teams suffer from burnout, ramp time, and inconsistency. AI systems run 24/7 without fatigue.",
+        "However, AI lacks nuance. That's why we embed human oversight into every automated workflow."
+      ],
+      "sections": []
+    },
+    "why-hiring-sdrs-broken": {
+      "slug": "why-hiring-sdrs-broken",
+      "title": "Why Hiring SDRs Is Broken (And What Replaces Them)",
+      "category": "OPINION",
+      "readTime": "4 MIN READ",
+      "metaDescription": "The SDR tenure is shrinking while costs rise. It's time for a new model.",
+      "description": "The SDR tenure is shrinking while costs rise. It's time for a new model.",
+      "leadParagraphs": [
+        "The average SDR tenure is now less than 15 months. By the time they are ramped, they leave. This cycle kills momentum.",
+        "Axieonex provides a system, not a person, ensuring your pipeline generation never pauses due to turnover."
+      ],
+      "sections": []
+    },
+    "cold-outreach-to-revenue": {
+      "slug": "cold-outreach-to-revenue",
+      "title": "From Cold Outreach to Revenue Systems: How Modern B2B Sales Actually Works",
+      "category": "SALES TACTICS",
+      "readTime": "5 MIN READ",
+      "metaDescription": "Moving beyond 'spray and pray' to orchestrated revenue engineering.",
+      "description": "Moving beyond 'spray and pray' to orchestrated revenue engineering.",
+      "leadParagraphs": [
+        "Cold outreach isn't dead, but bad cold outreach is. Modern sales requires multi-channel orchestration—email, LinkedIn, and phone working in concert."
+      ],
+      "sections": []
+    },
+    "ai-sales-tools-fail": {
+      "slug": "ai-sales-tools-fail",
+      "title": "Why Most AI Sales Tools Fail Without Human Oversight",
+      "category": "TECHNOLOGY",
+      "readTime": "4 MIN READ",
+      "metaDescription": "Tools are only as good as the strategy behind them.",
+      "description": "Tools are only as good as the strategy behind them.",
+      "leadParagraphs": [
+        "Buying a tool doesn't solve a sales problem. Without expert implementation and constant optimization, AI tools just generate noise at scale."
+      ],
+      "sections": []
+    },
+    "cost-inhouse-vs-outsourced": {
+      "slug": "cost-inhouse-vs-outsourced",
+      "title": "The True Cost of In-House Sales Teams vs. Outsourced AI-Driven Systems",
+      "category": "ROI",
+      "readTime": "6 MIN READ",
+      "metaDescription": "Calculating the hidden costs of management, software, and training.",
+      "description": "Calculating the hidden costs of management, software, and training.",
+      "leadParagraphs": [
+        "When you factor in recruiting fees, management time, software licenses, and benefits, an in-house SDR team is significantly more expensive than an outcome-based AI system."
+      ],
+      "sections": []
+    }
+  },
+  "legal": {
+    "privacy-policy": {
+      "slug": "privacy-policy",
+      "title": "Privacy Policy",
+      "tagline": "We are committed to protecting your privacy and personal data.",
+      "lastUpdated": "LAST UPDATED: DECEMBER 13, 2025",
+      "metaDescription": "Read Axieonex Sales' Privacy Policy to understand how we collect, use, and protect your personal data.",
+      "sections": [
+        {
+          "number": "1",
+          "heading": "Introduction",
+          "paragraphs": [
+            "Welcome to Axieonex Sales. We respect your privacy and are committed to protecting your personal data. This Privacy Policy will inform you as to how we look after your personal data when you visit our website (axieonexsales.net) and tell you about your privacy rights and how the law protects you. By using our Service, you agree to the collection and use of information in accordance with this policy."
+          ]
+        },
+        {
+          "number": "2",
+          "heading": "Information We Collect",
+          "paragraphs": [
+            "We collect several different types of information for various purposes to provide and improve our Service to you:",
+            "Personal Data: While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ('Personal Data'). This may include, but is not limited to: Email address, First name and last name, Phone number, Business name, and Cookies and Usage Data.",
+            "Usage Data: We may also collect information how the Service is accessed and used ('Usage Data'). This Usage Data may include information such as your computer's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, unique device identifiers and other diagnostic data."
+          ]
+        },
+        {
+          "number": "3",
+          "heading": "How We Use Your Information",
+          "paragraphs": [
+            "Axieonex Sales uses the collected data for various purposes:",
+            "To provide and maintain the Service",
+            "To notify you about changes to our Service",
+            "To allow you to participate in interactive features of our Service when you choose to do so",
+            "To provide customer care and support",
+            "To provide analysis or valuable information so that we can improve the Service",
+            "To monitor the usage of the Service",
+            "To detect, prevent and address technical issues"
+          ]
+        },
+        {
+          "number": "4",
+          "heading": "Legal Basis for Processing",
+          "paragraphs": [
+            "If you are from the European Economic Area (EEA), Axieonex Sales's legal basis for collecting and using the personal information described in this Privacy Policy depends on the Personal Data we collect and the specific context in which we collect it. We may process your Personal Data because: We need to perform a contract with you; You have given us permission to do so; The processing is in our legitimate interests and it's not overridden by your rights; or To comply with the law."
+          ]
+        },
+        {
+          "number": "5",
+          "heading": "Information Sharing and Disclosure",
+          "paragraphs": [
+            "We do not sell your personal data. However, we may share your information with third-party service providers to facilitate our Service, to provide the Service on our behalf, to perform Service-related services, or to assist us in analyzing how our Service is used. These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose."
+          ]
+        },
+        {
+          "number": "6",
+          "heading": "Data Retention",
+          "paragraphs": [
+            "Axieonex Sales will retain your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies."
+          ]
+        },
+        {
+          "number": "7",
+          "heading": "Your Data Protection Rights",
+          "paragraphs": [
+            "Axieonex Sales aims to take reasonable steps to allow you to correct, amend, delete, or limit the use of your Personal Data. Whenever made possible, you can update your Personal Data directly within your account settings section. If you are unable to change your Personal Data, please contact us to make the required changes. You have the right: To access and receive a copy of the Personal Data we hold about you; To rectify any Personal Data held about you that is inaccurate; To request the deletion of Personal Data held about you."
+          ]
+        },
+        {
+          "number": "8",
+          "heading": "International Data Transfers",
+          "paragraphs": [
+            "Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction. If you are located outside United States and choose to provide information to us, please note that we transfer the data, including Personal Data, to United States and process it there."
+          ]
+        },
+        {
+          "number": "9",
+          "heading": "Security of Your Data",
+          "paragraphs": [
+            "The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security. We implement appropriate technical and organizational measures to ensure a level of security appropriate to the risk."
+          ]
+        },
+        {
+          "number": "10",
+          "heading": "Children's Privacy",
+          "paragraphs": [
+            "Our Service does not address anyone under the age of 18 ('Children'). We do not knowingly collect personally identifiable information from anyone under the age of"
+          ]
+        },
+        {
+          "number": "18",
+          "heading": "If you are a parent or guardian and you are aware that your Children has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.",
+          "paragraphs": []
+        },
+        {
+          "number": "11",
+          "heading": "Changes to This Privacy Policy",
+          "paragraphs": [
+            "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the 'effective date' at the top of this Privacy Policy. You are advised to review this Privacy Policy periodically for any changes."
+          ]
+        },
+        {
+          "number": "12",
+          "heading": "Third-Party Websites",
+          "paragraphs": [
+            "Our Service may contain links to other sites that are not operated by us. If you click on a third party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy of every site you visit. We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services."
+          ]
+        },
+        {
+          "number": "13",
+          "heading": "Cookie Policy",
+          "paragraphs": [
+            "We use cookies and similar tracking technologies to track the activity on our Service and hold certain information. Cookies are files with small amount of data which may include an anonymous unique identifier. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. For more detailed information, please refer to our Cookies Policy."
+          ]
+        },
+        {
+          "number": "14",
+          "heading": "California Privacy Rights (CCPA)",
+          "paragraphs": [
+            "If you are a California resident, you have specific rights regarding your personal information under the California Consumer Privacy Act (CCPA). You have the right to request that we disclose certain information to you about our collection and use of your personal information over the past 12 months. You have the right to request that we delete any of your personal information that we collected from you and retained, subject to certain exceptions."
+          ]
+        },
+        {
+          "number": "15",
+          "heading": "Contact Us",
+          "paragraphs": [
+            "If you have any questions about this Privacy Policy, please contact us:",
+            "By email: info@axieonexsales.net",
+            "By visiting the contact page on our website: axieonexsales.net/contact",
+            "© 2026 Axieonex Sales. All rights reserved."
+          ]
+        }
+      ]
+    },
+    "terms-of-service": {
+      "slug": "terms-of-service",
+      "title": "Terms of Service",
+      "tagline": "Please read these terms and conditions carefully before using our service.",
+      "lastUpdated": "LAST UPDATED: DECEMBER 13, 2025",
+      "metaDescription": "Read Axieonex Sales' Terms of Service regarding your use of our website and services.",
+      "sections": [
+        {
+          "number": "1",
+          "heading": "Purchases",
+          "paragraphs": [
+            "If you wish to purchase any product or service made available through the Service ('Purchase'), you may be asked to supply certain information relevant to your Purchase including, without limitation, your credit card number, the expiration date of your credit card, your billing address, and your shipping information. You represent and warrant that: (i) you have the legal right to use any credit card(s) or other payment method(s) in connection with any Purchase; and that (ii) the information you supply to us is true, correct and complete."
+          ]
+        },
+        {
+          "number": "2",
+          "heading": "Availability, Errors and Inaccuracies",
+          "paragraphs": [
+            "We are constantly updating our offerings of products and services on the Service. The products or services available on our Service may be mispriced, described inaccurately, or unavailable, and we may experience delays in updating information on the Service and in our advertising on other web sites. We cannot and do not guarantee the accuracy or completeness of any information, including prices, product images, specifications, availability, and services. We reserve the right to change or update information and to correct errors, inaccuracies, or omissions at any time without prior notice."
+          ]
+        },
+        {
+          "number": "3",
+          "heading": "Subscriptions",
+          "paragraphs": [
+            "Some parts of the Service are billed on a subscription basis ('Subscription(s)'). You will be billed in advance on a recurring and periodic basis ('Billing Cycle'). Billing cycles are set either on a monthly or annual basis, depending on the type of subscription plan you select when purchasing a Subscription. At the end of each Billing Cycle, your Subscription will automatically renew under the exact same conditions unless you cancel it or Axieonex Sales cancels it."
+          ]
+        },
+        {
+          "number": "4",
+          "heading": "Free Trial",
+          "paragraphs": [
+            "Axieonex Sales may, at its sole discretion, offer a Subscription with a free trial for a limited period of time ('Free Trial'). You may be required to enter your billing information in order to sign up for the Free Trial. If you do enter your billing information when signing up for the Free Trial, you will not be charged by Axieonex Sales until the Free Trial has expired. On the last day of the Free Trial period, unless you cancelled your Subscription, you will be automatically charged the applicable Subscription fees for the type of Subscription you have selected."
+          ]
+        },
+        {
+          "number": "5",
+          "heading": "Fee Changes",
+          "paragraphs": [
+            "Axieonex Sales, in its sole discretion and at any time, may modify the Subscription fees for the Subscriptions. Any Subscription fee change will become effective at the end of the then-current Billing Cycle. Axieonex Sales will provide you with reasonable prior notice of any change in Subscription fees to give you an opportunity to terminate your Subscription before such change becomes effective. Your continued use of the Service after the Subscription fee change comes into effect constitutes your agreement to pay the modified Subscription fee amount."
+          ]
+        },
+        {
+          "number": "6",
+          "heading": "Refunds",
+          "paragraphs": [
+            "Except when required by law, paid Subscription fees are non-refundable. Certain refund requests for Subscriptions may be considered by Axieonex Sales on a case-by-case basis and granted at the sole discretion of Axieonex Sales."
+          ]
+        },
+        {
+          "number": "7",
+          "heading": "Accounts",
+          "paragraphs": [
+            "When you create an account with us, you must provide us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service. You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service."
+          ]
+        },
+        {
+          "number": "8",
+          "heading": "Intellectual Property",
+          "paragraphs": [
+            "The Service and its original content (excluding Content provided by users), features and functionality are and will remain the exclusive property of Axieonex Sales and its licensors. The Service is protected by copyright, trademark, and other laws of both the United States and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Axieonex Sales."
+          ]
+        },
+        {
+          "number": "9",
+          "heading": "Links To Other Web Sites",
+          "paragraphs": [
+            "Our Service may contain links to third-party web sites or services that are not owned or controlled by Axieonex Sales. Axieonex Sales has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that Axieonex Sales shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services."
+          ]
+        },
+        {
+          "number": "10",
+          "heading": "Indemnification",
+          "paragraphs": [
+            "You agree to defend, indemnify and hold harmless Axieonex Sales and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney's fees), resulting from or arising out of a) your use and access of the Service, by you or any person using your account and password; or b) a breach of these Terms.",
+            "© 2026 Axieonex Sales. All rights reserved."
+          ]
+        }
+      ]
+    },
+    "cookies-policy": {
+      "slug": "cookies-policy",
+      "title": "Cookie Policy",
+      "tagline": "Transparency about how we use data to improve your experience.",
+      "lastUpdated": "LAST UPDATED: DECEMBER 13, 2025",
+      "metaDescription": "Learn about how Axieonex Sales uses cookies to improve your experience and manage your preferences.",
+      "sections": [
+        {
+          "number": "1",
+          "heading": "What are cookies?",
+          "paragraphs": [
+            "Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners in order to make their websites work, or to work more efficiently, as well as to provide reporting information.",
+            "Cookies set by the website owner (in this case, Axieonex) are called \"first-party cookies\". Cookies set by parties other than the website owner are called \"third-party cookies\". Third-party cookies enable third-party features or functionality to be provided on or through the website (e.g., advertising, interactive content, and analytics). The parties that set these third-party cookies can recognize your computer both when it visits the website in question and also when it visits certain other websites."
+          ]
+        },
+        {
+          "number": "2",
+          "heading": "Why do we use cookies?",
+          "paragraphs": [
+            "We use first- and third-party cookies for several reasons. Some cookies are required for technical reasons in order for our Website to operate, and we refer to these as \"essential\" or \"strictly necessary\" cookies. Other cookies also enable us to track and target the interests of our users to enhance the experience on our Online Properties. Third parties serve cookies through our Website for advertising, analytics, and other purposes. This is described in more detail below."
+          ]
+        },
+        {
+          "number": "3",
+          "heading": "What types of cookies do we use?",
+          "paragraphs": [
+            "Strictly Necessary Cookies",
+            "These cookies are strictly necessary to provide you with services available through our Website and to use some of its features, such as access to secure areas.",
+            "Performance & Analytics Cookies",
+            "These cookies collect information that is used either in aggregate form to help us understand how our Website is being used or how effective our marketing campaigns are, or to help us customize our Website for you.",
+            "Functionality Cookies",
+            "These cookies are used to enhance the performance and functionality of our Website but are non-essential to their use. However, without these cookies, certain functionality (like videos) may become unavailable.",
+            "Tailored Content Cookies",
+            "These cookies help us customize the content and expressions you see on our site based on how you have interacted with our content previously.",
+            "Targeting Cookies",
+            "These cookies are used to make advertising messages more relevant to you. They perform functions like preventing the same ad from continuously reappearing, ensuring that ads are properly displayed for advertisers, and in some cases selecting advertisements that are based on your interests."
+          ]
+        },
+        {
+          "number": "4",
+          "heading": "How long will cookies stay on my browsing device?",
+          "paragraphs": [
+            "The length of time a cookie will stay on your browsing device depends on whether it is a \"persistent\" or \"session\" cookie. Session cookies will only stay on your device until you stop browsing. Persistent cookies stay on your browsing device until they expire or are deleted. Most of the cookies we use are persistent and will expire between 30 minutes and two years from the date they are downloaded to your device."
+          ]
+        },
+        {
+          "number": "5",
+          "heading": "First- and Third-Party Cookies",
+          "paragraphs": [
+            "First-party cookies are cookies that belong to Axieonex, while third-party cookies are cookies that another party places on your browsing device through our Website.",
+            "We may allow third parties, such as analytics providers and ad networks, to place cookies on your device. These third parties may use cookies, web beacons, and other technologies to collect information about your use of our Website and other websites, including your IP address, web browser, pages viewed, time spent on pages, links clicked, and conversion information."
+          ]
+        },
+        {
+          "number": "6",
+          "heading": "How to control and delete cookies from your browser",
+          "paragraphs": [
+            "You have the right to decide whether to accept or reject cookies. You can exercise your cookie rights by setting your preferences in the Cookie Consent Manager. The Cookie Consent Manager allows you to select which categories of cookies you accept or reject. Essential cookies cannot be rejected as they are strictly necessary to provide you with services.",
+            "You can also set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. As the means by which you can refuse cookies through your web browser controls vary from browser-to-browser, you should visit your browser's help menu for more information."
+          ]
+        }
+      ]
+    }
+  }
+}
