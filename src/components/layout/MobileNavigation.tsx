@@ -23,6 +23,14 @@ export function MobileNavigation({ isOpen, onClose }: { isOpen: boolean; onClose
       className="fixed inset-0 z-(--ax-z-mobile-nav) flex flex-col bg-ax-surface-base/98 px-6 pb-10 pt-28 backdrop-blur-md lg:hidden"
       style={{ zIndex: "var(--ax-z-mobile-nav)" }}
     >
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close menu"
+        className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center text-3xl text-ax-text-primary"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
       <nav aria-label="Mobile" className="flex flex-1 flex-col justify-center gap-2">
         {[...PRIMARY_NAV, CONTACT_NAV].map((link) => {
           const active = pathname === link.href;

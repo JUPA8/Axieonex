@@ -38,9 +38,24 @@ export function ReviewStep({
         <div>Engagement range: {data.budget}</div>
         <div className="border-t border-white/8 pt-2.5 text-ax-cyan-alt">{slotLabel ?? "No time selected yet."}</div>
       </div>
-      <label className="flex items-start gap-3 text-[13.5px] text-ax-text-muted">
-        <input type="checkbox" checked={data.consent} onChange={(e) => onConsentChange(e.target.checked)} className="mt-1 h-[18px] w-[18px]" />
-        <span>
+      {/*
+        The checkbox is wrapped in the label for a large click target, but its
+        accessible name is set explicitly via aria-labelledby rather than
+        relying on implicit label-wrapping: nested interactive links inside a
+        wrapping <label> make the browser's accessible-name computation
+        unreliable (observed announcing "on" instead of the consent text).
+      */}
+      <label htmlFor="booking-consent" className="flex items-start gap-3 text-[13.5px] text-ax-text-muted">
+        <input
+          id="booking-consent"
+          type="checkbox"
+          checked={data.consent}
+          onChange={(e) => onConsentChange(e.target.checked)}
+          aria-labelledby="booking-consent-text"
+          aria-describedby={consentError ? "booking-consent-error" : undefined}
+          className="mt-1 h-[18px] w-[18px]"
+        />
+        <span id="booking-consent-text">
           I agree to be contacted about this request and have read the{" "}
           <TransitionLink href="/privacy" className="underline hover:text-ax-text-primary">
             Privacy Policy
@@ -52,7 +67,11 @@ export function ReviewStep({
           .
         </span>
       </label>
-      {consentError && <p className="mt-2 text-[12.5px] text-ax-error">{consentError}</p>}
+      {consentError && (
+        <p id="booking-consent-error" className="mt-2 text-[12.5px] text-ax-error">
+          {consentError}
+        </p>
+      )}
     </div>
   );
 }

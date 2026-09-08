@@ -32,12 +32,12 @@ const sourceSerif = Source_Serif_4({
   weight: ["400", "600"],
 });
 
+// Every route sets its own complete title (per axieonex-seo.json, titles already
+// include the AXIEONEX brand name) via generateMetadata/metadata exports, so this
+// is only a fallback for a route that defines none, not a template to compose with.
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${SITE_NAME} | AI-Orchestrated, Human-Executed Revenue Systems`,
-    template: `%s | ${SITE_NAME}`,
-  },
+  title: `${SITE_NAME} | AI-Orchestrated, Human-Executed Revenue Systems`,
   description: "We build revenue pipelines, not just meetings. AI detects signals, humans qualify conversations.",
 };
 

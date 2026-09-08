@@ -66,9 +66,19 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center justify-self-end gap-3">
-          <Button href={STRATEGY_CALL_NAV.href} variant="primary" className="hidden lg:inline-flex">
-            {STRATEGY_CALL_NAV.label}
-          </Button>
+          {/*
+            The visibility toggle lives on this wrapper, not on Button's own
+            className: Button's base classes already set an unconditional
+            `inline-flex`, which sits later in the generated stylesheet than
+            a plain `hidden` override and wins the cascade tie regardless of
+            viewport, silently keeping the button visible on mobile. A
+            wrapper with no competing display utility avoids that collision.
+          */}
+          <div className="hidden lg:block">
+            <Button href={STRATEGY_CALL_NAV.href} variant="primary">
+              {STRATEGY_CALL_NAV.label}
+            </Button>
+          </div>
           <button
             type="button"
             className="flex h-11 w-11 items-center justify-center rounded-sm text-ax-text-primary lg:hidden"

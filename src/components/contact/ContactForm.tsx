@@ -164,9 +164,22 @@ export function ContactForm() {
         )}
       </div>
 
-      <label className="flex items-start gap-3 text-[13.5px] text-ax-text-muted">
-        <input type="checkbox" name="consent" className="mt-1 h-[18px] w-[18px]" aria-describedby={state.errors.consent ? "consent-error" : undefined} />
-        <span>
+      {/*
+        Accessible name set explicitly via aria-labelledby rather than relying
+        on implicit label-wrapping: a nested interactive link inside a
+        wrapping <label> makes the browser's accessible-name computation
+        unreliable (observed announcing "on" instead of the consent text).
+      */}
+      <label htmlFor="consent" className="flex items-start gap-3 text-[13.5px] text-ax-text-muted">
+        <input
+          id="consent"
+          type="checkbox"
+          name="consent"
+          aria-labelledby="consent-text"
+          aria-describedby={state.errors.consent ? "consent-error" : undefined}
+          className="mt-1 h-[18px] w-[18px]"
+        />
+        <span id="consent-text">
           I agree to be contacted about this enquiry and have read the{" "}
           <TransitionLink href="/privacy" className="underline hover:text-ax-text-primary">
             Privacy Policy
