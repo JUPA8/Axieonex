@@ -1,49 +1,62 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Work_Sans, Space_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
+import { PageTransitionProvider } from "@/components/transition/PageTransitionProvider";
+import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Footer } from "@/components/layout/Footer";
-import { CookieConsent } from "@/components/layout/CookieConsent";
-import { DemoModalProvider } from "@/features/contact/DemoModalContext";
-import { DemoModal } from "@/features/contact/DemoModal";
+import { CookieConsentBanner } from "@/components/cookies/CookieConsentBanner";
+import { RevealController } from "@/components/motion/RevealController";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const SITE_URL = "https://www.axieonex.com";
+const workSans = Work_Sans({
+  variable: "--font-work-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+});
+
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
+  subsets: ["latin"],
+  weight: ["400", "600"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "AXIEONEX | AI Appointment Setting & Lead Generation",
-    template: "%s | Axieonex",
+    default: `${SITE_NAME} — AI-Orchestrated, Human-Executed Revenue Systems`,
+    template: `%s — ${SITE_NAME}`,
   },
-  description:
-    "We Build Revenue Pipelines — Not Just Meetings. AI-powered outbound systems and human expertise designed for predictable, scalable growth.",
+  description: "We build revenue pipelines, not just meetings. AI detects signals, humans qualify conversations.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} h-full`}>
-      <body className="flex min-h-full flex-col antialiased">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-[var(--color-accent)] focus:px-4 focus:py-2 focus:text-[#04141a]"
-        >
+    <html lang="en" className={`${bricolage.variable} ${workSans.variable} ${spaceMono.variable} ${sourceSerif.variable} h-full`}>
+      <body className="flex min-h-full flex-col">
+        <a href="#main-content" className="ax-skip-link">
           Skip to content
         </a>
-        <DemoModalProvider>
-          <Header />
-          <main id="main-content" className="flex-1">
+        <PageTransitionProvider>
+          <RevealController />
+          <SiteHeader />
+          <main id="main-content" className="flex-1 pt-[88px]">
             {children}
           </main>
           <Footer />
-          <CookieConsent />
-          <DemoModal />
-        </DemoModalProvider>
+          <CookieConsentBanner />
+        </PageTransitionProvider>
       </body>
     </html>
   );
