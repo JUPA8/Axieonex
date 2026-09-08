@@ -44,7 +44,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${bricolage.variable} ${workSans.variable} ${spaceMono.variable} ${sourceSerif.variable} h-full`}>
-      <body className="flex min-h-full flex-col">
+      {/*
+        suppressHydrationWarning here only covers this element's own
+        attributes (React's documented, narrow scope for the prop) — it does
+        not suppress hydration checking for children. It's needed because
+        some browser extensions (Grammarly, password managers, etc.) inject
+        attributes like data-gr-ext-installed directly onto <body> before
+        React hydrates, which is a false-positive mismatch outside app code.
+      */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <a href="#main-content" className="ax-skip-link">
           Skip to content
         </a>
