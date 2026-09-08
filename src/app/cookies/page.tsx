@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 const CANONICAL = `${SITE_URL}/cookies`;
 
 export const metadata: Metadata = {
-  title: "Cookies Policy — AXIEONEX",
+  title: "Cookies Policy | AXIEONEX",
   description: "How AXIEONEX uses cookies and similar technologies.",
   alternates: { canonical: CANONICAL },
 };

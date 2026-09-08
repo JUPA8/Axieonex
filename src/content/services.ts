@@ -4,7 +4,7 @@ import type { Service } from "@/types/content";
  * Ported verbatim from Axieonex Service Detail.dc.html's SERVICES data object
  * (per-slug problem/ai/human/control/receive/channels/quality/steps/faq) plus
  * Axieonex Services.dc.html's hub diagram data (ecosystem.*, which uses its own
- * distinct one-line blurbs, not the detail page's copy — the two pages are
+ * distinct one-line blurbs, not the detail page's copy; the two pages are
  * genuinely different content in the approved design, not a duplication bug).
  */
 export const SERVICES: Service[] = [

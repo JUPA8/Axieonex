@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
  * Wires every `[data-reveal]` element on the current page to an
  * IntersectionObserver, adding `.is-in` the first time it enters the
  * viewport (elements already visible on mount reveal immediately, so first
- * paint is never blank — see Motion Inventory section 2/6). Lives once in
+ * paint is never blank; see Motion Inventory section 2/6). Lives once in
  * the root layout and re-scans whenever the route changes, since page
  * content remounts under the persistent layout.
  */

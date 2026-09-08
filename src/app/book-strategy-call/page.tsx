@@ -5,7 +5,7 @@ import { SITE_URL } from "@/lib/site";
 const CANONICAL = `${SITE_URL}/book-strategy-call`;
 
 export const metadata: Metadata = {
-  title: "Book a Strategy Call — AXIEONEX",
+  title: "Book a Strategy Call | AXIEONEX",
   description: "Schedule a strategy session to map your revenue system.",
   alternates: { canonical: CANONICAL },
   robots: { index: false, follow: true },

@@ -35,7 +35,7 @@ export const ALL_ACCEPTED_CONSENT: ConsentState = {
  * current mocked behavior in axieonex-integrations.json ("Cookie consent /
  * optional-script blocking", status: mocked pending CMP/vendor decision). If this
  * throws or is unavailable, the caller must treat the visitor as having given no
- * consent — never default to granting optional categories.
+ * consent; never default to granting optional categories.
  */
 export function readConsent(): StoredConsent | null {
   if (typeof window === "undefined") return null;

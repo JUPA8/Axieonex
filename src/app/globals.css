@@ -4,7 +4,7 @@
    AXIEONEX design tokens
    Ported 1:1 from the approved handoff's axieonex-tokens.css /
    axieonex-tokens.json. Do not introduce new raw color/spacing values
-   elsewhere in the codebase — reference these custom properties (directly,
+   elsewhere in the codebase: reference these custom properties (directly,
    or via the Tailwind theme() mappings below) so there is exactly one
    source of truth.
    ========================================================================== */

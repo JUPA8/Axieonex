@@ -12,11 +12,11 @@ import { HOME_FAQ } from "@/content/homeFaq";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "AXIEONEX — AI-Orchestrated, Human-Executed Revenue Systems",
+  title: "AXIEONEX | AI-Orchestrated, Human-Executed Revenue Systems",
   description: "We build revenue pipelines, not just meetings. AI detects signals, humans qualify conversations.",
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: "AXIEONEX — AI-Orchestrated, Human-Executed Revenue Systems",
+    title: "AXIEONEX | AI-Orchestrated, Human-Executed Revenue Systems",
     description: "We build revenue pipelines, not just meetings. AI detects signals, humans qualify conversations.",
     url: SITE_URL,
     type: "website",

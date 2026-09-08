@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 const CANONICAL = `${SITE_URL}/cookie-preferences`;
 
 export const metadata: Metadata = {
-  title: "Cookie Preferences — AXIEONEX",
+  title: "Cookie Preferences | AXIEONEX",
   description: "Manage your cookie consent preferences.",
   alternates: { canonical: CANONICAL },
   robots: { index: false, follow: true },
@@ -28,7 +28,7 @@ export default function CookiePreferencesPage() {
 
         <div role="note" className="mb-10 rounded-md border border-ax-warning/40 bg-ax-warning/10 px-5 py-4 text-sm leading-relaxed text-ax-text-body">
           Your choice is currently saved to this browser only (localStorage), as explicitly disclosed pending a
-          production consent-management platform — see axieonex-integrations.json. No optional script (analytics or
+          production consent-management platform, see axieonex-integrations.json. No optional script (analytics or
           marketing) is loaded by this site regardless of your selection, since none has been integrated yet.
         </div>
 

@@ -3,7 +3,7 @@ import { NotFoundSignal } from "@/components/not-found/NotFoundSignal";
 import { Button } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
-  title: "Page Not Found — AXIEONEX",
+  title: "Page Not Found | AXIEONEX",
   description: "The page you are looking for could not be found.",
   robots: { index: false, follow: true },
 };

@@ -90,7 +90,7 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
     }
   }, [pathname]);
 
-  // Focus management: after any pathname change (transition-driven or not — covers
+  // Focus management: after any pathname change (transition-driven or not, this covers
   // back/forward and non-intercepted navigations too), move focus to the main
   // landmark unless the user already has focus somewhere meaningful.
   useEffect(() => {

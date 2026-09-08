@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const service = getService(slug);
   if (!service) return {};
   const canonical = `${SITE_URL}/services/${slug}`;
-  const title = `${service.title} — AXIEONEX`;
+  const title = `${service.title} | AXIEONEX`;
   return {
     title,
     description: service.purpose,

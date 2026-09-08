@@ -36,7 +36,7 @@ export default function ServicesPage() {
 
       {/*
         The approved Services hub prototype has no distinct final-CTA copy of
-        its own (only the per-service panel CTAs above) — reusing the
+        its own (only the per-service panel CTAs above), so this reuses the
         homepage's approved closing line verbatim rather than inventing new
         marketing copy for this page.
       */}

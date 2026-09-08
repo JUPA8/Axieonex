@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 const CANONICAL = `${SITE_URL}/privacy`;
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — AXIEONEX",
+  title: "Privacy Policy | AXIEONEX",
   description: "How AXIEONEX collects, uses, and protects personal data.",
   alternates: { canonical: CANONICAL },
 };

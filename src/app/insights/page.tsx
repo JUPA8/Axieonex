@@ -6,10 +6,10 @@ import { SITE_URL } from "@/lib/site";
 const CANONICAL = `${SITE_URL}/insights`;
 
 export const metadata: Metadata = {
-  title: "Insights — AXIEONEX",
+  title: "Insights | AXIEONEX",
   description: "Research and perspective on AI-orchestrated revenue systems.",
   alternates: { canonical: CANONICAL },
-  openGraph: { title: "Insights — AXIEONEX", description: "Research and perspective on AI-orchestrated revenue systems.", url: CANONICAL },
+  openGraph: { title: "Insights | AXIEONEX", description: "Research and perspective on AI-orchestrated revenue systems.", url: CANONICAL },
 };
 
 export default function InsightsPage() {

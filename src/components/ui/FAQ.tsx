@@ -3,7 +3,7 @@ export type FaqItem = {
   answer: string;
 };
 
-/** Accessible disclosure list. Native <details>/<summary> — no JS required. */
+/** Accessible disclosure list. Native <details>/<summary>, no JS required. */
 export function FAQ({ items, heading = "Frequently asked questions" }: { items: FaqItem[]; heading?: string }) {
   return (
     <div>

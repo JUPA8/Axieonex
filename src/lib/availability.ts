@@ -7,7 +7,7 @@ const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "S
 /**
  * Hardcoded mock availability (next 4 weekdays x 4 fixed slots), matching the
  * approved static prototype exactly. Production requires a real calendar
- * provider query — see axieonex-integrations.json.
+ * provider query, see axieonex-integrations.json.
  */
 export function buildAvailability(referenceDate = new Date()): AvailabilityDay[] {
   const days: AvailabilityDay[] = [];

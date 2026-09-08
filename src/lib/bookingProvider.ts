@@ -6,7 +6,7 @@ export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | 
 
 /**
  * Server-side booking submission boundary. No calendar provider has been
- * selected yet (see axieonex-integrations.json — "Strategy Call booking and
+ * selected yet (see axieonex-integrations.json, "Strategy Call booking and
  * calendar", status: mocked pending calendar provider selection). Until
  * CALENDAR_PROVIDER_API_KEY and CALENDAR_ID are configured, this honestly
  * reports "not_configured" instead of confirming a booking that was never

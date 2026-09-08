@@ -4,11 +4,11 @@ import type { Article } from "@/types/content";
  * Canonical article slugs come from axieonex-routes.json (the routing authority).
  * The prototype's Insights/Article `.dc.html` files use a different, mutually
  * inconsistent slug set (e.g. "modern-b2b-revenue-systems" instead of
- * "cold-outreach-to-revenue-systems") — a documented drift between the static
+ * "cold-outreach-to-revenue-systems"), a documented drift between the static
  * preview and the approved route manifest. Titles/body copy below are ported
  * verbatim from the prototype's data object; only the slugs are normalized to
  * the manifest's canonical values. No article has full long-form body copy yet
- * (only title + a 4-paragraph seed, per the handoff's own disclosure) — this is
+ * (only title + a 4-paragraph seed, per the handoff's own disclosure), and this is
  * surfaced honestly rather than padded with invented copy.
  */
 export const ARTICLES: Article[] = [

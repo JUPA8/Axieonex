@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site";
 const CANONICAL = `${SITE_URL}/terms`;
 
 export const metadata: Metadata = {
-  title: "Terms of Service — AXIEONEX",
+  title: "Terms of Service | AXIEONEX",
   description: "The terms governing use of the AXIEONEX website and services.",
   alternates: { canonical: CANONICAL },
 };

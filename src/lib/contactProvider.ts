@@ -10,7 +10,7 @@ export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | 
 
 /**
  * Server-side delivery boundary for the Contact form. No provider has been
- * selected yet (see axieonex-integrations.json — "Contact form delivery",
+ * selected yet (see axieonex-integrations.json, "Contact form delivery",
  * status: mocked, pending provider selection), so CONTACT_FORM_ENDPOINT is
  * intentionally left unset in .env.example. Until an owner configures it,
  * this honestly reports "not_configured" rather than a fake success.
