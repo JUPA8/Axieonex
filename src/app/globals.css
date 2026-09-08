@@ -195,6 +195,18 @@
   --color-ax-pearl-1: var(--ax-pearl-1);
   --color-ax-graphite: var(--ax-graphite);
   --color-ax-platinum: var(--ax-platinum);
+  --color-ax-ink-0: var(--ax-ink-0);
+  --color-ax-ink-1: var(--ax-ink-1);
+  --color-ax-ink-2: var(--ax-ink-2);
+  --color-ax-ink-3: var(--ax-ink-3);
+  --color-ax-ink-4: var(--ax-ink-4);
+  --color-ax-ink-5: var(--ax-ink-5);
+  --color-ax-ink-6: var(--ax-ink-6);
+  --color-ax-ink-7: var(--ax-ink-7);
+  --color-ax-surface-base: var(--ax-surface-base);
+  --color-ax-surface-raised: var(--ax-surface-raised);
+  --color-ax-surface-legal: var(--ax-surface-legal);
+  --color-ax-surface-light: var(--ax-surface-light);
   --color-ax-text-primary: var(--ax-text-primary);
   --color-ax-text-primary-on-light: var(--ax-text-primary-on-light);
   --color-ax-text-muted: var(--ax-text-muted);
@@ -366,5 +378,26 @@ p {
 @keyframes ax-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes ax-envelope-flap {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.92);
+  }
+}
+
+@keyframes ax-wave-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
   }
 }

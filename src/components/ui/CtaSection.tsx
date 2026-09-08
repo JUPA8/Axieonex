@@ -11,7 +11,7 @@ export function CtaSection({
   className = "",
 }: {
   heading: string;
-  body: string;
+  body?: string;
   ctaLabel?: string;
   ctaHref?: string;
   material?: BrandMarkMaterial;
@@ -24,7 +24,7 @@ export function CtaSection({
           <BrandMark material={material} size={64} />
         </div>
         <h2 className="mb-4 text-[length:var(--ax-fs-h1-fluid)] font-bold tracking-tight">{heading}</h2>
-        <p className="mb-9 max-w-[52ch] text-[16.5px] leading-relaxed text-ax-text-muted">{body}</p>
+        {body ? <p className="mb-9 max-w-[52ch] text-[16.5px] leading-relaxed text-ax-text-muted">{body}</p> : null}
         <Button href={ctaHref} variant="primary" size="large" magnetic>
           {ctaLabel}
         </Button>
