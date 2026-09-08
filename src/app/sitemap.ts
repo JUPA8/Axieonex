@@ -1,0 +1,36 @@
+import type { MetadataRoute } from "next";
+import { ARTICLES } from "@/content/articles";
+import { SERVICES } from "@/content/services";
+import { SITE_URL } from "@/lib/site";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date();
+
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${SITE_URL}/`, lastModified: now, priority: 1.0 },
+    { url: `${SITE_URL}/about`, lastModified: now, priority: 0.7 },
+    { url: `${SITE_URL}/how-we-work`, lastModified: now, priority: 0.8 },
+    { url: `${SITE_URL}/services`, lastModified: now, priority: 0.9 },
+    { url: `${SITE_URL}/pricing`, lastModified: now, priority: 0.8 },
+    { url: `${SITE_URL}/insights`, lastModified: now, priority: 0.6 },
+    { url: `${SITE_URL}/contact`, lastModified: now, priority: 0.5 },
+    { url: `${SITE_URL}/book-strategy-call`, lastModified: now, priority: 0.6 },
+    { url: `${SITE_URL}/privacy`, lastModified: now, priority: 0.2 },
+    { url: `${SITE_URL}/cookies`, lastModified: now, priority: 0.2 },
+    { url: `${SITE_URL}/terms`, lastModified: now, priority: 0.2 },
+  ];
+
+  const serviceRoutes: MetadataRoute.Sitemap = SERVICES.map((service) => ({
+    url: `${SITE_URL}/services/${service.slug}`,
+    lastModified: now,
+    priority: 0.8,
+  }));
+
+  const articleRoutes: MetadataRoute.Sitemap = ARTICLES.map((article) => ({
+    url: `${SITE_URL}/insights/${article.slug}`,
+    lastModified: now,
+    priority: 0.5,
+  }));
+
+  return [...staticRoutes, ...serviceRoutes, ...articleRoutes];
+}

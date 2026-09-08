@@ -1,4 +1,4 @@
-export const SITE_URL = "https://www.axieonex.com";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.axieonex.com";
 export const SITE_NAME = "AXIEONEX";
 export const CONTACT_EMAIL = "info@axieonexsales.net";
 export const OPERATING_STATEMENT =
