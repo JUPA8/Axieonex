@@ -391,6 +391,20 @@ p {
   }
 }
 
+@keyframes ax-converge {
+  0% {
+    opacity: 0;
+    transform: translate(var(--fx), var(--fy));
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
 @keyframes ax-wave-pulse {
   0% {
     opacity: 0.7;
