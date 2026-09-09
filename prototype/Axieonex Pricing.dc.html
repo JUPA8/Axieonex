@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body{margin:0;background:#0B0C0F;color:#E9E9EC;-webkit-font-smoothing:antialiased}
+  a{color:#E9E9EC;text-decoration:none}
+  a:hover{color:#B79CEF}
+  :focus-visible{outline:2px solid #B79CEF;outline-offset:3px}
+  [data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  [data-reveal].is-in{opacity:1;transform:translateY(0)}
+  @media (prefers-reduced-motion: reduce){ [data-reveal]{opacity:1!important;transform:none!important;transition:none!important} }
+  .axNavLink{font-size:14.5px;color:#8E8E96}
+  .axNavLink[aria-current="true"]{color:#E9E9EC;font-weight:600}
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .32s ease;background:#0B0C0F}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:64px;height:64px;filter:saturate(.4) brightness(1.1);transform:scale(.5);opacity:.7;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .42s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1.2);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+
+  @keyframes axAssemble{0%{opacity:0;transform:translate(var(--tx,0),var(--ty,0)) scale(.7)}100%{opacity:1;transform:translate(0,0) scale(1)}}
+  .axAssemblePiece{animation:axAssemble .9s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes axCalibrate{0%{opacity:.3}50%{opacity:.9}100%{opacity:.3}}
+  .axCalibrateRing{animation:axCalibrate 2.8s ease-in-out infinite}
+  @media (prefers-reduced-motion: reduce){ .axAssemblePiece,.axCalibrateRing{animation:none;opacity:1} }
+
+  .axTierCard{border:1px solid rgba(255,255,255,0.08);background:linear-gradient(160deg,rgba(255,255,255,0.03),rgba(255,255,255,0));padding:30px 26px;transition:border-color .3s ease,transform .3s ease}
+  .axTierCard.is-selected{border-color:#8B5CF6;transform:translateY(-4px)}
+  .axTierBtn{background:none;border:1px solid rgba(255,255,255,0.14);color:#E9E9EC;font-size:13px;padding:8px 16px;border-radius:2px}
+  .axTierBtn.is-selected{background:#8B5CF6;border-color:#8B5CF6;color:#fff}
+  .axCompareRow{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.06)}
+  .axCompareCell{background:#0B0C0F;padding:16px 14px;font-size:13.5px;color:#B7B7BF}
+  @media (max-width:900px){ .axCompareRow{grid-template-columns:1fr} .axCompareCell{border-bottom:1px solid rgba(255,255,255,0.06)} }
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:#0B0C0F;color:#E9E9EC">
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:20px 40px;background:rgba(11,12,15,0.88);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" aria-label="Axieonex home" style="display:flex;align-items:center;gap:10px;justify-self:start">
+      <div style="width:26px;height:26px;filter:saturate(.5)"><dc-import name="LogoMark" hint-size="26px,26px"></dc-import></div>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px">AXIEONEX</span>
+    </a>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;justify-self:center">
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}">Home</a>
+      <a class="axNavLink" href="Axieonex About.dc.html" onClick="{{ navTransition }}">About</a>
+      <a class="axNavLink" href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}">How We Work</a>
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html#services" onClick="{{ navTransition }}">Services</a>
+      <a class="axNavLink" href="Axieonex Pricing.dc.html" aria-current="true">Pricing</a>
+      <a class="axNavLink" href="Axieonex Insights.dc.html" onClick="{{ navTransition }}">Insights</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="justify-self:end;background:linear-gradient(120deg,#8B5CF6,#B79CEF);color:#0B0C0F;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:2px;white-space:nowrap">Book a strategy call</a>
+  </nav>
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="64px,64px"></dc-import></div></div>
+
+  <!-- HERO -->
+  <section style="max-width:1100px;margin:0 auto;padding:190px 40px 90px">
+    <div style="display:flex;align-items:center;gap:44px;flex-wrap:wrap">
+      <div style="position:relative;width:130px;height:130px;flex:none">
+        <svg viewBox="0 0 130 130" style="position:absolute;inset:0" aria-hidden="true"><circle class="axCalibrateRing" cx="65" cy="65" r="60" fill="none" stroke="rgba(139,92,246,0.35)" stroke-width="1"></circle><circle class="axCalibrateRing" cx="65" cy="65" r="50" fill="none" stroke="rgba(183,156,239,0.25)" stroke-width="1" style="animation-delay:.6s"></circle></svg>
+        <div class="axAssemblePiece" style="position:absolute;inset:28px;filter:saturate(.55) contrast(1.05);--tx:-14px;--ty:-10px"><dc-import name="LogoMark" hint-size="74px,74px"></dc-import></div>
+      </div>
+      <div style="flex:1;min-width:260px">
+        <div data-reveal style="font-size:13px;font-weight:600;color:#B79CEF;margin-bottom:16px">Engagement, not a price list</div>
+        <h1 data-reveal style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(32px,4.4vw,52px);line-height:1.1;margin:0 0 18px;letter-spacing:-0.01em">Structured to your market, calibrated to your goals.</h1>
+        <p data-reveal style="margin:0;font-size:16.5px;line-height:1.6;color:#B7B7BF;max-width:56ch">Every engagement is built around your target market, channels and required human involvement. Below is the framework we use to scope it, not a fixed menu.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIERS -->
+  <section style="max-width:1180px;margin:0 auto;padding:20px 40px 90px">
+    <div data-reveal style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px">
+      <div class="axTierCard {{ tier0Class }}" tabindex="0" onClick="{{ selectTier0 }}">
+        <div style="font-size:11px;font-weight:600;color:#8E8E96;margin-bottom:10px">FOUNDATION</div>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px">Custom</div>
+        <p style="font-size:13.5px;line-height:1.55;color:#9A9AA2;margin:0 0 18px">Single market, one or two channels. For teams testing a coordinated system for the first time.</p>
+        <button class="axTierBtn {{ tier0Class }}">View details</button>
+      </div>
+      <div class="axTierCard {{ tier1Class }}" tabindex="0" onClick="{{ selectTier1 }}">
+        <div style="font-size:11px;font-weight:600;color:#8E8E96;margin-bottom:10px">GROWTH</div>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px">Custom</div>
+        <p style="font-size:13.5px;line-height:1.55;color:#9A9AA2;margin:0 0 18px">Multi-channel orchestration across one or two markets, with dedicated human qualification.</p>
+        <button class="axTierBtn {{ tier1Class }}">View details</button>
+      </div>
+      <div class="axTierCard {{ tier2Class }}" tabindex="0" onClick="{{ selectTier2 }}">
+        <div style="font-size:11px;font-weight:600;color:#8E8E96;margin-bottom:10px">SCALE</div>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px">Custom</div>
+        <p style="font-size:13.5px;line-height:1.55;color:#9A9AA2;margin:0 0 18px">Full-channel coverage across multiple markets, with strategy involvement and deep reporting.</p>
+        <button class="axTierBtn {{ tier2Class }}">View details</button>
+      </div>
+      <div class="axTierCard {{ tier3Class }}" tabindex="0" onClick="{{ selectTier3 }}">
+        <div style="font-size:11px;font-weight:600;color:#8E8E96;margin-bottom:10px">CUSTOM REVENUE SYSTEM</div>
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;margin-bottom:6px">Contact for scope</div>
+        <p style="font-size:13.5px;line-height:1.55;color:#9A9AA2;margin:0 0 18px">Built end to end around a complex GTM motion, multiple business units, or unusual markets.</p>
+        <button class="axTierBtn {{ tier3Class }}">View details</button>
+      </div>
+    </div>
+    <p style="margin:18px 0 0;font-size:12.5px;color:#6E6E76">Final pricing is confirmed on a strategy call once scope, channels and market coverage are defined. Nothing above is a published rate.</p>
+  </section>
+
+  <!-- COMPARISON -->
+  <section data-reveal style="max-width:1100px;margin:0 auto;padding:20px 40px 110px">
+    <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;margin:0 0 30px">What changes between engagements</h2>
+    <div style="border:1px solid rgba(255,255,255,0.06)">
+      <div class="axCompareRow"><div class="axCompareCell" style="color:#E9E9EC;font-weight:600">Market coverage</div><div class="axCompareCell">1 market</div><div class="axCompareCell">1 to 2 markets</div><div class="axCompareCell">Multiple markets</div><div class="axCompareCell">Defined with you</div></div>
+      <div class="axCompareRow"><div class="axCompareCell" style="color:#E9E9EC;font-weight:600">Channels included</div><div class="axCompareCell">1 to 2 channels</div><div class="axCompareCell">Email, LinkedIn, calling</div><div class="axCompareCell">Full channel coverage</div><div class="axCompareCell">Defined with you</div></div>
+      <div class="axCompareRow"><div class="axCompareCell" style="color:#E9E9EC;font-weight:600">Signal intelligence</div><div class="axCompareCell">Standard</div><div class="axCompareCell">Enhanced</div><div class="axCompareCell">Continuous, multi-source</div><div class="axCompareCell">Defined with you</div></div>
+      <div class="axCompareRow"><div class="axCompareCell" style="color:#E9E9EC;font-weight:600">Human involvement</div><div class="axCompareCell">Validation and qualification</div><div class="axCompareCell">Dedicated strategist</div><div class="axCompareCell">Senior strategist and analyst team</div><div class="axCompareCell">Defined with you</div></div>
+      <div class="axCompareRow"><div class="axCompareCell" style="color:#E9E9EC;font-weight:600">Reporting</div><div class="axCompareCell">Monthly summary</div><div class="axCompareCell">Bi-weekly reporting</div><div class="axCompareCell">Real-time dashboard access</div><div class="axCompareCell">Defined with you</div></div>
+      <div class="axCompareRow"><div class="axCompareCell" style="color:#E9E9EC;font-weight:600">Strategy support</div><div class="axCompareCell">Onboarding only</div><div class="axCompareCell">Quarterly review</div><div class="axCompareCell">Ongoing GTM strategy input</div><div class="axCompareCell">Defined with you</div></div>
+    </div>
+  </section>
+
+  <!-- BUILD VS BUY -->
+  <section data-reveal style="background:#111216;padding:100px 40px;border-top:1px solid rgba(255,255,255,0.06)">
+    <div style="max-width:900px;margin:0 auto">
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;margin:0 0 18px">Building this internally means hiring, training and managing an SDR team, plus the tooling to run them. An engagement with Axieonex replaces that with one accountable system and no ramp time.</h2>
+      <p style="margin:0;font-size:14px;color:#8E8E96">We do not publish comparative cost figures here. Bring your current numbers to a strategy call and we will show you where a coordinated system changes the equation.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="max-width:760px;margin:0 auto;padding:100px 40px">
+    <h2 data-reveal style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;margin:0 0 36px">Pricing questions</h2>
+    <div data-reveal style="display:flex;flex-direction:column">
+      <details style="border-top:1px solid rgba(255,255,255,0.1);padding:18px 0"><summary style="cursor:pointer;font-size:15.5px;font-weight:600;list-style:none">Why is there no fixed price list?</summary><p style="margin:12px 0 0;font-size:14.5px;line-height:1.6;color:#B7B7BF">Because scope varies by market, channel count and required human involvement. A fixed menu would either overcharge simple engagements or undercut complex ones.</p></details>
+      <details style="border-top:1px solid rgba(255,255,255,0.1);padding:18px 0"><summary style="cursor:pointer;font-size:15.5px;font-weight:600;list-style:none">How is scope decided?</summary><p style="margin:12px 0 0;font-size:14.5px;line-height:1.6;color:#B7B7BF">On a strategy call, we map your market, channels and desired qualification depth, then propose the closest tier and adjust it to fit.</p></details>
+      <details style="border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);padding:18px 0"><summary style="cursor:pointer;font-size:15.5px;font-weight:600;list-style:none">Can an engagement change tiers later?</summary><p style="margin:12px 0 0;font-size:14.5px;line-height:1.6;color:#B7B7BF">Yes. Most clients start narrower and expand market or channel coverage once the initial system is proven.</p></details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section data-reveal style="background:#111216;padding:110px 40px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+    <div style="max-width:640px;margin:0 auto">
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(28px,3.6vw,40px);margin:0 0 18px">Let's scope your engagement.</h2>
+      <a href="Axieonex Book Strategy Call.dc.html" style="display:inline-block;margin-top:10px;background:linear-gradient(120deg,#8B5CF6,#B79CEF);color:#0B0C0F;font-size:15px;font-weight:600;padding:16px 28px;border-radius:2px">Book a strategy call</a>
+    </div>
+  </section>
+
+  <footer style="background:#08090C;padding:40px;text-align:center;font-size:12.5px;color:#6E6E76">
+    info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.<br />&#169; 2026 Axieonex Sales. All rights reserved.
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { transitioning: false, selectedTier: 1 };
+
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+
+  componentDidMount() {
+    const els = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-in'); });
+      }, { threshold: 0.15 });
+      els.forEach(el => io.observe(el));
+      this._io = io;
+    } else { els.forEach(el => el.classList.add('is-in')); }
+  }
+  componentWillUnmount() { if (this._io) this._io.disconnect(); }
+
+  renderVals() {
+    const t = this.state.selectedTier;
+    return {
+      transitionClass: this.state.transitioning ? 'is-active' : '',
+      navTransition: (e) => this.navTransition(e),
+      tier0Class: t === 0 ? 'is-selected' : '',
+      tier1Class: t === 1 ? 'is-selected' : '',
+      tier2Class: t === 2 ? 'is-selected' : '',
+      tier3Class: t === 3 ? 'is-selected' : '',
+      selectTier0: () => this.setState({ selectedTier: 0 }),
+      selectTier1: () => this.setState({ selectedTier: 1 }),
+      selectTier2: () => this.setState({ selectedTier: 2 }),
+      selectTier3: () => this.setState({ selectedTier: 3 })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  body{margin:0;background:#0B0D12;color:#E7E9EF;-webkit-font-smoothing:antialiased}
+  a{color:#5CC8E8;text-decoration:underline}
+  a:hover{color:#8B5CF6}
+  :focus-visible{outline:2px solid #5CC8E8;outline-offset:3px}
+  .axNavLink{font-size:14.5px;color:#8E92A0;text-decoration:none}
+  .axNavLink:hover{color:#E7E9EF}
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s ease;background:#0B0D12}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:44px;height:44px;transform:scale(.7);opacity:.6;transition:transform .3s ease,opacity .3s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+  .axLegalBody h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:19px;margin:38px 0 12px;scroll-margin-top:110px}
+  .axLegalBody p,.axLegalBody li{font-size:15px;line-height:1.7;color:#C4C8D4;margin:0 0 12px}
+  .axLegalBody ul{margin:0 0 14px;padding-left:20px}
+  .axTocLink{display:block;font-size:13px;color:#8E92A0;padding:6px 0;text-decoration:none}
+  .axTocLink:hover{color:#E7E9EF}
+  @media (max-width:900px){ .axTocCol{display:none!important} }
+  .axCatCard{border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:18px 20px;margin-bottom:14px}
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:#0B0D12;color:#E7E9EF">
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:18px 28px;background:rgba(11,13,18,0.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" aria-label="Axieonex home" style="display:flex;align-items:center;gap:10px;justify-self:start;text-decoration:none">
+      <div style="width:24px;height:24px"><dc-import name="LogoMark" hint-size="24px,24px"></dc-import></div>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14.5px;color:#E7E9EF">AXIEONEX</span>
+    </a>
+    <div style="display:flex;gap:18px;flex-wrap:nowrap;justify-self:center;white-space:nowrap">
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}">Home</a>
+      <a class="axNavLink" href="Axieonex About.dc.html" onClick="{{ navTransition }}">About</a>
+      <a class="axNavLink" href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}">How We Work</a>
+      <a class="axNavLink" href="Axieonex Services.dc.html" onClick="{{ navTransition }}">Services</a>
+      <a class="axNavLink" href="Axieonex Pricing.dc.html" onClick="{{ navTransition }}">Pricing</a>
+      <a class="axNavLink" href="Axieonex Insights.dc.html" onClick="{{ navTransition }}">Insights</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="justify-self:end;background:#5CC8E8;color:#03141C;font-size:13px;font-weight:600;padding:10px 18px;border-radius:2px;white-space:nowrap;text-decoration:none">Book a strategy call</a>
+  </nav>
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="44px,44px"></dc-import></div></div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:130px 40px 100px;display:grid;grid-template-columns:220px 1fr;gap:56px;align-items:start">
+
+    <nav class="axTocCol" aria-label="Cookies Policy sections" style="position:sticky;top:110px">
+      <div style="font-size:11px;font-weight:600;color:#6E7280;margin-bottom:10px">ON THIS PAGE</div>
+      <a class="axTocLink" href="#what-are-cookies">What cookies are</a>
+      <a class="axTocLink" href="#categories">Categories we use</a>
+      <a class="axTocLink" href="#first-third-party">First and third party</a>
+      <a class="axTocLink" href="#duration">Duration and storage</a>
+      <a class="axTocLink" href="#consent">Consent and legal basis</a>
+      <a class="axTocLink" href="#controls">Managing cookies</a>
+      <a class="axTocLink" href="#transfers">International providers</a>
+      <a class="axTocLink" href="#changes">Changes to this policy</a>
+      <a class="axTocLink" href="#contact-us">Contact us</a>
+    </nav>
+
+    <div>
+      <div style="font-size:12px;font-weight:600;color:#5CC8E8;margin-bottom:14px">Legal</div>
+      <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(28px,3.6vw,42px);line-height:1.15;margin:0 0 10px">Cookies Policy</h1>
+      <p style="font-size:13.5px;color:#8E92A0;margin:0 0 8px">Last updated: [DATE TO BE CONFIRMED]</p>
+      <div style="background:rgba(233,79,168,0.1);border:1px solid rgba(233,79,168,0.3);border-radius:4px;padding:14px 16px;font-size:13px;line-height:1.6;color:#F0B9D6;margin:20px 0 40px">This page is a structural draft. It requires review by a qualified lawyer, and every bracketed value below must be confirmed against the final production cookie inventory, before it is published or relied on.</div>
+
+      <div class="axLegalBody">
+
+        <h2 id="what-are-cookies">1. What cookies and similar technologies are</h2>
+        <p>Cookies are small text files placed on your device when you visit a website. Similar technologies include local storage and pixels, which can serve comparable purposes. This policy explains the categories of cookies this site may use and why.</p>
+
+        <h2 id="categories">2. Categories of cookies we use</h2>
+        <div class="axCatCard"><strong style="color:#E7E9EF">Strictly necessary.</strong> Required for core site function, such as navigation and security. These cannot be switched off and do not require consent.</div>
+        <div class="axCatCard"><strong style="color:#E7E9EF">Functional.</strong> Remember choices you make, such as cookie preferences, to improve your experience on return visits.</div>
+        <div class="axCatCard"><strong style="color:#E7E9EF">Analytics.</strong> Help us understand how visitors use the site, if and once an analytics tool is implemented. Used only with your consent.</div>
+        <div class="axCatCard"><strong style="color:#E7E9EF">Preferences.</strong> Store settings such as display or regional preferences where applicable.</div>
+        <div class="axCatCard"><strong style="color:#E7E9EF">Marketing.</strong> Used only if a marketing or advertising tool is implemented, and only with your consent, to measure or personalize communications.</div>
+        <p>Whether analytics and marketing cookies are currently active on this site, and which specific tools are used, is [ANALYTICS AND MARKETING TOOLING TO BE CONFIRMED]. No optional cookie is described as active unless the underlying integration is verified.</p>
+
+        <h2 id="first-third-party">3. First-party and third-party cookies</h2>
+        <p>First-party cookies are set directly by this site. Third-party cookies may be set by services embedded on the site, such as a scheduling tool used for Strategy Call bookings. The specific third-party providers in use, and their own cookie practices, are [THIRD-PARTY PROVIDER LIST TO BE CONFIRMED]; each provider's own privacy and cookie policy will govern their cookies.</p>
+
+        <h2 id="duration">4. Duration and storage</h2>
+        <p>Session cookies are deleted when you close your browser. Persistent cookies remain for a set period or until manually deleted. The specific cookie names, purposes and retention durations in production use are maintained in a structured cookie inventory, held separately from this page, and are [COOKIE INVENTORY TO BE CONFIRMED AND PUBLISHED].</p>
+
+        <h2 id="consent">5. Consent and legal basis</h2>
+        <p>Strictly necessary cookies are used on the basis of our legitimate interest in operating the site. All other categories are used only with your consent, collected and recorded through <a href="Axieonex Cookie Preferences.dc.html" onClick="{{ navTransition }}">Cookie Preferences</a>. You may withdraw consent at any time by returning to that page.</p>
+
+        <h2 id="controls">6. Managing cookies</h2>
+        <p>You can manage non-essential cookies for this site at any time through <a href="Axieonex Cookie Preferences.dc.html" onClick="{{ navTransition }}">Cookie Preferences</a>. Most browsers also let you block or delete cookies through their settings; doing so may affect site functionality.</p>
+
+        <h2 id="transfers">7. International providers</h2>
+        <p>Where a cookie is set by a provider located outside your country or region, that provider's own data-transfer safeguards apply. The relevant providers and safeguards are [INTERNATIONAL PROVIDER DETAILS TO BE CONFIRMED]; see also our <a href="Axieonex Privacy Policy.dc.html" onClick="{{ navTransition }}">Privacy Policy</a>.</p>
+
+        <h2 id="changes">8. Changes to this policy</h2>
+        <p>We may update this policy as our cookie use changes. Material changes will be reflected by updating the date at the top of this page. The formal update and notification procedure is [POLICY UPDATE PROCEDURE TO BE CONFIRMED].</p>
+
+        <h2 id="contact-us">9. Contact us</h2>
+        <p>Questions about this policy can be sent to <a href="mailto:info@axieonexsales.net">info@axieonexsales.net</a>. See also our <a href="Axieonex Privacy Policy.dc.html" onClick="{{ navTransition }}">Privacy Policy</a> and <a href="Axieonex Cookie Preferences.dc.html" onClick="{{ navTransition }}">Cookie Preferences</a>.</p>
+
+      </div>
+
+      <div style="margin-top:50px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08)">
+        <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" style="text-decoration:none;color:#8E92A0;font-size:13.5px">&#8592; Back to the main website</a>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background:#08090C;padding:36px 40px;text-align:center;font-size:12.5px;color:#5C6070;border-top:1px solid rgba(255,255,255,0.06)">
+    info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.<br />&#169; 2026 Axieonex Sales. All rights reserved.
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { transitioning: false };
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+  renderVals() {
+    return { transitionClass: this.state.transitioning ? 'is-active' : '', navTransition: (e) => this.navTransition(e) };
+  }
+}
+</script>
+</body>
+</html>

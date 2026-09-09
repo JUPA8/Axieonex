@@ -1,0 +1,21 @@
+{
+  "$description": "Interactive state matrix across the whole site.",
+  "states": [
+    { "area": "navigation", "states": ["default", "scrolled-compact", "route-active", "hover", "focus-visible"] },
+    { "area": "mobile menu", "states": ["closed", "open"] },
+    { "area": "route transitions", "states": ["idle", "exiting (destination signature applied)", "entering", "reduced-motion (short, no travel)"] },
+    { "area": "contact form", "states": ["default", "focus", "validation error (per field)", "loading", "success", "server error"] },
+    { "area": "booking flow", "states": ["step 1-5 default", "step validation error", "back/next transition", "slot default", "slot selected", "slot unavailable/empty", "loading", "submission success", "submission error", "retry"] },
+    { "area": "cookie preferences", "states": ["default (unsaved)", "toggled", "strictly-necessary locked-on", "saved confirmation", "reopened with prior selection restored"] },
+    { "area": "FAQ", "states": ["closed", "open"] },
+    { "area": "pricing selector", "states": ["tier default", "tier selected", "tier focus"] },
+    { "area": "services diagram", "states": ["node default", "node hover", "node active/selected", "node focus"] },
+    { "area": "insights filters/search", "states": ["default (all articles)", "filtered results", "empty search result", "search input focus"] },
+    { "area": "article page", "states": ["reading progress 0-100%", "static content always rendered regardless of JS"] },
+    { "area": "legal pages", "states": ["static, TOC active-section highlight on scroll"] },
+    { "area": "404", "states": ["entrance sequence", "resting", "reduced-motion immediate resting state"] },
+    { "area": "global loading", "states": ["not applicable in static prototype (no client data fetching); production booking/contact submissions require a loading state, already implemented"] },
+    { "area": "reduced motion", "states": ["every animated area above has a documented reduced-motion equivalent, see axieonex-motion.json"] }
+  ],
+  "counts": { "areasDocumented": 15, "areasMissingStates": 0 }
+}

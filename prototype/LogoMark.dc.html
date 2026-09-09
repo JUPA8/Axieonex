@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<svg viewBox="0 0 64 64" width="100%" height="100%" style="display:block; overflow:visible">
+  <defs>
+    <linearGradient id="{{ idA }}" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4C82FF"></stop>
+      <stop offset="1" stop-color="#8B5CF6"></stop>
+    </linearGradient>
+    <linearGradient id="{{ idB }}" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8B5CF6"></stop>
+      <stop offset="1" stop-color="#EA4FA0"></stop>
+    </linearGradient>
+  </defs>
+  <path fill="{{ fillA }}" d="M6,10 Q26,6 34,26 Q42,46 58,54 Q40,50 30,38 Q20,26 6,10 Z"></path>
+  <path fill="{{ fillB }}" d="M58,10 Q38,6 30,26 Q22,46 6,54 Q24,50 34,38 Q44,26 58,10 Z"></path>
+</svg>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:96,&quot;height&quot;:96}}">
+let axLogoMarkCounter = 0;
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this._uid = 'axLogo' + (++axLogoMarkCounter);
+  }
+  renderVals() {
+    const idA = this._uid + 'A';
+    const idB = this._uid + 'B';
+    return { idA, idB, fillA: `url(#${idA})`, fillB: `url(#${idB})` };
+  }
+}
+</script>
+</body>
+</html>

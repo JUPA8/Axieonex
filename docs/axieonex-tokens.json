@@ -1,0 +1,181 @@
+{
+  "$schema": "AXIEONEX design tokens — mirrors axieonex-tokens.css custom property names 1:1 (ax-color-blue in JSON == --ax-blue in CSS with the ax- prefix pattern noted per key). Types are for Claude Code's typed token export (e.g. Tailwind theme or a TS const object).",
+  "color": {
+    "raw": {
+      "blue": { "value": "#3E7BFA", "type": "color" },
+      "blueAlt": { "value": "#4C82FF", "type": "color" },
+      "cyan": { "value": "#35D3E0", "type": "color" },
+      "cyanAlt": { "value": "#5CC8E8", "type": "color" },
+      "violet": { "value": "#8B5CF6", "type": "color" },
+      "magenta": { "value": "#E94FA8", "type": "color" },
+      "magentaAlt": { "value": "#EA4FA0", "type": "color" },
+      "ink0": { "value": "#050A16", "type": "color", "usedOn": ["home", "services", "service-detail"] },
+      "ink1": { "value": "#06070D", "type": "color", "usedOn": ["home"] },
+      "ink2": { "value": "#08090F", "type": "color", "usedOn": ["404", "strategy-call"] },
+      "ink3": { "value": "#0B0C0F", "type": "color", "usedOn": ["pricing"] },
+      "ink4": { "value": "#0B0D12", "type": "color", "usedOn": ["privacy", "cookies", "terms", "cookie-preferences"] },
+      "ink5": { "value": "#0C0D12", "type": "color", "usedOn": ["insights", "article"] },
+      "ink6": { "value": "#0F1424", "type": "color", "usedOn": ["how-we-work"] },
+      "ink7": { "value": "#080B18", "type": "color", "usedOn": ["how-we-work"] },
+      "pearl0": { "value": "#EFEEEA", "type": "color", "usedOn": ["about"] },
+      "pearl1": { "value": "#F5F6FA", "type": "color", "usedOn": ["home light sections"] },
+      "graphite": { "value": "#2A2D36", "type": "color" },
+      "platinum": { "value": "#B7B7C4", "type": "color", "usedOn": ["pricing"] }
+    },
+    "semantic": {
+      "textPrimary": { "value": "#EAEEF6", "type": "color" },
+      "textPrimaryOnLight": { "value": "#1B1B1E", "type": "color" },
+      "textMuted": { "value": "#8E92A0", "type": "color" },
+      "textMutedOnLight": { "value": "#6E7280", "type": "color" },
+      "textBody": { "value": "#C4C8D4", "type": "color" },
+      "surfaceBase": { "value": "{color.raw.ink1}", "type": "color" },
+      "surfaceRaised": { "value": "#12141C", "type": "color" },
+      "surfaceLegal": { "value": "{color.raw.ink4}", "type": "color" },
+      "surfaceLight": { "value": "{color.raw.pearl1}", "type": "color" },
+      "borderSubtle": { "value": "rgba(255,255,255,0.08)", "type": "color" },
+      "borderDefault": { "value": "rgba(255,255,255,0.14)", "type": "color" },
+      "focusRing": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "success": { "value": "{color.raw.cyan}", "type": "color" },
+      "warning": { "value": "#E8B368", "type": "color" },
+      "error": { "value": "{color.raw.magenta}", "type": "color" }
+    },
+    "pageTheme": {
+      "home": { "value": "{color.raw.violet}", "type": "color" },
+      "about": { "value": "#1B1B1E", "type": "color" },
+      "howWeWork": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "services": { "value": "{color.raw.blue}", "type": "color" },
+      "serviceLeadGeneration": { "value": "{color.raw.blue}", "type": "color" },
+      "serviceAppointmentSetting": { "value": "{color.raw.magenta}", "type": "color" },
+      "serviceHybridSdr": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "serviceColdEmail": { "value": "{color.raw.violet}", "type": "color" },
+      "serviceLinkedinOutreach": { "value": "{color.raw.blue}", "type": "color" },
+      "serviceColdCalling": { "value": "{color.raw.magenta}", "type": "color" },
+      "servicePresalesGtm": { "value": "{color.raw.violet}", "type": "color" },
+      "pricing": { "value": "{color.raw.platinum}", "type": "color" },
+      "insights": { "value": "{color.raw.violet}", "type": "color" },
+      "article": { "value": "{color.raw.violet}", "type": "color" },
+      "contact": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "strategyCall": { "value": "{color.raw.violet}", "type": "color" },
+      "privacy": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "cookies": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "terms": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "cookiePreferences": { "value": "{color.raw.cyanAlt}", "type": "color" },
+      "notFound": { "value": "{color.raw.magenta}", "type": "color" }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "display": { "value": "'Bricolage Grotesque', sans-serif", "type": "fontFamily", "licenseNote": "Google Font, no license fee confirmed; verify final weights loaded match production usage." },
+      "body": { "value": "'Work Sans', Helvetica, Arial, sans-serif", "type": "fontFamily" },
+      "mono": { "value": "'Space Mono', monospace", "type": "fontFamily" },
+      "editorial": { "value": "'Source Serif 4', Georgia, serif", "type": "fontFamily", "usedOn": ["article"] }
+    },
+    "fontWeight": {
+      "regular": { "value": 400, "type": "fontWeight" },
+      "medium": { "value": 500, "type": "fontWeight" },
+      "semibold": { "value": 600, "type": "fontWeight" },
+      "bold": { "value": 700, "type": "fontWeight" },
+      "black": { "value": 800, "type": "fontWeight" }
+    },
+    "fontSize": {
+      "displayFluid": { "value": "clamp(28px, 4.4vw, 50px)", "type": "dimension" },
+      "h1Fluid": { "value": "clamp(30px, 4vw, 46px)", "type": "dimension" },
+      "h2Fluid": { "value": "clamp(24px, 3.4vw, 38px)", "type": "dimension" },
+      "body": { "value": "16px", "type": "dimension" },
+      "bodyLarge": { "value": "18px", "type": "dimension" },
+      "small": { "value": "13px", "type": "dimension" }
+    },
+    "lineHeight": { "tight": { "value": 1.15, "type": "number" }, "body": { "value": 1.65, "type": "number" } },
+    "letterSpacing": { "label": { "value": "0.06em", "type": "dimension" } }
+  },
+  "spacing": {
+    "1": { "value": "4px", "type": "dimension" }, "2": { "value": "8px", "type": "dimension" },
+    "3": { "value": "12px", "type": "dimension" }, "4": { "value": "16px", "type": "dimension" },
+    "5": { "value": "20px", "type": "dimension" }, "6": { "value": "24px", "type": "dimension" },
+    "7": { "value": "32px", "type": "dimension" }, "8": { "value": "40px", "type": "dimension" },
+    "9": { "value": "56px", "type": "dimension" }, "10": { "value": "70px", "type": "dimension" },
+    "11": { "value": "100px", "type": "dimension" }, "12": { "value": "150px", "type": "dimension" }
+  },
+  "layout": {
+    "containerNarrow": { "value": "640px", "type": "dimension" },
+    "containerArticle": { "value": "720px", "type": "dimension" },
+    "containerDefault": { "value": "1000px", "type": "dimension" },
+    "containerWide": { "value": "1180px", "type": "dimension" },
+    "pageGutter": { "value": "40px", "type": "dimension" },
+    "pageGutterTight": { "value": "28px", "type": "dimension" },
+    "breakpoint": {
+      "mobile": { "value": "430px", "type": "dimension" },
+      "tablet": { "value": "768px", "type": "dimension" },
+      "tabletLandscape": { "value": "1024px", "type": "dimension" },
+      "laptop": { "value": "1280px", "type": "dimension" },
+      "desktop": { "value": "1440px", "type": "dimension" }
+    }
+  },
+  "border": {
+    "radiusSm": { "value": "2px", "type": "dimension" },
+    "radiusMd": { "value": "4px", "type": "dimension" },
+    "radiusLg": { "value": "6px", "type": "dimension" },
+    "width": { "value": "1px", "type": "dimension" }
+  },
+  "shadow": {
+    "glowAccent": { "value": "0 0 32px rgba(139,92,246,0.32)", "type": "shadow", "note": "Used only on the hero mark, never as ambient page glow." },
+    "card": { "value": "0 1px 0 rgba(255,255,255,0.06)", "type": "shadow" }
+  },
+  "gradient": {
+    "spectral": { "value": "linear-gradient(120deg, {color.raw.blue}, {color.raw.violet} 55%, {color.raw.magenta})", "type": "gradient" },
+    "signal": { "value": "linear-gradient(90deg, {color.raw.blue}, {color.raw.violet}, {color.raw.magenta})", "type": "gradient" },
+    "cyanBlue": { "value": "linear-gradient(120deg, {color.raw.blue}, {color.raw.cyanAlt})", "type": "gradient" }
+  },
+  "logo": {
+    "sizeNav": { "value": "24px", "type": "dimension" },
+    "sizeNavLarge": { "value": "26px", "type": "dimension" },
+    "sizeHero": { "value": "108px", "type": "dimension" },
+    "sizeFooter": { "value": "20px", "type": "dimension" },
+    "sizeTransitionMark": { "value": "56px", "type": "dimension" }
+  },
+  "navigation": {
+    "height": { "value": "88px", "type": "dimension" },
+    "paddingY": { "value": "18px", "type": "dimension" },
+    "paddingX": { "value": "28px", "type": "dimension" },
+    "gap": { "value": "18px", "type": "dimension" }
+  },
+  "button": {
+    "paddingY": { "value": "14px", "type": "dimension" },
+    "paddingX": { "value": "24px", "type": "dimension" },
+    "paddingYLarge": { "value": "17px", "type": "dimension" },
+    "paddingXLarge": { "value": "30px", "type": "dimension" },
+    "fontSize": { "value": "14px", "type": "dimension" }
+  },
+  "form": {
+    "paddingY": { "value": "12px", "type": "dimension" },
+    "paddingX": { "value": "14px", "type": "dimension" },
+    "fontSize": { "value": "14.5px", "type": "dimension" },
+    "borderDefault": { "value": "{color.semantic.borderDefault}", "type": "color" },
+    "borderError": { "value": "{color.semantic.error}", "type": "color" },
+    "borderFocus": { "value": "{color.raw.violet}", "type": "color" }
+  },
+  "zIndex": {
+    "nav": { "value": 60, "type": "number" },
+    "mobileNav": { "value": 80, "type": "number" },
+    "modal": { "value": 100, "type": "number" },
+    "transitionOverlay": { "value": 200, "type": "number" }
+  },
+  "motion": {
+    "durationFast": { "value": "300ms", "type": "duration" },
+    "durationBase": { "value": "420ms", "type": "duration" },
+    "durationSlow": { "value": "720ms", "type": "duration" },
+    "durationReduced": { "value": "120ms", "type": "duration" },
+    "easeStandard": { "value": "cubic-bezier(.2,.7,.2,1)", "type": "cubicBezier" },
+    "easeSpring": { "value": "cubic-bezier(.2,.8,.2,1)", "type": "cubicBezier" }
+  },
+  "transitionOverlay": {
+    "background": { "value": "{color.semantic.surfaceBase}", "type": "color" },
+    "markScaleStart": { "value": 0.6, "type": "number" },
+    "markScaleEnd": { "value": 1.15, "type": "number" }
+  },
+  "requiresConfirmation": [
+    "Final font license status for Bricolage Grotesque / Work Sans / Space Mono / Source Serif 4 in production (currently loaded via Google Fonts CDN, no cost confirmed beyond that).",
+    "Whether page-theme accent colors should become CSS custom properties consumed by Tailwind's theme() function or kept as a plain JS/TS const map.",
+    "Whether brand color values require formal trademark/brand-guideline sign-off before this token set is treated as final."
+  ]
+}

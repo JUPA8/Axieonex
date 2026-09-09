@@ -1,0 +1,26 @@
+{
+  "$description": "Content inventory by route/section with approval status. Static prototype copy is the source of truth unless marked otherwise.",
+  "content": [
+    { "route": "/", "section": "hero headline", "text": "We build revenue pipelines. Not just meetings.", "status": "approved" },
+    { "route": "/", "section": "positioning line", "text": "We do not automate sales. We orchestrate revenue.", "status": "approved" },
+    { "route": "/", "section": "three-stage system copy", "text": "Detection / Orchestration / Qualified conversation descriptions", "status": "approved" },
+    { "route": "/", "section": "FAQ", "text": "6 questions covering what AXIEONEX provides, AI/human split, suitability, qualification, channels, post-reply process", "status": "approved" },
+    { "route": "/about", "section": "positioning and principles", "text": "What AXIEONEX is, why it exists, AI+human philosophy", "status": "approved, no company history/founding-date claims included" },
+    { "route": "/how-we-work", "section": "12-step operating sequence", "text": "Market definition through continuous optimization", "status": "approved" },
+    { "route": "/services", "section": "7 service summaries", "text": "Lead Generation, Appointment Setting, Hybrid SDR, Cold Email, LinkedIn Outreach, Cold Calling, Pre-Sales/GTM", "status": "approved" },
+    { "route": "/services/*", "section": "per-service problem/AI/human/client/process/deliverables", "text": "see ServiceDetailTemplate data per slug", "status": "approved, no invented statistics or guarantees" },
+    { "route": "/pricing", "section": "engagement tiers", "text": "Foundation / Growth / Scale / Custom Revenue System, all marked Custom or Contact for scope", "status": "approved, figures intentionally withheld pending business decision" },
+    { "route": "/insights", "section": "6 article previews", "text": "titles and categories only, from the approved topic list", "status": "approved titles; full bodies require owner content" },
+    { "route": "/insights/[slug]", "section": "article body", "text": "template structure complete, body copy placeholder", "status": "requires owner-provided content, author, and publication date" },
+    { "route": "/contact", "section": "form copy and purpose selector", "text": "General / Service / Partnership / Media / Existing-client enquiry types", "status": "approved" },
+    { "route": "/contact", "section": "contact email", "text": "info@axieonexsales.net", "status": "approved, confirmed by user" },
+    { "route": "/book-strategy-call", "section": "wizard step copy", "text": "intro, personal, company, revenue situation, scheduling, review", "status": "approved" },
+    { "route": "/privacy", "section": "full policy body", "text": "structured legal framework with bracketed placeholders", "status": "requires legal review; entity/DPO/processor/retention details require owner confirmation" },
+    { "route": "/cookies", "section": "full policy body", "text": "structured cookie-category framework with bracketed placeholders", "status": "requires legal review; cookie inventory/vendors require technical confirmation" },
+    { "route": "/terms", "section": "full terms body", "text": "structured legal framework with bracketed placeholders", "status": "requires legal review; governing law/entity/commercial terms require owner confirmation" },
+    { "route": "/cookie-preferences", "section": "category descriptions and controls", "text": "Strictly Necessary, Functional, Analytics, Preferences, Marketing", "status": "approved structure, vendor list requires technical confirmation" },
+    { "route": "app/not-found.tsx", "section": "404 messaging", "text": "signal-not-found narrative with recovery links", "status": "approved" },
+    { "route": "footer (all pages)", "section": "operating statement and copyright", "text": "info@axieonexsales.net, operating globally across North America, Europe and selected international markets, (c) 2026 Axieonex Sales", "status": "approved, confirmed by user" }
+  ],
+  "counts": { "totalContentEntries": 20, "requiresOwnerConfirmation": ["about company-history depth", "article bodies/authors/dates", "pricing figures", "legal entity and processor details", "cookie vendor inventory"] }
+}

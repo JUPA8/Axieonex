@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&family=Source+Serif+4:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  body{margin:0;background:#0C0D12;color:#EDEDF2;-webkit-font-smoothing:antialiased}
+  a{color:#EDEDF2;text-decoration:none}
+  a:hover{color:#B79CEF}
+  :focus-visible{outline:2px solid #B79CEF;outline-offset:3px}
+  .axNavLink{font-size:14.5px;color:#8E8E9A}
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;background:#0C0D12}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:56px;height:56px;transform:scale(.6);opacity:.7;transition:transform .38s ease,opacity .38s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1.1);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+  #axProgressBar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#3E7BFA,#B79CEF);z-index:70;transition:width .1s linear}
+  .axArticleBody p{font-family:'Source Serif 4',Georgia,serif;font-size:18px;line-height:1.75;color:#D8D8E2;margin:0 0 22px}
+  .axArticleBody h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:40px 0 16px}
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:#0C0D12;color:#EDEDF2">
+  <div id="axProgressBar" style="width:{{ progressPct }}%"></div>
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:20px 40px;background:rgba(12,13,18,0.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" aria-label="Axieonex home" style="display:flex;align-items:center;gap:10px;justify-self:start">
+      <div style="width:26px;height:26px"><dc-import name="LogoMark" hint-size="26px,26px"></dc-import></div>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px">AXIEONEX</span>
+    </a>
+    <div style="display:flex;gap:26px;flex-wrap:wrap;justify-self:center">
+      <a class="axNavLink" href="Axieonex Insights.dc.html" onClick="{{ navTransition }}">Insights</a>
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}">Home</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="justify-self:end;background:linear-gradient(120deg,#8B5CF6,#B79CEF);color:#0C0D12;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:2px;white-space:nowrap">Book a strategy call</a>
+  </nav>
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="56px,56px"></dc-import></div></div>
+
+  <article style="max-width:720px;margin:0 auto;padding:150px 40px 60px">
+    <div style="font-size:12px;font-weight:600;color:{{ article.color }};margin-bottom:14px">{{ article.category }}</div>
+    <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.2;margin:0 0 20px">{{ article.title }}</h1>
+    <p style="font-size:13px;color:#7A7A88;margin:0 0 40px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,0.08)">Axieonex editorial team</p>
+
+    <div class="axArticleBody">
+      <p>{{ article.intro }}</p>
+      <h2>{{ article.h2a }}</h2>
+      <p>{{ article.bodyA }}</p>
+      <h2>{{ article.h2b }}</h2>
+      <p>{{ article.bodyB }}</p>
+      <h2>What this means for your pipeline</h2>
+      <p>{{ article.closing }}</p>
+    </div>
+
+    <div style="margin-top:44px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:14px">
+      <a href="Axieonex Insights.dc.html" onClick="{{ navTransition }}" style="font-size:13.5px;color:#8E8E9A">&#8592; All insights</a>
+    </div>
+  </article>
+
+  <section style="max-width:720px;margin:0 auto;padding:0 40px 100px">
+    <div style="font-size:12px;font-weight:600;color:#8E8E9A;margin-bottom:16px">Related insights</div>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ related }}" as="r" hint-placeholder-count="2">
+        <a href="{{ r.href }}" onClick="{{ r.navTransition }}" style="display:block;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08);font-size:15.5px;font-weight:600">{{ r.title }}</a>
+      </sc-for>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="display:inline-block;margin-top:34px;background:linear-gradient(120deg,#8B5CF6,#B79CEF);color:#0C0D12;font-size:14.5px;font-weight:600;padding:14px 24px;border-radius:2px">Book a strategy call</a>
+  </section>
+
+  <footer style="background:#08090C;padding:40px;text-align:center;font-size:12.5px;color:#6E6E76">
+    info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.<br />&#169; 2026 Axieonex Sales. All rights reserved.
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ARTICLES = {
+  'ai-human-hybrid-revenue-systems': {
+    title: 'How We Use an AI and Human Hybrid Model to Build Predictable Revenue', category: 'Operating model', color: '#3E7BFA',
+    intro: 'Predictable pipeline does not come from AI alone, and it does not come from headcount alone. It comes from a system where each does the part it is actually good at.',
+    h2a: 'Where AI adds real leverage', bodyA: 'AI is best at continuous, tireless work: scanning market signals, scoring accounts, sequencing outreach, and surfacing the accounts worth a human conversation.',
+    h2b: 'Where human judgment is irreplaceable', bodyB: 'Tone, timing, objection handling and the read on whether a prospect is genuinely ready to buy still require an experienced person. Removing that layer is where most automated outreach fails.',
+    closing: 'Axieonex is built around this division of labor: AI for volume and pattern-matching, humans for judgment and conversation.'
+  },
+  'ai-sales-systems-vs-traditional-sdr-teams': {
+    title: 'AI-Powered Sales Systems vs. Traditional Human Teams', category: 'Operating model', color: '#3E7BFA',
+    intro: 'The choice is rarely as binary as "AI or people." The more useful question is which parts of outbound each should own.',
+    h2a: 'What traditional SDR teams do well', bodyA: 'A well-trained SDR team brings judgment, relationship-building and adaptability that generic automation cannot replicate on its own.',
+    h2b: 'What breaks at scale', bodyB: 'Traditional teams struggle to keep pace with the volume of signal available today, and quality becomes inconsistent as headcount grows.',
+    closing: 'A coordinated AI and human system keeps the judgment while removing the volume ceiling.'
+  },
+  'why-internal-sdr-hiring-is-broken': {
+    title: 'Why Hiring SDRs Is Broken', category: 'Hiring', color: '#E94FA8',
+    intro: 'Building an internal SDR function usually means months of hiring and ramp before the first reliable pipeline appears.',
+    h2a: 'The hidden cost of ramp time', bodyA: 'Recruiting, training and management overhead all land before any revenue does, and turnover often resets that clock.',
+    h2b: 'What replaces it', bodyB: 'A system that is already operating, with signal detection, sequencing and qualification built in, removes the ramp-time problem entirely.',
+    closing: 'The question is not whether to invest in outbound. It is whether to rebuild the machinery from scratch or plug into one that already runs.'
+  },
+  'modern-b2b-revenue-systems': {
+    title: 'From Cold Outreach to Revenue Systems', category: 'Strategy', color: '#35D3E0',
+    intro: 'Cold outreach as a standalone tactic is losing effectiveness. What works now is outreach embedded in a larger, coordinated system.',
+    h2a: 'From channel to system', bodyA: 'Email, LinkedIn and calling perform better together, sequenced with shared context, than they do run independently.',
+    h2b: 'Signal changes everything', bodyB: 'Reaching out because of a real trigger, funding, hiring, technology change, converts differently than reaching out cold.',
+    closing: 'A modern revenue system treats every channel as one coordinated motion rather than a separate campaign.'
+  },
+  'why-ai-sales-tools-fail-without-human-oversight': {
+    title: 'Why Most AI Sales Tools Fail Without Human Oversight', category: 'Operating model', color: '#3E7BFA',
+    intro: 'Unsupervised AI outreach tends to degrade quickly: messaging becomes generic, timing becomes mechanical, and prospects notice.',
+    h2a: 'Where automation drifts', bodyA: 'Without a human reviewing tone and cadence, AI-generated sequences drift toward the lowest common denominator of messaging.',
+    h2b: 'The role of supervision', bodyB: 'A strategist reviewing quality and a rep handling every real reply keeps the system credible in front of prospects.',
+    closing: 'AI without oversight optimizes for volume. AI with oversight optimizes for quality and volume together.'
+  },
+  'real-cost-internal-sales-team-vs-outsourced': {
+    title: 'The True Cost of In-House Sales Teams vs. Outsourced AI-Driven Systems', category: 'Economics', color: '#8B5CF6',
+    intro: 'Comparing costs fairly means counting more than salary: recruiting, tooling, management time and ramp all belong in the equation.',
+    h2a: 'What an internal build actually costs', bodyA: 'Beyond compensation, an internal team requires tooling, management overhead and time before it becomes productive.',
+    h2b: 'What changes with an outsourced system', bodyB: 'A running system removes the ramp period and the tooling overhead, replacing it with one accountable engagement.',
+    closing: 'We do not publish comparative figures here. Bring your current numbers to a strategy call and we will map the real difference for your business.'
+  }
+};
+const ORDER = Object.keys(ARTICLES);
+
+function getSlug() {
+  try { return new URLSearchParams(window.location.search).get('slug') || ORDER[0]; } catch (e) { return ORDER[0]; }
+}
+
+class Component extends DCLogic {
+  state = { transitioning: false, progress: 0 };
+
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+
+  componentDidMount() {
+    this._onScroll = () => {
+      const h = document.documentElement;
+      const scrolled = h.scrollTop;
+      const max = h.scrollHeight - h.clientHeight;
+      this.setState({ progress: max > 0 ? Math.min(100, (scrolled / max) * 100) : 0 });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+  }
+  componentWillUnmount() { if (this._onScroll) window.removeEventListener('scroll', this._onScroll); }
+
+  renderVals() {
+    const slug = getSlug();
+    const article = ARTICLES[slug] || ARTICLES[ORDER[0]];
+    const relatedSlugs = ORDER.filter(s => s !== slug).slice(0, 2);
+    const related = relatedSlugs.map(s => ({
+      title: ARTICLES[s].title,
+      href: 'Axieonex Article.dc.html?slug=' + s,
+      navTransition: (e) => this.navTransition(e)
+    }));
+    return {
+      transitionClass: this.state.transitioning ? 'is-active' : '',
+      navTransition: (e) => this.navTransition(e),
+      progressPct: Math.round(this.state.progress),
+      article,
+      related
+    };
+  }
+}
+</script>
+</body>
+</html>

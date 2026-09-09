@@ -1,0 +1,7 @@
+Concept B — Convergence
+Recommended type: Space Grotesk Medium (production: Aeonik / GT Walsheim Medium)
+Ink: #101A2B   Accent: #0E9A8A
+
+All symbol files are pure paths, no filters, no rasters, no gradients.
+Wordmark/lockup files use live <text> with a fallback stack for review only —
+outline the type (convert to paths) before any production use.

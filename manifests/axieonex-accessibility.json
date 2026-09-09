@@ -1,0 +1,29 @@
+{
+  "$description": "Accessibility requirements by route/component, targeting WCAG 2.2 AA.",
+  "global": {
+    "skipLink": "required on every page, targets #main-content",
+    "headingHierarchy": "single h1 per page, sequential h2/h3, verified on all 28 routes",
+    "landmarks": "header/nav, main, footer on every page",
+    "focusVisible": "2px outline, --focus-color token, never removed",
+    "contrast": "4.5:1 body text, 3:1 large/headline text, verified against each page-theme background",
+    "reducedMotion": "every custom animation has a reduced-motion equivalent, see axieonex-motion.json",
+    "touchTargets": "minimum 44x44px on all interactive controls",
+    "colorOnly": "no state communicated by color alone (form errors always paired with text, toggles always paired with a label)"
+  },
+  "routes": [
+    { "route": "/", "headingStructure": "h1 hero, h2 per section", "landmarks": "standard", "keyboard": "nav, magnetic CTAs, FAQ all keyboard operable", "focus": "hero text never depends on animation for visibility", "labels": "n/a (no forms)", "liveRegions": "n/a", "touchTargets": "CTA buttons >=44px" },
+    { "route": "/about", "headingStructure": "h1, h2 per principle", "landmarks": "standard", "keyboard": "standard", "focus": "standard", "labels": "n/a", "liveRegions": "n/a", "touchTargets": "standard" },
+    { "route": "/how-we-work", "headingStructure": "h1, h2 per stage", "landmarks": "standard", "keyboard": "scroll-chapter content must remain in DOM order for keyboard/reader users, not purely scroll-jacked", "focus": "standard", "labels": "n/a", "liveRegions": "n/a", "touchTargets": "standard" },
+    { "route": "/services", "headingStructure": "h1, h2 per module", "landmarks": "standard", "keyboard": "diagram nodes are real buttons, tabbable in a logical order", "focus": "selecting a node moves visible focus/aria-live update to the panel", "labels": "node buttons have accessible names (service names)", "liveRegions": "aria-live polite on panel content swap", "touchTargets": "nodes >=44px" },
+    { "route": "/services/*", "headingStructure": "h1 service name, h2 per subsection", "landmarks": "standard", "keyboard": "standard", "focus": "standard", "labels": "n/a", "liveRegions": "n/a", "touchTargets": "standard" },
+    { "route": "/pricing", "headingStructure": "h1, h2 per tier/section", "landmarks": "standard", "keyboard": "tier cards are real buttons", "focus": "standard", "labels": "tier buttons named by tier", "liveRegions": "aria-live on tier selection change", "touchTargets": "standard" },
+    { "route": "/insights", "headingStructure": "h1, h2 featured, h2 per article card", "landmarks": "standard", "keyboard": "search input and filters tabbable", "focus": "standard", "labels": "search input has visible label", "liveRegions": "aria-live announcing result count on filter/search", "touchTargets": "standard" },
+    { "route": "/insights/[slug]", "headingStructure": "h1 title, sequential h2/h3 for body sections", "landmarks": "standard, article element", "keyboard": "standard", "focus": "standard", "labels": "n/a", "liveRegions": "n/a", "touchTargets": "share controls >=44px" },
+    { "route": "/contact", "headingStructure": "h1, h2 form", "landmarks": "standard", "keyboard": "full form tabbable in logical order", "focus": "first invalid field receives focus on failed submit", "labels": "every field has a programmatic label", "liveRegions": "aria-live for submit success/error", "touchTargets": "standard" },
+    { "route": "/book-strategy-call", "headingStructure": "h1 intro, h2 per step", "landmarks": "standard", "keyboard": "back/next/slot buttons all keyboard operable", "focus": "focus moves to new step's heading on step change", "labels": "every field labeled, error text linked via aria-describedby", "liveRegions": "aria-live for step change, validation errors, submission result", "touchTargets": "slot buttons and step controls >=44px" },
+    { "route": "/privacy /cookies /terms", "headingStructure": "h1, h2 per numbered section", "landmarks": "standard", "keyboard": "TOC links keyboard operable, anchor targets have scroll-margin-top", "focus": "standard", "labels": "n/a", "liveRegions": "n/a", "touchTargets": "standard" },
+    { "route": "/cookie-preferences", "headingStructure": "h1, h2 per category", "landmarks": "standard", "keyboard": "every switch is a native checkbox, operable via space/enter", "focus": "standard", "labels": "every switch has a visible label plus description", "liveRegions": "aria-live confirms save action", "touchTargets": "switches >=44px" },
+    { "route": "app/not-found.tsx", "headingStructure": "h1 error message", "landmarks": "standard", "keyboard": "recovery links immediately focusable, not gated by animation", "focus": "h1 or main receives focus on load", "labels": "n/a", "liveRegions": "n/a", "touchTargets": "standard" }
+  ],
+  "counts": { "routesDocumented": 13, "routesMissingAccessibilityGuidance": 0 }
+}

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "axieonex-dev",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Users/abdelrahmanahmed/Desktop/axieonex-rebuild && pnpm dev"],
+      "port": 3000
+    }
+  ]
+}

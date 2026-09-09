@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink-0:#06070D;--ink-1:#0A0C17;--ink-2:#0D1020;
+    --paper-0:#F2F4FA;--paper-1:#EDF0F8;
+    --blue:#3E7BFA;--cyan:#35D3E0;--violet:#8B5CF6;--magenta:#E94FA8;
+    --seam:linear-gradient(90deg,var(--blue),var(--violet),var(--magenta));
+  }
+  body{margin:0;background:var(--ink-0);color:#F2F3F8;-webkit-font-smoothing:antialiased}
+  a{color:#F2F3F8;text-decoration:none}
+  a:hover{color:#8B5CF6}
+  button{font-family:inherit;cursor:pointer}
+  :focus-visible{outline:2px solid #35D3E0;outline-offset:3px}
+  ::selection{background:#8B5CF6;color:#fff}
+  .axSeam{height:2px;background:var(--seam);opacity:.5}
+
+  [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  [data-reveal].is-in{opacity:1;transform:translateY(0)}
+  [data-reveal="scale"]{transform:scale(.94);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+  [data-reveal="scale"].is-in{transform:scale(1)}
+  [data-reveal="mask-left"]{opacity:1;transform:none;clip-path:inset(0 100% 0 0);transition:clip-path .9s cubic-bezier(.2,.7,.2,1)}
+  [data-reveal="mask-left"].is-in{clip-path:inset(0 0 0 0)}
+  [data-reveal="mask-right"]{opacity:1;transform:none;clip-path:inset(0 0 0 100%);transition:clip-path .9s cubic-bezier(.2,.7,.2,1)}
+  [data-reveal="mask-right"].is-in{clip-path:inset(0 0 0 0)}
+  [data-reveal="slide-lg"]{transform:translateY(52px)}
+  [data-reveal="slide-lg"].is-in{transform:translateY(0)}
+  @media (prefers-reduced-motion: reduce){
+    [data-reveal]{opacity:1!important;transform:none!important;clip-path:none!important;transition:none!important}
+  }
+
+  section{scroll-margin-top:88px}
+
+  @keyframes axFragmentIn{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+  .axFragment{opacity:0;animation:axFragmentIn .5s ease both}
+  @keyframes axHumanIn{0%{opacity:0;transform:scale(.5)}55%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1)}}
+  .axHumanDot{opacity:0;animation:axHumanIn 1.3s ease both;animation-delay:1.1s}
+  @keyframes axMarkReveal{0%{clip-path:circle(0% at 50% 50%);filter:blur(9px) brightness(1.6)}100%{clip-path:circle(78% at 50% 50%);filter:blur(0) brightness(1)}}
+  .axMark{animation:axMarkReveal 1.1s cubic-bezier(.2,.75,.15,1) both;animation-delay:1.55s}
+  @keyframes axCaptionIn{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+  .axCaption{opacity:0;animation:axCaptionIn .6s ease both}
+  @media (prefers-reduced-motion: reduce){
+    .axFragment,.axMark,.axCaption,.axHumanDot{animation:none!important;opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important}
+  }
+
+  @keyframes axHeroLine{0%{transform:translateY(34px)}100%{transform:translateY(0)}}
+  .axHeroLine{opacity:1;animation:axHeroLine .9s cubic-bezier(.2,.7,.2,1) both}
+  @media (prefers-reduced-motion: reduce){ .axHeroLine{animation:none!important;transform:none!important} }
+
+  @media (prefers-reduced-motion: no-preference){
+    .axDot{animation:axTravel var(--dur,7s) linear infinite}
+    @keyframes axTravel{0%{offset-distance:0%;opacity:0}8%{opacity:1}92%{opacity:1}100%{offset-distance:100%;opacity:0}}
+  }
+  @media (prefers-reduced-motion: reduce){ .axDot{offset-distance:55%} }
+
+  .axNav{transition:padding .35s ease,background .35s ease,border-color .35s ease}
+  .axNav.axNavCompact{padding-top:12px!important;padding-bottom:12px!important;background:rgba(6,7,13,0.88)!important;border-color:rgba(255,255,255,0.1)!important}
+  .axNavLink{position:relative;z-index:1;padding:9px 14px;color:#B7BBCB;font-size:14.5px;white-space:nowrap;border-radius:999px;transition:color .3s ease}
+  .axNavLink[aria-current="true"]{color:#F2F3F8}
+  .axNavLinksRow{white-space:nowrap;position:relative}
+  @keyframes axNavIn{0%{opacity:0;transform:translateY(-10px)}100%{opacity:1;transform:translateY(0)}}
+  .axNavLink{opacity:0;animation:axNavIn .6s cubic-bezier(.2,.7,.2,1) both}
+  .axNavLink:nth-of-type(1){animation-delay:.08s}.axNavLink:nth-of-type(2){animation-delay:.14s}.axNavLink:nth-of-type(3){animation-delay:.2s}.axNavLink:nth-of-type(4){animation-delay:.26s}.axNavLink:nth-of-type(5){animation-delay:.32s}.axNavLink:nth-of-type(6){animation-delay:.38s}
+  .axNavCta{animation-delay:.46s}
+  @media (prefers-reduced-motion: reduce){ .axNavLink{animation:none!important;opacity:1!important;transform:none!important} }
+  .axWordmark{transition:opacity .3s ease,max-width .3s ease,margin .3s ease;max-width:120px;overflow:hidden;white-space:nowrap}
+  .axNavCompact .axWordmark{opacity:0;max-width:0;margin-left:0}
+  .axLogoLockup{display:flex;align-items:center;gap:10px;transition:transform .3s ease}
+  .axLogoLockup:hover .axLogoMarkBox{transform:scale(1.08) rotate(-4deg)}
+  .axLogoMarkBox{transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .axNavLink[aria-current="true"]{color:#F2F3F8}
+  #axNavIndicator{position:absolute;left:0;top:0;height:0;width:0;background:rgba(139,92,246,0.14);border:1px solid rgba(139,92,246,0.4);border-radius:999px;transition:left .45s cubic-bezier(.34,1.4,.64,1),top .45s cubic-bezier(.34,1.4,.64,1),width .45s cubic-bezier(.34,1.4,.64,1),height .45s cubic-bezier(.34,1.4,.64,1);pointer-events:none;z-index:0}
+
+  .axMobileToggle{display:none}
+  .axMobilePanel{position:fixed;inset:0;z-index:80;background:var(--ink-0);display:flex;flex-direction:column;padding:110px 40px 40px;transform:translateY(-100%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+  .axMobilePanel.is-open{transform:translateY(0)}
+  @media (max-width:980px){
+    .axNavLinksRow{display:none!important}
+    .axMobileToggle{display:flex!important}
+  }
+  @media (min-width:981px){
+    nav[data-nav]{gap:20px;padding-left:28px;padding-right:28px}
+    .axNavLinksRow{gap:20px}
+  }
+
+  .axCapVisual{position:absolute;inset:0;opacity:0;transform:scale(.94);transition:opacity .6s ease,transform .6s ease}
+  .axCapVisual.is-active{opacity:1;transform:scale(1)}
+  @keyframes axPulse{0%,100%{opacity:.4}50%{opacity:1}}
+  .axPulseDot{animation:axPulse 2.4s ease-in-out infinite}
+  @keyframes axScan{0%{transform:translateX(0)}100%{transform:translateX(400px)}}
+  .axScanLine{animation:axScan 3.8s linear infinite}
+  @keyframes axFlowDash{to{stroke-dashoffset:-140}}
+  .axFlowPath{stroke-dasharray:5 9;animation:axFlowDash 2.6s linear infinite}
+  @keyframes axHumanPulse{0%,100%{opacity:.25;r:20}50%{opacity:.6;r:26}}
+  .axHumanRing{animation:axHumanPulse 2.6s ease-in-out infinite}
+  @media (prefers-reduced-motion: reduce){ .axPulseDot,.axScanLine,.axFlowPath,.axHumanRing{animation:none;opacity:.85} }
+  .axEngineWorld0{background:radial-gradient(circle at 75% 30%,rgba(53,211,224,0.07),transparent 55%),var(--ink-2)}
+  .axEngineWorld1{background:radial-gradient(circle at 50% 50%,rgba(139,92,246,0.1),transparent 60%),var(--ink-2)}
+  .axEngineWorld2{background:radial-gradient(circle at 45% 65%,rgba(232,179,104,0.08),transparent 55%),var(--ink-2)}
+
+  .axStage{border-left:2px solid rgba(255,255,255,0.08);padding-left:28px;transition:border-color .4s ease}
+  .axStage.is-active{border-color:#8B5CF6}
+  .axStage .axStageNum{color:#3A3E52;transition:color .4s ease}
+  .axStage.is-active .axStageNum{color:#8B5CF6}
+
+  .axMagnetic{transition:transform .2s ease}
+
+  details.axFaq summary::-webkit-details-marker{display:none}
+  .axFaqPlus{transition:transform .3s ease}
+  details[open] .axFaqPlus{transform:rotate(45deg)}
+  .axLinkUnderline{position:relative}
+  .axLinkUnderline::after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:0;background:#8B5CF6;transition:width .35s ease}
+  .axLinkUnderline:hover::after{width:100%}
+
+  /* Booking modal */
+  .axModalOverlay{position:fixed;inset:0;z-index:100;background:rgba(4,5,10,0.72);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px}
+  .axModalPanel{background:var(--ink-1);border:1px solid rgba(255,255,255,0.09);border-radius:6px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;padding:38px}
+  .axField{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+  .axField label{font-size:13px;color:#B7BBCB}
+  .axField input,.axField select,.axField textarea{background:#05060B;border:1px solid rgba(255,255,255,0.14);border-radius:4px;color:#F2F3F8;padding:12px 14px;font-size:14.5px;font-family:inherit}
+  .axField input:focus,.axField select:focus,.axField textarea:focus{border-color:#8B5CF6}
+  .axFieldError{border-color:#E94FA8!important}
+  .axErrorText{font-size:12.5px;color:#E94FA8;margin:0}
+  .axStepDot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.16)}
+  .axStepDot.is-done{background:#8B5CF6}
+  .axSlotBtn{border:1px solid rgba(255,255,255,0.14);background:#05060B;color:#F2F3F8;border-radius:4px;padding:10px;font-size:13px;text-align:center}
+  .axSlotBtn.is-selected{border-color:#35D3E0;background:rgba(53,211,224,0.1)}
+
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .32s ease;background:#06070D}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:64px;height:64px;transform:scale(.5);opacity:.7;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .42s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1.2);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+  @media (max-width:860px){
+    .axHeroGrid{grid-template-columns:1fr!important}
+    .axHeroVisual{order:-1;height:280px!important}
+    .axCapGrid{grid-template-columns:1fr!important}
+    .axCapStickyCol{position:static!important;height:220px!important;margin-bottom:20px}
+    .axDivGrid{grid-template-columns:1fr!important}
+  }
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:var(--ink-0);color:#F2F3F8;overflow-x:hidden">
+
+  <!-- NAV -->
+  <nav class="axNav" data-nav style="position:fixed;top:0;left:0;right:0;z-index:70;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:20px 40px;border-bottom:1px solid rgba(255,255,255,0.06)">
+    <a href="/" aria-label="Axieonex home" class="axLogoLockup" style="justify-self:start;grid-column:1">
+      <div class="axLogoMarkBox" style="width:30px;height:30px;flex:none"><dc-import name="LogoMark" hint-size="30px,30px"></dc-import></div>
+      <span class="axWordmark" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.01em;display:inline-block">AXIEONEX</span>
+    </a>
+    <div class="axNavLinksRow" style="position:relative;display:flex;gap:30px;justify-self:center">
+      <a class="axNavLink" data-scroll="home" href="#home" aria-current="{{ isHomeActive }}">Home</a>
+      <a class="axNavLink" href="Axieonex About.dc.html" onClick="{{ navTransition }}">About</a>
+      <a class="axNavLink" href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}">How We Work</a>
+      <a class="axNavLink" data-scroll="services" href="#services" aria-current="{{ isServicesActive }}">Services</a>
+      <a class="axNavLink" data-scroll="articles" href="#articles" aria-current="{{ isInsightsActive }}">Insights</a>
+      <a class="axNavLink" href="Axieonex Pricing.dc.html" onClick="{{ navTransition }}">Pricing</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+      <span id="axNavIndicator"></span>
+    </div>
+    <div style="justify-self:end;display:flex;width:max-content;flex:none;grid-column:3">
+      <button class="axMagnetic axNavCta" data-magnetic onClick="{{ openBooking }}" style="background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);border:none;color:#fff;font-size:13.5px;font-weight:600;padding:11px 22px 11px 20px;clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0">Book a strategy call <span aria-hidden="true">&#8594;</span></button>
+      <button class="axMobileToggle" onClick="{{ toggleMobileNav }}" aria-label="Open menu" aria-expanded="{{ mobileNavOpen }}" style="background:none;border:1px solid rgba(255,255,255,0.16);border-radius:4px;color:#F2F3F8;width:40px;height:40px;align-items:center;justify-content:center;font-size:18px">&#9776;</button>
+    </div>
+  </nav>
+
+  <div class="axMobilePanel {{ mobileNavClass }}" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <button onClick="{{ toggleMobileNav }}" aria-label="Close menu" style="position:absolute;top:22px;right:28px;background:none;border:none;color:#F2F3F8;font-size:26px">&#215;</button>
+    <div style="display:flex;flex-direction:column;gap:26px">
+      <a href="#home" onClick="{{ closeMobileAndScroll_home }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:28px">Home</a>
+      <a href="Axieonex About.dc.html" onClick="{{ navTransition }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:28px">About</a>
+      <a href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:28px">How We Work</a>
+      <a href="#services" onClick="{{ closeMobileAndScroll_services }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:28px">Services</a>
+      <a href="#articles" onClick="{{ closeMobileAndScroll_articles }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:28px">Insights</a>
+      <a href="Axieonex Pricing.dc.html" onClick="{{ navTransition }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:28px">Pricing</a>
+      <a href="Axieonex Contact.dc.html" onClick="{{ navTransition }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:28px">Contact</a>
+      <button onClick="{{ openBookingFromMobile }}" style="margin-top:10px;background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);border:none;color:#fff;font-size:15px;font-weight:600;padding:16px 24px;border-radius:2px;text-align:left">Book a strategy call</button>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section id="home" style="position:relative;padding:168px 40px 130px;max-width:1360px;margin:0 auto">
+    <div class="axHeroGrid" style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center">
+      <div>
+        <div class="axHeroLine" style="animation-delay:.05s;font-size:13px;letter-spacing:0.04em;color:#8B5CF6;margin-bottom:26px;font-weight:600">We do not automate sales. We orchestrate revenue.</div>
+        <h1 style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(44px,6.2vw,80px);line-height:0.98;letter-spacing:-0.01em">
+          <span class="axHeroLine" style="animation-delay:.15s;display:block">We build revenue pipelines.</span>
+          <span class="axHeroLine" style="animation-delay:.35s;display:block;font-weight:400;font-style:italic">Not just meetings.</span>
+        </h1>
+        <p class="axHeroLine" style="animation-delay:.55s;margin:32px 0 0;font-size:18px;line-height:1.6;color:#B7BBCB;max-width:46ch">An AI-orchestrated, human-executed revenue engine that replaces the cost and complexity of building an internal SDR team with one accountable system.</p>
+        <div class="axHeroLine" style="animation-delay:.7s;display:flex;gap:14px;margin-top:36px;flex-wrap:wrap">
+          <button class="axMagnetic" data-magnetic data-scroll="engine" onClick="{{ scrollToEngine }}" style="background:#F2F3F8;border:none;color:#05060B;font-size:15px;font-weight:600;padding:16px 28px;border-radius:2px">See how it works</button>
+          <button class="axMagnetic" data-magnetic onClick="{{ openBooking }}" style="border:1px solid rgba(255,255,255,0.18);background:none;color:#F2F3F8;font-size:15px;padding:16px 28px;border-radius:2px">Discuss your market</button>
+        </div>
+      </div>
+
+      <div class="axHeroVisual" style="position:relative;height:440px">
+        <svg viewBox="0 0 420 420" width="100%" height="100%" style="position:absolute;inset:0;overflow:visible" aria-hidden="true">
+          <path d="M10,60 C120,20 180,150 210,210" fill="none" stroke="rgba(62,123,250,0.32)" stroke-width="1"></path>
+          <path d="M20,340 C120,300 160,240 210,210" fill="none" stroke="rgba(53,211,224,0.32)" stroke-width="1"></path>
+          <path d="M400,50 C300,90 250,140 210,210" fill="none" stroke="rgba(139,92,246,0.32)" stroke-width="1"></path>
+          <path d="M400,370 C300,340 250,270 210,210" fill="none" stroke="rgba(233,79,168,0.32)" stroke-width="1"></path>
+          <circle class="axDot" style="offset-path:path('M10,60 C120,20 180,150 210,210');fill:#3E7BFA;--dur:6.5s" r="4"></circle>
+          <circle class="axDot" style="offset-path:path('M20,340 C120,300 160,240 210,210');fill:#35D3E0;--dur:7.8s;animation-delay:.9s" r="2.4" opacity=".55"></circle>
+          <circle class="axDot" style="offset-path:path('M400,50 C300,90 250,140 210,210');fill:#8B5CF6;--dur:7.2s;animation-delay:1.6s" r="3.5"></circle>
+          <circle class="axDot" style="offset-path:path('M400,370 C300,340 250,270 210,210');fill:#E94FA8;--dur:8.4s;animation-delay:.4s" r="2.8" opacity=".7"></circle>
+          <circle class="axHumanDot" cx="210" cy="210" r="16" fill="none" stroke="#E8B368" stroke-width="1.5"></circle>
+        </svg>
+        <div class="axFragment" style="position:absolute;left:6%;top:12%;font-size:11.5px;color:#8FA3E0;animation-delay:.05s">Funding signal</div>
+        <div class="axFragment" style="position:absolute;left:2%;top:80%;font-size:11.5px;color:#7FDEE6;animation-delay:.18s">Hiring signal</div>
+        <div class="axFragment" style="position:absolute;right:4%;top:8%;font-size:11.5px;color:#B79CEF;animation-delay:.3s;text-align:right">Tech-stack signal</div>
+        <div class="axFragment" style="position:absolute;right:2%;top:86%;font-size:11.5px;color:#EBA0C9;animation-delay:.42s;text-align:right">Intent signal</div>
+        <div class="axMark" style="position:absolute;left:50%;top:50%;width:112px;height:112px;transform:translate(-50%,-50%);filter:drop-shadow(0 0 32px rgba(139,92,246,0.32))">
+          <dc-import name="LogoMark" hint-size="112px,112px"></dc-import>
+        </div>
+        <div class="axCaption" style="animation-delay:2.35s;position:absolute;left:50%;top:64%;transform:translateX(-50%);width:220px;text-align:center;font-size:12.5px;color:#8A8FA3;line-height:1.5">Orchestrated into one qualified conversation.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section style="background:var(--paper-0);color:#0E0F14;padding:120px 40px;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div data-reveal="mask-left" style="max-width:1000px;margin:0 auto">
+      <div style="font-size:13px;font-weight:600;color:#6E5DD8;margin-bottom:22px">The problem</div>
+      <p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(28px,3.6vw,42px);line-height:1.35;letter-spacing:-0.01em">Most outbound fails from <span style="font-weight:400;font-style:italic">disconnected tools</span>, unqualified lists run through generic automation, and the months of hiring and ramp before an internal SDR team produces anything. <span style="font-weight:400;font-style:italic">Activity without accountable pipeline.</span></p>
+    </div>
+  </section>
+
+  <!-- ENGINE -->
+  <section id="engine" data-reveal="scale" class="axEngineWrap" style="background:var(--ink-1);padding:140px 40px;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:1160px;margin:0 auto">
+      <div style="font-size:13px;font-weight:600;color:#35D3E0;text-align:center;margin-bottom:14px">The revenue engine</div>
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(28px,3.6vw,40px);text-align:center;margin:0 0 70px;letter-spacing:-0.01em">Signal in. Revenue conversation out.</h2>
+      <svg viewBox="0 0 1100 160" width="100%" height="auto" style="display:block;overflow:visible" aria-hidden="true">
+        <path style="stroke-dasharray:1400;stroke-dashoffset:{{ engineDashOffset }};transition:stroke-dashoffset 1.4s cubic-bezier(.2,.7,.2,1)" d="M40,80 C160,20 260,140 380,80 C480,30 560,130 660,80 C760,30 840,130 940,80 C990,60 1030,90 1060,80" fill="none" stroke="url(#axEngGrad)" stroke-width="2"></path>
+        <defs><linearGradient id="axEngGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3E7BFA"></stop><stop offset=".5" stop-color="#8B5CF6"></stop><stop offset="1" stop-color="#E94FA8"></stop></linearGradient></defs>
+      </svg>
+      <div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:22px">
+        <div style="flex:1;min-width:140px;text-align:center"><div style="font-size:11px;font-weight:600;color:#3E7BFA;margin-bottom:8px">01</div><div style="font-size:14px;font-weight:600">AI detects signals</div></div>
+        <div style="flex:1;min-width:140px;text-align:center"><div style="font-size:11px;font-weight:600;color:#5C86F1;margin-bottom:8px">02</div><div style="font-size:14px;font-weight:600">AI prioritizes and orchestrates</div></div>
+        <div style="flex:1;min-width:140px;text-align:center"><div style="font-size:11px;font-weight:600;color:#8B5CF6;margin-bottom:8px">03</div><div style="font-size:14px;font-weight:600">Human analysts validate</div></div>
+        <div style="flex:1;min-width:140px;text-align:center"><div style="font-size:11px;font-weight:600;color:#AA5FCF;margin-bottom:8px">04</div><div style="font-size:14px;font-weight:600">Strategists supervise</div></div>
+        <div style="flex:1;min-width:140px;text-align:center"><div style="font-size:11px;font-weight:600;color:#CB56B8;margin-bottom:8px">05</div><div style="font-size:14px;font-weight:600">Replies qualified</div></div>
+        <div style="flex:1;min-width:140px;text-align:center"><div style="font-size:11px;font-weight:600;color:#E94FA8;margin-bottom:8px">06</div><div style="font-size:14px;font-weight:600">You join a revenue-ready call</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THREE CAPABILITIES: immersive scroll-driven system -->
+  <section class="{{ engineWorldClass }}" style="padding:150px 40px;position:relative;transition:background .8s ease"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:1180px;margin:0 auto">
+      <div data-reveal style="font-size:13px;font-weight:600;color:#8B5CF6;text-align:center;margin-bottom:60px">One system, three stages</div>
+      <div class="axCapGrid" style="display:grid;grid-template-columns:0.95fr 1.05fr;gap:60px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:88px">
+          <div class="axStage {{ cap0Class }}" tabindex="0" data-cap="0" onFocus="{{ setCap0 }}" onMouseEnter="{{ setCap0 }}">
+            <div class="axStageNum" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px;margin-bottom:10px">01</div>
+            <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;margin:0 0 10px">Detection</h3>
+            <p style="margin:0;font-size:15.5px;line-height:1.65;color:#B7BBCB;max-width:44ch">The market is noisy. Our AI continuously scans thousands of accounts, filtering out weak activity and isolating genuine buying intent: funding, hiring, technology-stack changes.</p>
+          </div>
+          <div class="axStage {{ cap1Class }}" tabindex="0" data-cap="1" onFocus="{{ setCap1 }}" onMouseEnter="{{ setCap1 }}">
+            <div class="axStageNum" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px;margin-bottom:10px">02</div>
+            <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;margin:0 0 10px">Orchestration</h3>
+            <p style="margin:0;font-size:15.5px;line-height:1.65;color:#B7BBCB;max-width:44ch">Validated signals enter one coordinated system: data, messaging, email, LinkedIn and calling moving in sequence, with strategists supervising tone, timing and cadence throughout.</p>
+          </div>
+          <div class="axStage {{ cap2Class }}" tabindex="0" data-cap="2" onFocus="{{ setCap2 }}" onMouseEnter="{{ setCap2 }}">
+            <div class="axStageNum" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:36px;margin-bottom:10px">03</div>
+            <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;margin:0 0 10px">Qualified conversation</h3>
+            <p style="margin:0;font-size:15.5px;line-height:1.65;color:#B7BBCB;max-width:44ch">The coordinated paths resolve into one opportunity. A human has validated it, managed the reply, and handled the objections. You step in ready to sell.</p>
+          </div>
+        </div>
+
+        <div class="axCapStickyCol" style="position:sticky;top:120px;height:440px">
+          <div style="position:relative;width:100%;height:100%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:8px;overflow:hidden">
+
+            <svg class="axCapVisual {{ cap0Class }}" viewBox="0 0 400 400" width="100%" height="100%" aria-hidden="true">
+              <line class="axScanLine" x1="0" y1="0" x2="0" y2="400" stroke="rgba(53,211,224,0.35)" stroke-width="2"></line>
+              <circle class="axPulseDot" cx="60" cy="70" r="3" fill="#3E7BFA" opacity=".5"></circle>
+              <circle class="axPulseDot" cx="130" cy="40" r="2.5" fill="#8B5CF6" opacity=".4" style="animation-delay:.2s"></circle>
+              <circle class="axPulseDot" cx="320" cy="90" r="3" fill="#35D3E0" opacity=".45" style="animation-delay:.5s"></circle>
+              <circle class="axPulseDot" cx="60" cy="220" r="2.5" fill="#E94FA8" opacity=".4" style="animation-delay:.8s"></circle>
+              <circle class="axPulseDot" cx="350" cy="260" r="3" fill="#3E7BFA" opacity=".5" style="animation-delay:.3s"></circle>
+              <circle class="axPulseDot" cx="220" cy="340" r="2.5" fill="#8B5CF6" opacity=".4" style="animation-delay:1s"></circle>
+              <circle class="axPulseDot" cx="90" cy="330" r="3" fill="#35D3E0" opacity=".5" style="animation-delay:.6s"></circle>
+              <g>
+                <circle cx="180" cy="150" r="8" fill="none" stroke="#35D3E0" stroke-width="1.5"></circle>
+                <circle class="axPulseDot" cx="180" cy="150" r="6" fill="#35D3E0" style="animation-delay:.1s"></circle>
+                <text x="196" y="153" fill="#9FE8EE" font-size="11" font-family="'Work Sans',sans-serif">Funding signal</text>
+              </g>
+              <g>
+                <circle cx="250" cy="220" r="8" fill="none" stroke="#8B5CF6" stroke-width="1.5"></circle>
+                <circle class="axPulseDot" cx="250" cy="220" r="6" fill="#8B5CF6" style="animation-delay:.4s"></circle>
+                <text x="266" y="223" fill="#C9B6F5" font-size="11" font-family="'Work Sans',sans-serif">Hiring signal</text>
+              </g>
+              <g>
+                <circle cx="140" cy="270" r="8" fill="none" stroke="#E94FA8" stroke-width="1.5"></circle>
+                <circle class="axPulseDot" cx="140" cy="270" r="6" fill="#E94FA8" style="animation-delay:.7s"></circle>
+                <text x="156" y="273" fill="#F5AFD3" font-size="11" font-family="'Work Sans',sans-serif">Tech-stack signal</text>
+              </g>
+            </svg>
+
+            <svg class="axCapVisual {{ cap1Class }}" viewBox="0 0 400 400" width="100%" height="100%" aria-hidden="true">
+              <line class="axFlowPath" x1="90" y1="110" x2="200" y2="200" stroke="#3E7BFA" stroke-width="1.5" opacity=".7"></line>
+              <line class="axFlowPath" x1="310" y1="100" x2="200" y2="200" stroke="#8B5CF6" stroke-width="1.5" opacity=".7" style="animation-delay:-1s"></line>
+              <line class="axFlowPath" x1="90" y1="300" x2="200" y2="200" stroke="#35D3E0" stroke-width="1.5" opacity=".7" style="animation-delay:-2s"></line>
+              <line class="axFlowPath" x1="310" y1="300" x2="200" y2="200" stroke="#E94FA8" stroke-width="1.5" opacity=".7" style="animation-delay:-1.5s"></line>
+              <circle cx="200" cy="200" r="14" fill="#8B5CF6"></circle>
+              <circle cx="200" cy="200" r="22" fill="none" stroke="rgba(139,92,246,0.4)" stroke-width="1"></circle>
+              <text x="70" y="100" fill="#9FB6F5" font-size="11" font-family="'Work Sans',sans-serif">Email</text>
+              <text x="292" y="90" fill="#C9B6F5" font-size="11" font-family="'Work Sans',sans-serif">LinkedIn</text>
+              <text x="60" y="316" fill="#9FE8EE" font-size="11" font-family="'Work Sans',sans-serif">Calling</text>
+              <text x="284" y="316" fill="#F5AFD3" font-size="11" font-family="'Work Sans',sans-serif">Timing</text>
+              <circle class="axPulseDot" cx="90" cy="110" r="4" fill="#3E7BFA"></circle>
+              <circle class="axPulseDot" cx="310" cy="100" r="4" fill="#8B5CF6" style="animation-delay:.3s"></circle>
+              <circle class="axPulseDot" cx="90" cy="300" r="4" fill="#35D3E0" style="animation-delay:.6s"></circle>
+              <circle class="axPulseDot" cx="310" cy="300" r="4" fill="#E94FA8" style="animation-delay:.9s"></circle>
+            </svg>
+
+            <svg class="axCapVisual {{ cap2Class }}" viewBox="0 0 400 400" width="100%" height="100%" aria-hidden="true">
+              <path d="M120,150 Q110,120 150,110 Q220,90 260,130 Q300,170 260,210 Q230,240 180,220 Q130,205 120,150 Z" fill="rgba(139,92,246,0.06)" stroke="rgba(139,92,246,0.25)" stroke-width="1"></path>
+              <path d="M150,260 Q140,235 175,228 Q230,215 260,245 Q290,275 258,300 Q232,320 195,304 Q155,290 150,260 Z" fill="rgba(53,211,224,0.06)" stroke="rgba(53,211,224,0.25)" stroke-width="1"></path>
+              <line x1="180" y1="170" x2="210" y2="255" stroke="#35D3E0" stroke-width="2"></line>
+              <circle cx="180" cy="170" r="9" fill="#8B5CF6"></circle>
+              <circle cx="210" cy="255" r="16" fill="none" stroke="#35D3E0" stroke-width="2"></circle>
+              <path d="M201,255 L208,262 L221,246" fill="none" stroke="#35D3E0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <circle class="axHumanRing" cx="180" cy="170" r="20" fill="none" stroke="#E8B368" stroke-width="1.5"></circle>
+              <text x="150" y="105" fill="#C9B6F5" font-size="11" font-family="'Work Sans',sans-serif">Validated by a human</text>
+              <text x="150" y="330" fill="#9FE8EE" font-size="11" font-family="'Work Sans',sans-serif">Ready for you</text>
+            </svg>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTCOME -->
+  <section data-reveal="mask-right" style="background:var(--paper-1);color:#0E0F14;padding:100px 40px;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:900px;margin:0 auto;text-align:center">
+      <p style="margin:0;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:clamp(26px,3.4vw,38px);line-height:1.4;letter-spacing:-0.01em">Predictable pipeline. No SDR hiring burden. Consistent, qualified conversations. Full operational control, without sacrificing brand quality.</p>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" style="background:var(--ink-0);padding:130px 40px;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:1160px;margin:0 auto">
+      <div data-reveal style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:50px;flex-wrap:wrap;gap:14px">
+        <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(28px,3.4vw,38px);margin:0">One architecture. Seven roles.</h2>
+        <a class="axLinkUnderline" href="/services" style="font-size:14px;color:#B7BBCB">All services &#8594;</a>
+      </div>
+      <div data-reveal="mask-left" style="display:flex;flex-direction:column">
+        <a class="axLinkUnderline" href="/services/lead-generation" style="display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid rgba(255,255,255,0.08);gap:18px"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px">Lead Generation</span><span style="font-size:13.5px;color:#8A8FA3">Signal-driven sourcing</span></a>
+        <a class="axLinkUnderline" href="/services/cold-email" style="display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid rgba(255,255,255,0.08);gap:18px"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px">Cold Email and Messaging</span><span style="font-size:13.5px;color:#8A8FA3">Supervised sequences</span></a>
+        <a class="axLinkUnderline" href="/services/linkedin-outreach" style="display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid rgba(255,255,255,0.08);gap:18px"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px">LinkedIn Outreach</span><span style="font-size:13.5px;color:#8A8FA3">Coordinated social engagement</span></a>
+        <a class="axLinkUnderline" href="/services/cold-calling" style="display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid rgba(255,255,255,0.08);gap:18px"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px">Cold Calling</span><span style="font-size:13.5px;color:#8A8FA3">Warm signal, not cold lists</span></a>
+        <a class="axLinkUnderline" href="/services/appointment-setting" style="display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid rgba(255,255,255,0.08);gap:18px"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px">Appointment Setting</span><span style="font-size:13.5px;color:#8A8FA3">Meetings, only once qualified</span></a>
+        <a class="axLinkUnderline" href="/services/hybrid-sdr" style="display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid rgba(255,255,255,0.08);gap:18px"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px">Hybrid SDR Service</span><span style="font-size:13.5px;color:#8A8FA3">The full engine, end to end</span></a>
+        <a class="axLinkUnderline" href="/services/gtm-strategy" style="display:flex;justify-content:space-between;align-items:baseline;padding:22px 0;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08);gap:18px"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:20px">Pre-Sales and GTM Strategy</span><span style="font-size:13.5px;color:#8A8FA3">Targeting and offer design</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW ENGAGEMENT WORKS -->
+  <section style="background:var(--ink-1);padding:120px 40px;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:820px;margin:0 auto">
+      <div data-reveal style="font-size:13px;font-weight:600;color:#35D3E0;margin-bottom:16px">How engagement works</div>
+      <div data-reveal="scale" style="display:flex;flex-direction:column">
+        <div style="display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08)"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;color:#4A4F66">01</span><span style="font-size:16px">Understand your business and ideal customer</span></div>
+        <div style="display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08)"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;color:#4A4F66">02</span><span style="font-size:16px">Build the signal and targeting system</span></div>
+        <div style="display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08)"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;color:#4A4F66">03</span><span style="font-size:16px">Design the outreach architecture</span></div>
+        <div style="display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08)"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;color:#4A4F66">04</span><span style="font-size:16px">Launch coordinated execution</span></div>
+        <div style="display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08)"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;color:#4A4F66">05</span><span style="font-size:16px">Manage and qualify responses</span></div>
+        <div style="display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08)"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;color:#4A4F66">06</span><span style="font-size:16px">Improve using real market feedback</span></div>
+        <div style="display:grid;grid-template-columns:56px 1fr;gap:20px;padding:18px 0;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08)"><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;background:linear-gradient(120deg,#3E7BFA,#E94FA8);-webkit-background-clip:text;background-clip:text;color:transparent">07</span><span style="font-size:16px;font-weight:600">Deliver revenue-ready conversations</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIVISION OF RESPONSIBILITY -->
+  <section data-reveal="scale" style="background:var(--ink-0);padding:130px 40px;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:1160px;margin:0 auto">
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(26px,3.2vw,36px);text-align:center;margin:0 0 60px">What we automate. What humans own. What you control.</h2>
+      <div class="axDivGrid" style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:start;gap:0">
+        <div><div style="font-size:12px;font-weight:600;color:#3E7BFA;margin-bottom:14px">Axieonex automates</div><ul style="margin:0;padding-left:16px;font-size:14.5px;line-height:1.9;color:#B7BBCB"><li>Signal detection and scoring</li><li>List building and enrichment</li><li>Sequencing and cadence</li><li>Reporting and visibility</li></ul></div>
+        <div style="display:flex;align-items:center;justify-content:center;color:#3A3E52;font-size:20px;padding:0 18px">&#8594;</div>
+        <div><div style="font-size:12px;font-weight:600;color:#8B5CF6;margin-bottom:14px">Humans own</div><ul style="margin:0;padding-left:16px;font-size:14.5px;line-height:1.9;color:#B7BBCB"><li>Lead validation and quality bar</li><li>Tone, timing and nuance</li><li>Reply handling and objections</li><li>Qualification judgment</li></ul></div>
+        <div style="display:flex;align-items:center;justify-content:center;color:#3A3E52;font-size:20px;padding:0 18px">&#8594;</div>
+        <div><div style="font-size:12px;font-weight:600;color:#E94FA8;margin-bottom:14px">You control</div><ul style="margin:0;padding-left:16px;font-size:14.5px;line-height:1.9;color:#B7BBCB"><li>Brand voice and positioning</li><li>ICP definition and boundaries</li><li>Your definition of qualified</li><li>The final sales conversation</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSIGHTS -->
+  <section id="articles" style="background:var(--paper-0);color:#0E0F14;padding:120px 40px;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:1160px;margin:0 auto">
+      <div data-reveal style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:44px;flex-wrap:wrap;gap:14px">
+        <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(26px,3.2vw,36px);margin:0">Insights</h2>
+        <a class="axLinkUnderline" href="/articles" style="font-size:14px;color:#4A4D5C">All articles &#8594;</a>
+      </div>
+      <div data-reveal="scale" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:36px">
+        <a class="axLinkUnderline" href="/articles/ai-human-hybrid-revenue-systems" style="display:block;border-top:2px solid #3E7BFA;padding-top:18px"><div style="font-size:11px;font-weight:600;color:#8A8E9E">Operating model</div><div style="font-size:18px;font-weight:600;margin:10px 0 0;line-height:1.35;color:#0E0F14">AI and Human Hybrid Revenue Systems: Why Neither Works Alone</div></a>
+        <a class="axLinkUnderline" href="/articles/ai-sales-systems-vs-traditional-sdr-teams" style="display:block;border-top:2px solid #8B5CF6;padding-top:18px"><div style="font-size:11px;font-weight:600;color:#8A8E9E">Comparison</div><div style="font-size:18px;font-weight:600;margin:10px 0 0;line-height:1.35;color:#0E0F14">AI-Powered Sales Systems vs. Traditional SDR Teams</div></a>
+        <a class="axLinkUnderline" href="/articles/why-internal-sdr-hiring-is-broken" style="display:block;border-top:2px solid #E94FA8;padding-top:18px"><div style="font-size:11px;font-weight:600;color:#8A8E9E">Hiring</div><div style="font-size:18px;font-weight:600;margin:10px 0 0;line-height:1.35;color:#0E0F14">Why Internal SDR Hiring Is Broken, and What Replaces It</div></a>
+        <a class="axLinkUnderline" href="/articles/modern-b2b-revenue-systems" style="display:block;border-top:2px solid #3E7BFA;padding-top:18px"><div style="font-size:11px;font-weight:600;color:#8A8E9E">Strategy</div><div style="font-size:18px;font-weight:600;margin:10px 0 0;line-height:1.35;color:#0E0F14">What a Modern B2B Revenue System Actually Looks Like</div></a>
+        <a class="axLinkUnderline" href="/articles/why-ai-sales-tools-fail-without-human-oversight" style="display:block;border-top:2px solid #8B5CF6;padding-top:18px"><div style="font-size:11px;font-weight:600;color:#8A8E9E">Operating model</div><div style="font-size:18px;font-weight:600;margin:10px 0 0;line-height:1.35;color:#0E0F14">Why AI Sales Tools Fail Without Human Oversight</div></a>
+        <a class="axLinkUnderline" href="/articles/real-cost-internal-sales-team-vs-outsourced" style="display:block;border-top:2px solid #E94FA8;padding-top:18px"><div style="font-size:11px;font-weight:600;color:#8A8E9E">Economics</div><div style="font-size:18px;font-weight:600;margin:10px 0 0;line-height:1.35;color:#0E0F14">The Real Cost of an Internal Sales Team vs. an Outsourced Revenue System</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section style="background:var(--ink-0);padding:120px 40px">
+    <div style="max-width:760px;margin:0 auto">
+      <h2 data-reveal style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(26px,3.2vw,36px);margin:0 0 44px">Questions revenue leaders ask</h2>
+      <div data-reveal style="display:flex;flex-direction:column">
+        <details class="axFaq" style="border-top:1px solid rgba(255,255,255,0.1);padding:20px 0"><summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;list-style:none">What does Axieonex actually provide?<span class="axFaqPlus" style="font-size:20px;color:#8B5CF6">+</span></summary><p style="margin:14px 0 0;font-size:15px;line-height:1.6;color:#B7BBCB">A complete, AI-orchestrated outbound revenue system: signal detection, multi-channel outreach and qualification, run by experienced humans, so you receive revenue-ready conversations instead of raw activity.</p></details>
+        <details class="axFaq" style="border-top:1px solid rgba(255,255,255,0.1);padding:20px 0"><summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;list-style:none">How do AI and humans actually work together?<span class="axFaqPlus" style="font-size:20px;color:#8B5CF6">+</span></summary><p style="margin:14px 0 0;font-size:15px;line-height:1.6;color:#B7BBCB">AI handles detection, prioritization and scale. Human analysts validate leads, strategists supervise tone and cadence, and experienced reps handle every real conversation and objection.</p></details>
+        <details class="axFaq" style="border-top:1px solid rgba(255,255,255,0.1);padding:20px 0"><summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;list-style:none">Who is this service suitable for?<span class="axFaqPlus" style="font-size:20px;color:#8B5CF6">+</span></summary><p style="margin:14px 0 0;font-size:15px;line-height:1.6;color:#B7BBCB">International B2B companies, particularly technology and professional-services businesses, who want predictable pipeline without building an internal SDR function.</p></details>
+        <details class="axFaq" style="border-top:1px solid rgba(255,255,255,0.1);padding:20px 0"><summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;list-style:none">How does qualification work?<span class="axFaqPlus" style="font-size:20px;color:#8B5CF6">+</span></summary><p style="margin:14px 0 0;font-size:15px;line-height:1.6;color:#B7BBCB">Every reply is reviewed by a human before it reaches you. You only join the conversation once real buying interest has been confirmed.</p></details>
+        <details class="axFaq" style="border-top:1px solid rgba(255,255,255,0.1);padding:20px 0"><summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;list-style:none">Which outbound channels are included?<span class="axFaqPlus" style="font-size:20px;color:#8B5CF6">+</span></summary><p style="margin:14px 0 0;font-size:15px;line-height:1.6;color:#B7BBCB">Email, LinkedIn and calling, orchestrated as one coordinated sequence rather than three separate efforts.</p></details>
+        <details class="axFaq" style="border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);padding:20px 0"><summary style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;list-style:none">What happens after a qualified reply?<span class="axFaqPlus" style="font-size:20px;color:#8B5CF6">+</span></summary><p style="margin:14px 0 0;font-size:15px;line-height:1.6;color:#B7BBCB">We schedule the call directly on your calendar with context on the account and the signal that triggered it, so you show up ready to sell.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section data-reveal="scale" style="background:var(--ink-1);padding:150px 40px;text-align:center;position:relative"><div class="axSeam" style="position:absolute;top:0;left:0;right:0"></div>
+    <div style="max-width:720px;margin:0 auto">
+      <div style="width:64px;height:64px;margin:0 auto 28px"><dc-import name="LogoMark" hint-size="64px,64px"></dc-import></div>
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(30px,4vw,46px);margin:0 0 18px;letter-spacing:-0.01em">Let's build your revenue engine.</h2>
+      <p style="margin:0 0 36px;font-size:16.5px;line-height:1.6;color:#B7BBCB">Thirty minutes to map your market, your channels, and what a qualified conversation should look like for you.</p>
+      <button class="axMagnetic" data-magnetic onClick="{{ openBooking }}" style="background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);border:none;color:#fff;font-size:15.5px;font-weight:600;padding:18px 32px;border-radius:2px">Book a strategy call</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="background:#03040A;padding:56px 40px 40px;border-top:1px solid rgba(255,255,255,0.06)">
+    <div style="max-width:1160px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><div style="width:20px;height:20px"><dc-import name="LogoMark" hint-size="20px,20px"></dc-import></div><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:14px">AXIEONEX</span></div>
+          <p style="margin:0;font-size:13.5px;line-height:1.6;color:#7B8098;max-width:34ch">Axieonex operates AI-orchestrated outbound sales engines combining AI tools, CRM systems and human expertise to generate qualified revenue pipelines.</p>
+        </div>
+        <div><div style="font-size:11px;font-weight:600;color:#565B70;margin-bottom:14px">Company</div><div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px"><a href="Axieonex About.dc.html" style="color:#B7BBCB">About Axieonex</a><a href="Axieonex How We Work.dc.html" style="color:#B7BBCB">How We Work</a><a href="/pricing" style="color:#B7BBCB">Pricing</a><a href="#articles" style="color:#B7BBCB">Insights</a></div></div>
+        <div><div style="font-size:11px;font-weight:600;color:#565B70;margin-bottom:14px">Services</div><div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px"><a href="/services/lead-generation" style="color:#B7BBCB">Lead Generation</a><a href="/services/appointment-setting" style="color:#B7BBCB">Appointment Setting</a><a href="/services/hybrid-sdr" style="color:#B7BBCB">Hybrid SDR Service</a><a href="/services/linkedin-outreach" style="color:#B7BBCB">LinkedIn Outreach</a></div></div>
+        <div><div style="font-size:11px;font-weight:600;color:#565B70;margin-bottom:14px">Legal</div><div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px"><a href="/privacy-policy" style="color:#B7BBCB">Privacy Policy</a><a href="/cookies-policy" style="color:#B7BBCB">Cookies Policy</a><a href="/terms-of-service" style="color:#B7BBCB">Terms of Service</a></div></div>
+      </div>
+      <div style="margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;color:#565B70">
+        <span>info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.</span>
+        <span>&#169; 2026 Axieonex Sales. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOOKING MODAL -->
+  <sc-if value="{{ bookingOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="axModalOverlay" role="dialog" aria-modal="true" aria-label="Book a strategy call" onClick="{{ overlayClick }}">
+      <div class="axModalPanel" onClick="{{ stopPropagation }}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:26px">
+          <sc-if value="{{ showStepDots }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="display:flex;gap:8px;margin-bottom:6px">
+                <span class="axStepDot {{ dot1 }}"></span><span class="axStepDot {{ dot2 }}"></span><span class="axStepDot {{ dot3 }}"></span><span class="axStepDot {{ dot4 }}"></span><span class="axStepDot {{ dot5 }}"></span>
+              </div>
+              <div style="font-size:11.5px;color:#8A8FA3">{{ stepLabel }}</div>
+            </div>
+          </sc-if>
+          <button onClick="{{ closeBooking }}" aria-label="Close" style="background:none;border:none;color:#B7BBCB;font-size:22px">&#215;</button>
+        </div>
+
+        <sc-if value="{{ bookingSuccess }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:20px 0">
+            <div style="width:52px;height:52px;border-radius:50%;background:rgba(53,211,224,0.14);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:#35D3E0;font-size:24px">&#10003;</div>
+            <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:0 0 12px">Call requested.</h3>
+            <p style="font-size:15px;line-height:1.6;color:#B7BBCB;margin:0 0 24px">We will confirm your slot by email shortly. Expect a short pre-call brief with the signal that triggered your interest and a summary of what we will cover.</p>
+            <button onClick="{{ closeBooking }}" style="background:#F2F3F8;color:#05060B;border:none;font-size:14.5px;font-weight:600;padding:13px 24px;border-radius:2px">Done</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showStep0 }}" hint-placeholder-val="{{ true }}">
+          <div style="text-align:center;padding:10px 0 6px">
+            <div style="width:44px;height:44px;margin:0 auto 20px"><dc-import name="LogoMark" hint-size="44px,44px"></dc-import></div>
+            <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:24px;margin:0 0 14px">Your strategy session</h3>
+            <p style="font-size:15px;line-height:1.65;color:#B7BBCB;margin:0 0 26px;max-width:44ch;margin-left:auto;margin-right:auto">Fifteen minutes to map your market and channels, followed by a working session on your revenue engine. Five short steps: about you, your company, your revenue situation, a time that works, and a final review.</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showStep1 }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Personal information</h3>
+          <div class="axField"><label>Full name</label><input class="{{ nameErrClass }}" value="{{ bookingData.name }}" onChange="{{ setName }}" /><sc-if value="{{ nameErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your full name.</p></sc-if></div>
+          <div class="axField"><label>Business email</label><input class="{{ emailErrClass }}" value="{{ bookingData.email }}" onChange="{{ setEmail }}" /><sc-if value="{{ emailErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter a valid email address.</p></sc-if></div>
+          <div class="axField"><label>Phone number</label><input class="{{ phoneErrClass }}" value="{{ bookingData.phone }}" onChange="{{ setPhone }}" /><sc-if value="{{ phoneErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter a valid phone number.</p></sc-if></div>
+          <div class="axField"><label>Role or position</label><input class="{{ roleErrClass }}" value="{{ bookingData.role }}" onChange="{{ setRole }}" /><sc-if value="{{ roleErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your role.</p></sc-if></div>
+        </sc-if>
+
+        <sc-if value="{{ showStep2 }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Company information</h3>
+          <div class="axField"><label>Company name</label><input class="{{ companyErrClass }}" value="{{ bookingData.company }}" onChange="{{ setCompany }}" /><sc-if value="{{ companyErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your company name.</p></sc-if></div>
+          <div class="axField"><label>Company website</label><input class="{{ websiteErrClass }}" value="{{ bookingData.website }}" onChange="{{ setWebsite }}" placeholder="yourcompany.com" /><sc-if value="{{ websiteErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter a valid website.</p></sc-if></div>
+          <div class="axField"><label>Company size</label><select class="{{ sizeErrClass }}" value="{{ bookingData.size }}" onChange="{{ setSize }}"><option value="">Select</option><option value="1-10">1 to 10</option><option value="11-50">11 to 50</option><option value="51-200">51 to 200</option><option value="201+">201 or more</option></select><sc-if value="{{ sizeErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please select a company size.</p></sc-if></div>
+          <div class="axField"><label>Country</label><input class="{{ countryErrClass }}" value="{{ bookingData.country }}" onChange="{{ setCountry }}" /><sc-if value="{{ countryErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your country.</p></sc-if></div>
+        </sc-if>
+
+        <sc-if value="{{ showStep3 }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Revenue objectives</h3>
+          <div class="axField"><label>Current sales challenge</label><textarea class="{{ challengeErrClass }}" rows="3" value="{{ bookingData.challenge }}" onChange="{{ setChallenge }}"></textarea><sc-if value="{{ challengeErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please describe your current challenge.</p></sc-if></div>
+          <div class="axField"><label>Desired outcome</label><textarea class="{{ outcomeErrClass }}" rows="3" value="{{ bookingData.outcome }}" onChange="{{ setOutcome }}"></textarea><sc-if value="{{ outcomeErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please describe your desired outcome.</p></sc-if></div>
+          <div class="axField"><label>Monthly engagement range</label><select class="{{ budgetErrClass }}" value="{{ bookingData.budget }}" onChange="{{ setBudget }}"><option value="">Select</option><option value="under-3k">Under $3,000</option><option value="3k-8k">$3,000 to $8,000</option><option value="8k-20k">$8,000 to $20,000</option><option value="20k-plus">$20,000 and above</option></select><sc-if value="{{ budgetErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please select a range.</p></sc-if></div>
+          <div class="axField"><label>Additional context (optional)</label><textarea rows="3" value="{{ bookingData.context }}" onChange="{{ setContext }}"></textarea></div>
+        </sc-if>
+
+        <sc-if value="{{ showStep4 }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 6px">Select a date and time</h3>
+          <p style="margin:0 0 20px;font-size:13.5px;color:#8A8FA3">Your timezone: {{ timezone }}</p>
+          <sc-if value="{{ scheduleErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText" style="margin-bottom:14px">Please select a date and time.</p></sc-if>
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <sc-for list="{{ availability }}" as="day" hint-placeholder-count="5">
+              <div>
+                <div style="font-size:13.5px;font-weight:600;margin-bottom:8px">{{ day.label }}</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+                  <sc-for list="{{ day.slots }}" as="slot" hint-placeholder-count="4">
+                    <button class="axSlotBtn {{ slot.selectedClass }}" onClick="{{ slot.select }}">{{ slot.time }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showStep5 }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Review and confirm</h3>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:#D8DAE5;margin-bottom:22px">
+            <div><strong style="color:#F2F3F8">{{ bookingData.name }}</strong> &#183; {{ bookingData.role }}</div>
+            <div>{{ bookingData.email }} &#183; {{ bookingData.phone }}</div>
+            <div>{{ bookingData.company }} &#183; {{ bookingData.website }} &#183; {{ bookingData.size }} employees &#183; {{ bookingData.country }}</div>
+            <div style="padding-top:8px;border-top:1px solid rgba(255,255,255,0.08)">Challenge: {{ bookingData.challenge }}</div>
+            <div>Desired outcome: {{ bookingData.outcome }}</div>
+            <div>Engagement range: {{ bookingData.budget }}</div>
+            <div style="padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);color:#35D3E0">{{ selectedSlotLabel }}</div>
+          </div>
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#B7BBCB;margin-bottom:22px"><input type="checkbox" checked="{{ bookingData.consent }}" onChange="{{ toggleConsent }}" style="margin-top:2px" /><span>I agree to be contacted about this request and have read the <a href="/privacy-policy" style="text-decoration:underline">Privacy Policy</a> and <a href="/terms-of-service" style="text-decoration:underline">Terms of Service</a>.</span></label>
+          <sc-if value="{{ consentErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText" style="margin:-14px 0 18px">Please accept the privacy terms to continue.</p></sc-if>
+        </sc-if>
+
+        <sc-if value="{{ showFooterNav }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;justify-content:space-between;margin-top:8px">
+            <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ prevStep }}" style="background:none;border:1px solid rgba(255,255,255,0.16);color:#F2F3F8;font-size:14px;padding:12px 22px;border-radius:2px">Back</button></sc-if>
+            <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}"></sc-if>
+            <div style="margin-left:auto">
+              <sc-if value="{{ showNext }}" hint-placeholder-val="{{ true }}"><button onClick="{{ nextStep }}" style="background:#F2F3F8;color:#05060B;border:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:2px">{{ nextLabel }}</button></sc-if>
+              <sc-if value="{{ showSubmit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ submitBooking }}" disabled="{{ bookingSubmitting }}" style="background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);color:#fff;border:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:2px">{{ submitLabel }}</button></sc-if>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="64px,64px"></dc-import></div></div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[0-9+()\-\s]{7,}$/;
+const WEBSITE_RE = /^(https?:\/\/)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+.*$/;
+
+class Component extends DCLogic {
+  state = {
+    mobileNavOpen: false,
+    transitioning: false,
+    activeSection: 'home',
+    activeCap: 0,
+    engineInView: false,
+    bookingOpen: false,
+    bookingStep: 1,
+    bookingSubmitting: false,
+    bookingSuccess: false,
+    touchedErrors: {},
+    selectedSlot: null,
+    bookingData: {
+      name: '', email: '', phone: '', role: '',
+      company: '', website: '', size: '', country: '',
+      challenge: '', outcome: '', budget: '', context: '',
+      consent: false
+    }
+  };
+
+  componentDidMount() {
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-in'); });
+      }, { threshold: 0.18 });
+      revealEls.forEach(el => io.observe(el));
+      this._io = io;
+    } else { revealEls.forEach(el => el.classList.add('is-in')); }
+
+    const engineEl = document.getElementById('engine');
+    if (engineEl && 'IntersectionObserver' in window) {
+      const engineIo = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) this.setState({ engineInView: true }); });
+      }, { threshold: 0.35 });
+      engineIo.observe(engineEl);
+      this._engineIo = engineIo;
+    }
+
+    const sections = ['home', 'services', 'articles'];
+    if ('IntersectionObserver' in window) {
+      const navIo = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) this.setState({ activeSection: e.target.id }); });
+      }, { threshold: 0.5, rootMargin: '-88px 0px -50% 0px' });
+      sections.forEach(id => { const el = document.getElementById(id); if (el) navIo.observe(el); });
+      this._navIo = navIo;
+    }
+
+    const stages = document.querySelectorAll('[data-cap]');
+    if (stages.length && 'IntersectionObserver' in window) {
+      const capIo = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) this.setState({ activeCap: Number(e.target.getAttribute('data-cap')) }); });
+      }, { threshold: 0.6 });
+      stages.forEach(el => capIo.observe(el));
+      this._capIo = capIo;
+    }
+
+    const nav = document.querySelector('[data-nav]');
+    const onScroll = () => { if (nav) nav.classList.toggle('axNavCompact', window.scrollY > 40); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    this._onScroll = onScroll;
+    onScroll();
+
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduced) {
+      const magnets = document.querySelectorAll('[data-magnetic]');
+      this._magnetHandlers = [];
+      magnets.forEach(btn => {
+        const move = (e) => {
+          const r = btn.getBoundingClientRect();
+          const mx = e.clientX - (r.left + r.width / 2);
+          const my = e.clientY - (r.top + r.height / 2);
+          btn.style.transform = `translate(${mx * 0.2}px, ${my * 0.26}px)`;
+        };
+        const leave = () => { btn.style.transform = 'translate(0,0)'; };
+        btn.addEventListener('mousemove', move);
+        btn.addEventListener('mouseleave', leave);
+        this._magnetHandlers.push({ btn, move, leave });
+      });
+    }
+
+    this._onKeydown = (e) => { if (e.key === 'Escape' && this.state.bookingOpen) this.closeBooking(); };
+    window.addEventListener('keydown', this._onKeydown);
+
+    this._updateNavIndicator();
+    window.addEventListener('resize', this._updateNavIndicator.bind(this));
+  }
+
+  componentDidUpdate(prevState) {
+    if (prevState && prevState.activeSection !== this.state.activeSection) this._updateNavIndicator();
+  }
+
+  _updateNavIndicator() {
+    const active = document.querySelector(`.axNavLink[data-scroll="${this.state.activeSection}"]`);
+    const indicator = document.getElementById('axNavIndicator');
+    const row = document.querySelector('.axNavLinksRow');
+    if (active && indicator && row) {
+      const rowRect = row.getBoundingClientRect();
+      const r = active.getBoundingClientRect();
+      indicator.style.left = (r.left - rowRect.left) + 'px';
+      indicator.style.top = (r.top - rowRect.top) + 'px';
+      indicator.style.width = r.width + 'px';
+      indicator.style.height = r.height + 'px';
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._io) this._io.disconnect();
+    if (this._engineIo) this._engineIo.disconnect();
+    if (this._navIo) this._navIo.disconnect();
+    if (this._capIo) this._capIo.disconnect();
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._onKeydown) window.removeEventListener('keydown', this._onKeydown);
+    if (this._magnetHandlers) this._magnetHandlers.forEach(({ btn, move, leave }) => {
+      btn.removeEventListener('mousemove', move); btn.removeEventListener('mouseleave', leave);
+    });
+  }
+
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+
+  scrollTo(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navH = 88;
+    const top = el.getBoundingClientRect().top + window.scrollY - navH;
+    window.scrollTo({ top, behavior: 'smooth' });
+    if (history.pushState) history.pushState(null, '', '#' + id);
+  }
+
+  toggleMobileNav() { this.setState(s => ({ mobileNavOpen: !s.mobileNavOpen })); }
+  closeMobileNav() { this.setState({ mobileNavOpen: false }); }
+  openBookingFromMobile() { this.setState({ mobileNavOpen: false }); this.openBooking(); }
+
+  updateField(key, value) {
+    this.setState(s => ({ bookingData: { ...s.bookingData, [key]: value } }));
+  }
+
+  validateStep(step) {
+    const d = this.state.bookingData;
+    const errs = {};
+    if (step === 0) {
+      // no fields to validate on the intro step
+    } else if (step === 1) {
+      if (!d.name.trim()) errs.name = true;
+      if (!EMAIL_RE.test(d.email)) errs.email = true;
+      if (!PHONE_RE.test(d.phone)) errs.phone = true;
+      if (!d.role.trim()) errs.role = true;
+    } else if (step === 2) {
+      if (!d.company.trim()) errs.company = true;
+      if (!WEBSITE_RE.test(d.website)) errs.website = true;
+      if (!d.size) errs.size = true;
+      if (!d.country.trim()) errs.country = true;
+    } else if (step === 3) {
+      if (!d.challenge.trim()) errs.challenge = true;
+      if (!d.outcome.trim()) errs.outcome = true;
+      if (!d.budget) errs.budget = true;
+    } else if (step === 4) {
+      if (!this.state.selectedSlot) errs.schedule = true;
+    } else if (step === 5) {
+      if (!d.consent) errs.consent = true;
+    }
+    this.setState({ touchedErrors: errs });
+    return Object.keys(errs).length === 0;
+  }
+
+  nextStep() {
+    if (!this.validateStep(this.state.bookingStep)) return;
+    if (this.state.bookingStep === 5) { this.submitBooking(); return; }
+    this.setState(s => ({ bookingStep: s.bookingStep + 1, touchedErrors: {} }));
+  }
+  prevStep() { this.setState(s => ({ bookingStep: Math.max(0, s.bookingStep - 1), touchedErrors: {} })); }
+
+  submitBooking() {
+    if (!this.validateStep(5)) return;
+    this.setState({ bookingSubmitting: true });
+    setTimeout(() => { this.setState({ bookingSubmitting: false, bookingSuccess: true }); }, 900);
+  }
+
+  openBooking() { this.setState({ bookingOpen: true, bookingStep: 0, bookingSuccess: false, touchedErrors: {} }); }
+  closeBooking() { this.setState({ bookingOpen: false }); }
+
+  buildAvailability() {
+    const days = [];
+    const today = new Date();
+    let added = 0, offset = 1;
+    const times = ['9:00 AM', '11:00 AM', '1:00 PM', '3:00 PM'];
+    while (added < 4) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + offset);
+      offset++;
+      if (d.getDay() === 0 || d.getDay() === 6) continue;
+      const label = d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+      const key = d.toISOString().slice(0, 10);
+      days.push({
+        label,
+        slots: times.map(t => {
+          const slotKey = key + '_' + t;
+          return {
+            time: t,
+            selectedClass: this.state.selectedSlot === slotKey ? 'is-selected' : '',
+            select: () => this.setState({ selectedSlot: slotKey, touchedErrors: { ...this.state.touchedErrors, schedule: false } }),
+            _label: label + ' at ' + t
+          };
+        })
+      });
+      added++;
+    }
+    return days;
+  }
+
+  renderVals() {
+    const s = this.state;
+    const step = s.bookingStep;
+    const err = s.touchedErrors;
+    const availability = this.buildAvailability();
+    let selectedSlotLabel = 'No time selected yet.';
+    if (s.selectedSlot) {
+      for (const day of availability) for (const slot of day.slots) {
+        const key = day.label;
+        if (slot.selectedClass === 'is-selected') selectedSlotLabel = day.label + ' at ' + slot.time;
+      }
+    }
+
+    return {
+      isHomeActive: s.activeSection === 'home' ? 'true' : 'false',
+      isServicesActive: s.activeSection === 'services' ? 'true' : 'false',
+      isInsightsActive: s.activeSection === 'articles' ? 'true' : 'false',
+      mobileNavOpen: s.mobileNavOpen,
+      mobileNavClass: s.mobileNavOpen ? 'is-open' : '',
+      transitionClass: s.transitioning ? 'is-active' : '',
+      navTransition: (e) => this.navTransition(e),
+      toggleMobileNav: () => this.toggleMobileNav(),
+      closeMobileNav: () => this.closeMobileNav(),
+      closeMobileAndScroll_home: (e) => { e.preventDefault(); this.closeMobileNav(); this.scrollTo('home'); },
+      closeMobileAndScroll_services: (e) => { e.preventDefault(); this.closeMobileNav(); this.scrollTo('services'); },
+      closeMobileAndScroll_articles: (e) => { e.preventDefault(); this.closeMobileNav(); this.scrollTo('articles'); },
+      openBookingFromMobile: () => this.openBookingFromMobile(),
+      scrollToEngine: () => this.scrollTo('engine'),
+      openBooking: () => this.openBooking(),
+
+      engineDashOffset: s.engineInView ? 0 : 1400,
+
+      cap0Class: s.activeCap === 0 ? 'is-active' : '',
+      cap1Class: s.activeCap === 1 ? 'is-active' : '',
+      cap2Class: s.activeCap === 2 ? 'is-active' : '',
+      engineWorldClass: 'axEngineWorld' + s.activeCap,
+      setCap0: () => this.setState({ activeCap: 0 }),
+      setCap1: () => this.setState({ activeCap: 1 }),
+      setCap2: () => this.setState({ activeCap: 2 }),
+
+      bookingOpen: s.bookingOpen,
+      bookingSuccess: s.bookingSuccess,
+      bookingSubmitting: s.bookingSubmitting,
+      bookingData: s.bookingData,
+      closeBooking: () => this.closeBooking(),
+      overlayClick: () => this.closeBooking(),
+      stopPropagation: (e) => e.stopPropagation(),
+
+      dot1: step >= 1 ? 'is-done' : '', dot2: step >= 2 ? 'is-done' : '', dot3: step >= 3 ? 'is-done' : '', dot4: step >= 4 ? 'is-done' : '', dot5: step >= 5 ? 'is-done' : '',
+      showStepDots: step >= 1,
+      stepLabel: ['', 'About you', 'Your company', 'Your revenue situation', 'Scheduling', 'Review and confirm'][step] || '',
+
+      showStep0: !s.bookingSuccess && step === 0,
+      showStep1: !s.bookingSuccess && step === 1,
+      showStep2: !s.bookingSuccess && step === 2,
+      showStep3: !s.bookingSuccess && step === 3,
+      showStep4: !s.bookingSuccess && step === 4,
+      showStep5: !s.bookingSuccess && step === 5,
+      showFooterNav: !s.bookingSuccess,
+      showBack: step > 0 && step < 5,
+      showNext: step < 5,
+      showSubmit: step === 5,
+      nextLabel: step === 0 ? 'Begin' : 'Next',
+      submitLabel: s.bookingSubmitting ? 'Submitting...' : 'Confirm request',
+      nextStep: () => this.nextStep(),
+      prevStep: () => this.prevStep(),
+      submitBooking: () => this.submitBooking(),
+
+      setName: (e) => this.updateField('name', e.target.value),
+      setEmail: (e) => this.updateField('email', e.target.value),
+      setPhone: (e) => this.updateField('phone', e.target.value),
+      setRole: (e) => this.updateField('role', e.target.value),
+      setCompany: (e) => this.updateField('company', e.target.value),
+      setWebsite: (e) => this.updateField('website', e.target.value),
+      setSize: (e) => this.updateField('size', e.target.value),
+      setCountry: (e) => this.updateField('country', e.target.value),
+      setChallenge: (e) => this.updateField('challenge', e.target.value),
+      setOutcome: (e) => this.updateField('outcome', e.target.value),
+      setBudget: (e) => this.updateField('budget', e.target.value),
+      setContext: (e) => this.updateField('context', e.target.value),
+      toggleConsent: (e) => this.updateField('consent', e.target.checked),
+
+      nameErr: !!err.name, emailErr: !!err.email, phoneErr: !!err.phone, roleErr: !!err.role,
+      companyErr: !!err.company, websiteErr: !!err.website, sizeErr: !!err.size, countryErr: !!err.country,
+      challengeErr: !!err.challenge, outcomeErr: !!err.outcome, budgetErr: !!err.budget,
+      scheduleErr: !!err.schedule, consentErr: !!err.consent,
+      nameErrClass: err.name ? 'axFieldError' : '', emailErrClass: err.email ? 'axFieldError' : '',
+      phoneErrClass: err.phone ? 'axFieldError' : '', roleErrClass: err.role ? 'axFieldError' : '',
+      companyErrClass: err.company ? 'axFieldError' : '', websiteErrClass: err.website ? 'axFieldError' : '',
+      sizeErrClass: err.size ? 'axFieldError' : '', countryErrClass: err.country ? 'axFieldError' : '',
+      challengeErrClass: err.challenge ? 'axFieldError' : '', outcomeErrClass: err.outcome ? 'axFieldError' : '',
+      budgetErrClass: err.budget ? 'axFieldError' : '',
+
+      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Local time',
+      availability,
+      selectedSlotLabel
+    };
+  }
+}
+</script>
+</body>
+</html>

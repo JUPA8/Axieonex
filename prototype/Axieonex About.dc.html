@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  body{margin:0;background:#EFEEEA;color:#1B1B1E;-webkit-font-smoothing:antialiased}
+  a{color:#1B1B1E;text-decoration:none}
+  a:hover{color:#6E5DD8}
+  :focus-visible{outline:2px solid #6E5DD8;outline-offset:3px}
+  [data-reveal]{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  [data-reveal].is-in{opacity:1;transform:translateY(0)}
+  @media (prefers-reduced-motion: reduce){ [data-reveal]{opacity:1!important;transform:none!important;transition:none!important} }
+  .axEmbossBox{filter:grayscale(1) contrast(1.15) brightness(1.4);opacity:.82;mix-blend-mode:luminosity}
+  @keyframes axSweep{0%{background-position:-120% 0}100%{background-position:220% 0}}
+  .axSweepLayer{position:absolute;inset:0;background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,0.9) 50%,transparent 60%);background-size:250% 100%;animation:axSweep 3.2s ease-in-out 1 both;mix-blend-mode:overlay}
+  @media (prefers-reduced-motion: reduce){ .axSweepLayer{animation:none;display:none} }
+  .axNavLink{font-size:14.5px;color:#5A5A62}
+  .axNavLink[aria-current="true"]{color:#1B1B1E;font-weight:600}
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .32s ease;background:#EFEEEA}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:64px;height:64px;filter:grayscale(1) contrast(1.2) brightness(.85);transform:scale(.5);opacity:.7;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .42s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1.2);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:#EFEEEA;color:#1B1B1E">
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:20px 40px;background:rgba(239,238,234,0.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,0,0,0.06)">
+    <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" aria-label="Axieonex home" style="display:flex;align-items:center;gap:10px;justify-self:start">
+      <div style="width:26px;height:26px;filter:grayscale(1) contrast(1.2) brightness(.85)"><dc-import name="LogoMark" hint-size="26px,26px"></dc-import></div>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px">AXIEONEX</span>
+    </a>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;justify-self:center">
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}">Home</a>
+      <a class="axNavLink" href="Axieonex About.dc.html" aria-current="true">About</a>
+      <a class="axNavLink" href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}">How We Work</a>
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html#services" onClick="{{ navTransition }}">Services</a>
+      <a class="axNavLink" href="Axieonex Pricing.dc.html" onClick="{{ navTransition }}">Pricing</a>
+      <a class="axNavLink" href="Axieonex Insights.dc.html" onClick="{{ navTransition }}">Insights</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="justify-self:end;background:#1B1B1E;color:#EFEEEA;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:2px;white-space:nowrap">Book a strategy call</a>
+  </nav>
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="64px,64px"></dc-import></div></div>
+
+  <!-- HERO -->
+  <section style="max-width:1100px;margin:0 auto;padding:190px 40px 100px;text-align:center">
+    <div style="position:relative;width:150px;height:150px;margin:0 auto 40px">
+      <div class="axEmbossBox" style="position:absolute;inset:0"><dc-import name="LogoMark" hint-size="150px,150px"></dc-import></div>
+      <div class="axSweepLayer"></div>
+    </div>
+    <div data-reveal style="font-size:13px;font-weight:600;color:#6E5DD8;letter-spacing:0.02em;margin-bottom:20px">Why Axieonex exists</div>
+    <h1 data-reveal style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(34px,4.6vw,58px);line-height:1.08;margin:0 0 24px;letter-spacing:-0.01em">Revenue is too important to leave to software alone, or to people alone.</h1>
+    <p data-reveal style="margin:0 auto;max-width:56ch;font-size:17.5px;line-height:1.65;color:#54545C">Axieonex exists because most companies are forced to choose between the speed of automation and the judgment of an experienced sales team. We built a system that keeps both.</p>
+  </section>
+
+  <!-- PROBLEM -->
+  <section data-reveal style="max-width:900px;margin:0 auto;padding:70px 40px">
+    <div style="border-top:1px solid rgba(0,0,0,0.1);padding-top:44px">
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:28px;margin:0 0 18px">The problem with fragmented sales technology</h2>
+      <p style="font-size:16px;line-height:1.7;color:#3D3D45;margin:0">Most B2B companies assemble outbound from disconnected pieces: a data vendor, a sequencing tool, a dialer, and a rotating cast of SDRs who leave before they ramp. Each piece works in isolation. None of them are accountable for the outcome. Axieonex was built as the opposite of that: one system, one team, one result to stand behind.</p>
+    </div>
+  </section>
+
+  <!-- OPERATING PHILOSOPHY -->
+  <section style="background:#FFFFFF;padding:100px 40px;border-top:1px solid rgba(0,0,0,0.06);border-bottom:1px solid rgba(0,0,0,0.06)">
+    <div style="max-width:1100px;margin:0 auto">
+      <h2 data-reveal style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:30px;margin:0 0 50px;text-align:center">The hybrid operating philosophy</h2>
+      <div data-reveal style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.08)">
+        <div style="background:#FFFFFF;padding:32px"><div style="font-size:12px;font-weight:600;color:#6E5DD8;margin-bottom:14px">What AI owns</div><p style="margin:0;font-size:14.5px;line-height:1.65;color:#4A4A52">Continuous signal detection, list building, sequencing, cadence and reporting: the volume and consistency no human team can sustain alone.</p></div>
+        <div style="background:#FFFFFF;padding:32px"><div style="font-size:12px;font-weight:600;color:#8A6BD8;margin-bottom:14px">What experienced humans own</div><p style="margin:0;font-size:14.5px;line-height:1.65;color:#4A4A52">Lead validation, message tone and timing, every reply, every objection, and the judgment calls that decide whether interest is real.</p></div>
+        <div style="background:#FFFFFF;padding:32px"><div style="font-size:12px;font-weight:600;color:#B85CA8;margin-bottom:14px">What clients retain</div><p style="margin:0;font-size:14.5px;line-height:1.65;color:#4A4A52">Brand voice, ICP boundaries, the definition of a qualified conversation, and the final sales conversation itself.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section data-reveal style="max-width:900px;margin:0 auto;padding:100px 40px">
+    <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:30px;margin:0 0 40px">Operating principles</h2>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-top:1px solid rgba(0,0,0,0.1)"><span style="font-size:14.5px;font-weight:600;color:#6E5DD8">Accountability</span><span style="font-size:15.5px;line-height:1.6;color:#3D3D45">Every stage of the system has a named owner, human or AI. Nothing runs unattended.</span></div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-top:1px solid rgba(0,0,0,0.1)"><span style="font-size:14.5px;font-weight:600;color:#6E5DD8">Quality over volume</span><span style="font-size:15.5px;line-height:1.6;color:#3D3D45">A validated lead beats ten unqualified ones. We optimize for conversations that convert, not activity that reports well.</span></div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-top:1px solid rgba(0,0,0,0.1)"><span style="font-size:14.5px;font-weight:600;color:#6E5DD8">Transparency</span><span style="font-size:15.5px;line-height:1.6;color:#3D3D45">Clients see how the system works, not just what it produces.</span></div>
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 0;border-top:1px solid rgba(0,0,0,0.1);border-bottom:1px solid rgba(0,0,0,0.1)"><span style="font-size:14.5px;font-weight:600;color:#6E5DD8">Global readiness</span><span style="font-size:15.5px;line-height:1.6;color:#3D3D45">Built to operate across markets and time zones from day one, not retrofitted for international clients later.</span></div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section data-reveal style="background:#1B1B1E;color:#EFEEEA;padding:110px 40px;text-align:center">
+    <div style="max-width:640px;margin:0 auto">
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(28px,3.6vw,40px);margin:0 0 18px">See the system for your market.</h2>
+      <a href="Axieonex Book Strategy Call.dc.html" style="display:inline-block;margin-top:10px;background:#EFEEEA;color:#1B1B1E;font-size:15px;font-weight:600;padding:16px 28px;border-radius:2px">Book a strategy call</a>
+    </div>
+  </section>
+
+  <footer style="background:#E6E4DE;padding:40px;text-align:center;font-size:12.5px;color:#77767E">
+    info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.<br />&#169; 2026 Axieonex Sales. All rights reserved.
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { transitioning: false };
+  componentDidMount() {
+    const els = document.querySelectorAll('[data-reveal]');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-in'); });
+      }, { threshold: 0.15 });
+      els.forEach(el => io.observe(el));
+      this._io = io;
+    } else { els.forEach(el => el.classList.add('is-in')); }
+  }
+  componentWillUnmount() { if (this._io) this._io.disconnect(); }
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+  renderVals() {
+    return { transitionClass: this.state.transitioning ? 'is-active' : '', navTransition: (e) => this.navTransition(e) };
+  }
+}
+</script>
+</body>
+</html>

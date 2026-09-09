@@ -1,0 +1,7 @@
+Concept D — Open Quadrant
+Recommended type: Archivo Medium (production: Roobert / Aeonik Medium)
+Ink: #191720   Accent: #6E5DE7
+
+All symbol files are pure paths, no filters, no rasters, no gradients.
+Wordmark/lockup files use live <text> with a fallback stack for review only —
+outline the type (convert to paths) before any production use.

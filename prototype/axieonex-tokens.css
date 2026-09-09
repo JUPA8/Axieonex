@@ -1,0 +1,187 @@
+/* AXIEONEX design tokens — CSS custom properties.
+   Values are extracted from the already-approved pages; nothing here is a new
+   aesthetic direction. This file defines ONLY custom properties (no selectors,
+   no classes, no layout rules), so linking it from every page is safe: it
+   cannot cause a flash of unstyled content because it renders nothing itself.
+   Page-specific inline styles continue to own actual layout/visual rules,
+   per this design tool's inline-styling requirement (see implementation note
+   for how Next.js should consume these as real classes instead). */
+
+:root {
+  /* ---- Raw brand palette ---- */
+  --ax-blue: #3E7BFA;
+  --ax-blue-alt: #4C82FF;
+  --ax-cyan: #35D3E0;
+  --ax-cyan-alt: #5CC8E8;
+  --ax-violet: #8B5CF6;
+  --ax-magenta: #E94FA8;
+  --ax-magenta-alt: #EA4FA0;
+
+  /* ---- Raw neutrals / materials ---- */
+  --ax-ink-0: #050A16;   /* home / services deepest surface */
+  --ax-ink-1: #06070D;   /* homepage base */
+  --ax-ink-2: #08090F;   /* 404 / book strategy call base */
+  --ax-ink-3: #0B0C0F;   /* pricing base (obsidian) */
+  --ax-ink-4: #0B0D12;   /* legal pages base */
+  --ax-ink-5: #0C0D12;   /* insights / article base */
+  --ax-ink-6: #0F1424;   /* how-we-work panel */
+  --ax-ink-7: #080B18;   /* how-we-work base */
+  --ax-pearl-0: #EFEEEA; /* about base */
+  --ax-pearl-1: #F5F6FA; /* homepage light section */
+  --ax-graphite: #2A2D36;
+  --ax-platinum: #B7B7C4;
+
+  /* ---- Semantic: text ---- */
+  --ax-text-primary: #EAEEF6;
+  --ax-text-primary-on-light: #1B1B1E;
+  --ax-text-muted: #8E92A0;
+  --ax-text-muted-on-light: #6E7280;
+  --ax-text-body: #C4C8D4;
+
+  /* ---- Semantic: surfaces ---- */
+  --ax-surface-base: var(--ax-ink-1);
+  --ax-surface-raised: #12141C;
+  --ax-surface-legal: var(--ax-ink-4);
+  --ax-surface-light: var(--ax-pearl-1);
+
+  /* ---- Semantic: borders / focus ---- */
+  --ax-border-subtle: rgba(255,255,255,0.08);
+  --ax-border-default: rgba(255,255,255,0.14);
+  --ax-focus-ring: #5CC8E8;
+
+  /* ---- Semantic: status ---- */
+  --ax-success: #35D3E0;
+  --ax-warning: #E8B368;
+  --ax-error: #E94FA8;
+
+  /* ---- Page-theme accents (single primary accent per destination) ---- */
+  --ax-theme-home: var(--ax-violet);
+  --ax-theme-about: #1B1B1E;
+  --ax-theme-how-we-work: var(--ax-cyan-alt);
+  --ax-theme-services: var(--ax-blue);
+  --ax-theme-service-lead-generation: var(--ax-blue);
+  --ax-theme-service-appointment-setting: var(--ax-magenta);
+  --ax-theme-service-hybrid-sdr: var(--ax-cyan-alt);
+  --ax-theme-service-cold-email: var(--ax-violet);
+  --ax-theme-service-linkedin-outreach: var(--ax-blue);
+  --ax-theme-service-cold-calling: var(--ax-magenta);
+  --ax-theme-service-presales-gtm: var(--ax-violet);
+  --ax-theme-pricing: var(--ax-platinum);
+  --ax-theme-insights: var(--ax-violet);
+  --ax-theme-article: var(--ax-violet);
+  --ax-theme-contact: var(--ax-cyan-alt);
+  --ax-theme-strategy-call: var(--ax-violet);
+  --ax-theme-legal: var(--ax-cyan-alt);
+  --ax-theme-404: var(--ax-magenta);
+
+  /* ---- Typography ---- */
+  --ax-font-display: 'Bricolage Grotesque', sans-serif;
+  --ax-font-body: 'Work Sans', Helvetica, Arial, sans-serif;
+  --ax-font-mono: 'Space Mono', monospace;
+  --ax-font-editorial: 'Source Serif 4', Georgia, serif;
+  --ax-weight-regular: 400;
+  --ax-weight-medium: 500;
+  --ax-weight-semibold: 600;
+  --ax-weight-bold: 700;
+  --ax-weight-black: 800;
+  --ax-fs-display-fluid: clamp(28px, 4.4vw, 50px);
+  --ax-fs-h1-fluid: clamp(30px, 4vw, 46px);
+  --ax-fs-h2-fluid: clamp(24px, 3.4vw, 38px);
+  --ax-fs-body: 16px;
+  --ax-fs-body-lg: 18px;
+  --ax-fs-small: 13px;
+  --ax-lh-tight: 1.15;
+  --ax-lh-body: 1.65;
+  --ax-ls-label: 0.06em;
+
+  /* ---- Spacing scale (derived from repeated page values) ---- */
+  --ax-space-1: 4px;
+  --ax-space-2: 8px;
+  --ax-space-3: 12px;
+  --ax-space-4: 16px;
+  --ax-space-5: 20px;
+  --ax-space-6: 24px;
+  --ax-space-7: 32px;
+  --ax-space-8: 40px;
+  --ax-space-9: 56px;
+  --ax-space-10: 70px;
+  --ax-space-11: 100px;
+  --ax-space-12: 150px;
+
+  /* ---- Containers / grid ---- */
+  --ax-container-narrow: 640px;
+  --ax-container-article: 720px;
+  --ax-container-default: 1000px;
+  --ax-container-wide: 1180px;
+  --ax-page-gutter: 40px;
+  --ax-page-gutter-tight: 28px;
+
+  /* ---- Borders / radius ---- */
+  --ax-radius-sm: 2px;
+  --ax-radius-md: 4px;
+  --ax-radius-lg: 6px;
+  --ax-border-width: 1px;
+
+  /* ---- Shadow / glow (used sparingly, never ambient) ---- */
+  --ax-glow-accent: 0 0 32px rgba(139,92,246,0.32);
+  --ax-shadow-card: 0 1px 0 rgba(255,255,255,0.06);
+
+  /* ---- Gradients ---- */
+  --ax-gradient-spectral: linear-gradient(120deg, var(--ax-blue), var(--ax-violet) 55%, var(--ax-magenta));
+  --ax-gradient-signal: linear-gradient(90deg, var(--ax-blue), var(--ax-violet), var(--ax-magenta));
+  --ax-gradient-cyan-blue: linear-gradient(120deg, var(--ax-blue), var(--ax-cyan-alt));
+
+  /* ---- Logo ---- */
+  --ax-logo-size-nav: 24px;
+  --ax-logo-size-nav-lg: 26px;
+  --ax-logo-size-hero: 108px;
+  --ax-logo-size-footer: 20px;
+  --ax-logo-size-transition-mark: 56px;
+
+  /* ---- Navigation ---- */
+  --ax-nav-height: 88px;
+  --ax-nav-padding-y: 18px;
+  --ax-nav-padding-x: var(--ax-page-gutter-tight);
+  --ax-nav-gap: 18px;
+
+  /* ---- Buttons ---- */
+  --ax-btn-padding-y: 14px;
+  --ax-btn-padding-x: 24px;
+  --ax-btn-padding-y-lg: 17px;
+  --ax-btn-padding-x-lg: 30px;
+  --ax-btn-font-size: 14px;
+
+  /* ---- Form controls ---- */
+  --ax-field-padding-y: 12px;
+  --ax-field-padding-x: 14px;
+  --ax-field-font-size: 14.5px;
+  --ax-field-border: var(--ax-border-default);
+  --ax-field-border-error: var(--ax-error);
+  --ax-field-border-focus: var(--ax-violet);
+
+  /* ---- Z-index layers ---- */
+  --ax-z-nav: 60;
+  --ax-z-mobile-nav: 80;
+  --ax-z-modal: 100;
+  --ax-z-transition-overlay: 200;
+
+  /* ---- Breakpoints (documented; CSS custom properties cannot gate @media, mirrored in JSON) ---- */
+  --ax-bp-mobile: 430px;
+  --ax-bp-tablet: 768px;
+  --ax-bp-tablet-landscape: 1024px;
+  --ax-bp-laptop: 1280px;
+  --ax-bp-desktop: 1440px;
+
+  /* ---- Motion ---- */
+  --ax-duration-fast: 300ms;
+  --ax-duration-base: 420ms;
+  --ax-duration-slow: 720ms;
+  --ax-duration-reduced: 120ms;
+  --ax-ease-standard: cubic-bezier(.2,.7,.2,1);
+  --ax-ease-spring: cubic-bezier(.2,.8,.2,1);
+
+  /* ---- Transition overlay ---- */
+  --ax-overlay-bg: var(--ax-surface-base);
+  --ax-overlay-mark-scale-start: 0.6;
+  --ax-overlay-mark-scale-end: 1.15;
+}

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  body{margin:0;background:#050A16;color:#EAF0FA;-webkit-font-smoothing:antialiased}
+  a{color:#EAF0FA;text-decoration:none}
+  :focus-visible{outline:2px solid #5CC8E8;outline-offset:3px}
+  [data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+  [data-reveal].is-in{opacity:1;transform:translateY(0)}
+  @media (prefers-reduced-motion: reduce){ [data-reveal]{opacity:1!important;transform:none!important;transition:none!important} }
+  .axNavLink{font-size:14.5px;color:#8FA3C4}
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;background:#050A16}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:56px;height:56px;transform:scale(.6);opacity:.7;transition:transform .38s ease,opacity .38s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1.1);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+  @keyframes axNodePulse{0%,100%{opacity:.35}50%{opacity:1}}
+  .axNodePulse{animation:axNodePulse 2.6s ease-in-out infinite}
+  @keyframes axRadarSweep{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+  .axRadarSweep{transform-origin:70px 70px;animation:axRadarSweep 4s linear infinite}
+  @keyframes axEnvelopeFlap{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+  .axEnvelopeFlap{animation:axEnvelopeFlap 2.8s ease-in-out infinite}
+  @keyframes axWavePulse{0%{opacity:.7;transform:scale(.85)}100%{opacity:0;transform:scale(1.15)}}
+  .axWavePulse{animation:axWavePulse 2.2s ease-out infinite;transform-origin:70px 70px}
+  @media (prefers-reduced-motion: reduce){ .axNodePulse,.axRadarSweep,.axEnvelopeFlap,.axWavePulse{animation:none;opacity:.8} }
+  details.axFaq summary::-webkit-details-marker{display:none}
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:#050A16;color:#EAF0FA">
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:20px 40px;background:rgba(5,10,22,0.88);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" aria-label="Axieonex home" style="display:flex;align-items:center;gap:10px;justify-self:start">
+      <div style="width:26px;height:26px"><dc-import name="LogoMark" hint-size="26px,26px"></dc-import></div>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px">AXIEONEX</span>
+    </a>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;justify-self:center">
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}">Home</a>
+      <a class="axNavLink" href="Axieonex About.dc.html" onClick="{{ navTransition }}">About</a>
+      <a class="axNavLink" href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}">How We Work</a>
+      <a class="axNavLink" href="Axieonex Services.dc.html" onClick="{{ navTransition }}">Services</a>
+      <a class="axNavLink" href="Axieonex Pricing.dc.html" onClick="{{ navTransition }}">Pricing</a>
+      <a class="axNavLink" href="Axieonex Insights.dc.html" onClick="{{ navTransition }}">Insights</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="justify-self:end;background:{{ service.accent }};color:#03141C;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:2px;white-space:nowrap">Book a strategy call</a>
+  </nav>
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="56px,56px"></dc-import></div></div>
+
+  <!-- HERO -->
+  <section style="max-width:1000px;margin:0 auto;padding:170px 40px 60px">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center">
+      <div>
+        <div data-reveal style="font-size:12px;font-weight:600;color:{{ service.accent }};margin-bottom:16px">{{ service.role }}</div>
+        <h1 data-reveal style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(30px,4.4vw,50px);line-height:1.1;margin:0 0 18px">{{ service.title }}</h1>
+        <p data-reveal style="margin:0;font-size:16.5px;line-height:1.6;color:#AEC0DE;max-width:56ch">{{ service.purpose }}</p>
+      </div>
+      <div style="width:120px;height:120px;flex:none;position:relative">
+        <sc-if value="{{ isVisualLeadGen }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+            <circle cx="70" cy="70" r="58" fill="none" stroke="{{ service.accent }}" stroke-width="1" opacity=".3"></circle>
+            <circle cx="70" cy="70" r="38" fill="none" stroke="{{ service.accent }}" stroke-width="1" opacity=".25"></circle>
+            <line class="axRadarSweep" x1="70" y1="70" x2="70" y2="12" stroke="{{ service.accent }}" stroke-width="2"></line>
+            <circle class="axNodePulse" cx="94" cy="46" r="4" fill="{{ service.accent }}"></circle>
+            <circle class="axNodePulse" cx="46" cy="96" r="3" fill="{{ service.accent }}" style="animation-delay:.5s"></circle>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ isVisualAppt }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+            <rect x="26" y="30" width="88" height="80" rx="6" fill="none" stroke="{{ service.accent }}" stroke-width="1.5" opacity=".4"></rect>
+            <line x1="26" y1="52" x2="114" y2="52" stroke="{{ service.accent }}" stroke-width="1.5" opacity=".4"></line>
+            <circle class="axNodePulse" cx="70" cy="80" r="16" fill="none" stroke="{{ service.accent }}" stroke-width="2"></circle>
+            <path d="M62,80 L68,86 L80,72" fill="none" stroke="{{ service.accent }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ isVisualHybrid }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+            <circle class="axNodePulse" cx="56" cy="70" r="30" fill="none" stroke="{{ service.accent }}" stroke-width="2"></circle>
+            <circle class="axNodePulse" cx="86" cy="70" r="30" fill="none" stroke="{{ service.accent }}" stroke-width="2" style="animation-delay:.6s"></circle>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ isVisualEmail }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+            <rect x="24" y="42" width="92" height="60" rx="4" fill="none" stroke="{{ service.accent }}" stroke-width="1.5" opacity=".5"></rect>
+            <path class="axEnvelopeFlap" d="M24,42 L70,80 L116,42" fill="none" stroke="{{ service.accent }}" stroke-width="2"></path>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ isVisualLinkedin }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+            <line x1="70" y1="70" x2="30" y2="40" stroke="{{ service.accent }}" stroke-width="1.5" opacity=".5"></line>
+            <line x1="70" y1="70" x2="112" y2="42" stroke="{{ service.accent }}" stroke-width="1.5" opacity=".5"></line>
+            <line x1="70" y1="70" x2="100" y2="106" stroke="{{ service.accent }}" stroke-width="1.5" opacity=".5"></line>
+            <line x1="70" y1="70" x2="34" y2="102" stroke="{{ service.accent }}" stroke-width="1.5" opacity=".5"></line>
+            <circle class="axNodePulse" cx="70" cy="70" r="10" fill="{{ service.accent }}"></circle>
+            <circle class="axNodePulse" cx="30" cy="40" r="4" fill="{{ service.accent }}" style="animation-delay:.2s"></circle>
+            <circle class="axNodePulse" cx="112" cy="42" r="4" fill="{{ service.accent }}" style="animation-delay:.4s"></circle>
+            <circle class="axNodePulse" cx="100" cy="106" r="4" fill="{{ service.accent }}" style="animation-delay:.6s"></circle>
+            <circle class="axNodePulse" cx="34" cy="102" r="4" fill="{{ service.accent }}" style="animation-delay:.8s"></circle>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ isVisualCalling }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+            <circle class="axWavePulse" cx="70" cy="70" r="20" fill="none" stroke="{{ service.accent }}" stroke-width="1.5"></circle>
+            <circle class="axWavePulse" cx="70" cy="70" r="34" fill="none" stroke="{{ service.accent }}" stroke-width="1.5" style="animation-delay:.5s"></circle>
+            <circle class="axWavePulse" cx="70" cy="70" r="48" fill="none" stroke="{{ service.accent }}" stroke-width="1.5" style="animation-delay:1s"></circle>
+            <circle cx="70" cy="70" r="8" fill="{{ service.accent }}"></circle>
+          </svg>
+        </sc-if>
+        <sc-if value="{{ isVisualStrategy }}" hint-placeholder-val="{{ false }}">
+          <svg viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+            <line x1="20" y1="46" x2="120" y2="46" stroke="{{ service.accent }}" stroke-width="1" opacity=".3"></line>
+            <line x1="20" y1="70" x2="120" y2="70" stroke="{{ service.accent }}" stroke-width="1" opacity=".3"></line>
+            <line x1="20" y1="94" x2="120" y2="94" stroke="{{ service.accent }}" stroke-width="1" opacity=".3"></line>
+            <line x1="46" y1="20" x2="46" y2="120" stroke="{{ service.accent }}" stroke-width="1" opacity=".3"></line>
+            <line x1="94" y1="20" x2="94" y2="120" stroke="{{ service.accent }}" stroke-width="1" opacity=".3"></line>
+            <circle class="axNodePulse" cx="46" cy="46" r="5" fill="{{ service.accent }}"></circle>
+            <circle class="axNodePulse" cx="94" cy="70" r="5" fill="{{ service.accent }}" style="animation-delay:.4s"></circle>
+            <circle class="axNodePulse" cx="46" cy="94" r="5" fill="{{ service.accent }}" style="animation-delay:.8s"></circle>
+          </svg>
+        </sc-if>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section data-reveal style="max-width:1000px;margin:0 auto;padding:20px 40px 60px;border-top:1px solid rgba(255,255,255,0.08)">
+    <div style="font-size:11px;font-weight:600;color:#8FA3C4;margin:24px 0 12px">The problem it solves</div>
+    <p style="margin:0;font-size:16px;line-height:1.65;color:#D6E0F0;max-width:70ch">{{ service.problem }}</p>
+  </section>
+
+  <!-- RESPONSIBILITY SPLIT -->
+  <section data-reveal style="max-width:1000px;margin:0 auto;padding:0 40px 70px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.08)">
+      <div style="background:#050A16;padding:22px"><div style="font-size:11px;font-weight:600;color:{{ service.accent }};margin-bottom:10px">AI PERFORMS</div><p style="margin:0;font-size:13.5px;line-height:1.55;color:#AEC0DE">{{ service.ai }}</p></div>
+      <div style="background:#050A16;padding:22px"><div style="font-size:11px;font-weight:600;color:{{ service.accent }};margin-bottom:10px">HUMANS PERFORM</div><p style="margin:0;font-size:13.5px;line-height:1.55;color:#AEC0DE">{{ service.human }}</p></div>
+      <div style="background:#050A16;padding:22px"><div style="font-size:11px;font-weight:600;color:{{ service.accent }};margin-bottom:10px">YOU CONTROL</div><p style="margin:0;font-size:13.5px;line-height:1.55;color:#AEC0DE">{{ service.control }}</p></div>
+      <div style="background:#050A16;padding:22px"><div style="font-size:11px;font-weight:600;color:{{ service.accent }};margin-bottom:10px">YOU RECEIVE</div><p style="margin:0;font-size:13.5px;line-height:1.55;color:#AEC0DE">{{ service.receive }}</p></div>
+    </div>
+  </section>
+
+  <!-- CHANNELS + QUALITY -->
+  <section data-reveal style="max-width:1000px;margin:0 auto;padding:0 40px 70px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px">
+      <div><div style="font-size:11px;font-weight:600;color:#8FA3C4;margin-bottom:10px">CHANNELS AND CAPABILITIES</div><p style="margin:0;font-size:14.5px;line-height:1.6;color:#D6E0F0">{{ service.channels }}</p></div>
+      <div><div style="font-size:11px;font-weight:600;color:#8FA3C4;margin-bottom:10px">QUALITY CONTROLS</div><p style="margin:0;font-size:14.5px;line-height:1.6;color:#D6E0F0">{{ service.quality }}</p></div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section data-reveal style="max-width:1000px;margin:0 auto;padding:0 40px 70px">
+    <div style="font-size:11px;font-weight:600;color:#8FA3C4;margin-bottom:18px">How it operates</div>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ service.steps }}" as="step" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:40px 1fr;gap:16px;padding:16px 0;border-top:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:16px;color:{{ service.accent }}">{{ step.n }}</div>
+          <div style="font-size:14.5px;color:#D6E0F0">{{ step.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section data-reveal style="max-width:1000px;margin:0 auto;padding:0 40px 70px">
+    <div style="font-size:11px;font-weight:600;color:#8FA3C4;margin-bottom:18px">Frequently asked</div>
+    <details class="axFaq" style="border-top:1px solid rgba(255,255,255,0.08);padding:16px 0"><summary style="cursor:pointer;font-size:15px;font-weight:600;list-style:none">{{ service.faqQ }}</summary><p style="margin:12px 0 0;font-size:14px;line-height:1.6;color:#AEC0DE">{{ service.faqA }}</p></details>
+  </section>
+
+  <!-- RELATED + CTA -->
+  <section data-reveal style="max-width:1000px;margin:0 auto;padding:0 40px 100px">
+    <div style="font-size:11px;font-weight:600;color:#8FA3C4;margin-bottom:16px">Related services</div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px">
+      <sc-for list="{{ related }}" as="r" hint-placeholder-count="2">
+        <a href="{{ r.href }}" onClick="{{ r.navTransition }}" style="border:1px solid rgba(255,255,255,0.14);padding:9px 14px;font-size:13px;border-radius:2px">{{ r.title }}</a>
+      </sc-for>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="display:inline-block;background:{{ service.accent }};color:#03141C;font-size:14.5px;font-weight:600;padding:14px 24px;border-radius:2px">Book a strategy call</a>
+  </section>
+
+  <footer style="background:#03060E;padding:40px;text-align:center;font-size:12.5px;color:#5C6B85">
+    info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.<br />&#169; 2026 Axieonex Sales. All rights reserved.
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SERVICES = {
+  'lead-generation': { visual: 'leadgen', title: 'Lead Generation', role: 'INTAKE', accent: '#3E7BFA',
+    channels: 'Firmographic, funding, hiring and technology-stack signal, refreshed continuously across your target market.',
+    quality: 'Every account is checked against your ICP by a human analyst before it ever enters outreach.',
+    purpose: 'Signal-driven sourcing of accounts that are actually ready to buy, not a purchased list run through generic automation.',
+    problem: 'Bought lists and generic scraping produce volume without relevance. Reps waste cycles on accounts with no real buying signal.',
+    ai: 'Continuously scans funding, hiring and technology-stack signals across your target market.', human: 'Validates every lead against your ICP before it enters the system.',
+    control: 'You define the ICP, exclusions and account priorities.', receive: 'A live, continuously refreshed pipeline of accounts worth pursuing.',
+    steps: [{n:'01',text:'Define ICP and exclusion criteria together.'},{n:'02',text:'Configure signal sources and scoring.'},{n:'03',text:'Human analysts validate the highest-scoring accounts.'},{n:'04',text:'Qualified accounts flow into outreach.'}],
+    faqQ: 'How is this different from a purchased list?', faqA: 'Lists are static and decay immediately. This runs continuously against live market signal, so relevance does not expire.' },
+  'appointment-setting': { visual: 'appt', title: 'Appointment Setting', role: 'QUALIFICATION', accent: '#E94FA8',
+    channels: 'Works across every inbound reply channel: email, LinkedIn and calling.',
+    quality: 'A strategist confirms real intent by conversation before any meeting is booked.',
+    purpose: 'Meetings booked only once interest has been genuinely qualified, not booked to hit a volume target.',
+    problem: 'Volume-based appointment setting fills calendars with meetings that go nowhere, wasting your team\u2019s time.',
+    ai: 'Flags replies worth human attention immediately and prioritizes follow-up timing.', human: 'Confirms real intent and fit before anything reaches your calendar.',
+    control: 'You define what "qualified" means and who should be on the call.', receive: 'A calendar of conversations worth having.',
+    steps: [{n:'01',text:'Define your qualification bar.'},{n:'02',text:'Replies are triaged and prioritized.'},{n:'03',text:'A strategist confirms intent by conversation.'},{n:'04',text:'The meeting is booked directly on your calendar.'}],
+    faqQ: 'What counts as a qualified meeting?', faqA: 'One where the prospect has confirmed a real need, timeline and role in the buying decision, defined together with you at kickoff.' },
+  'hybrid-sdr': { visual: 'hybrid', title: 'Hybrid SDR Service', role: 'FULL-STACK', accent: '#5CC8E8',
+    channels: 'Email, LinkedIn, calling, signal intelligence and qualification, run as one function.',
+    quality: 'Weekly review with your team against the quality bar you define at kickoff.',
+    purpose: 'The complete engine run end to end as your outbound function, replacing the need to build an internal team.',
+    problem: 'Building an internal SDR function means months of hiring and ramp before the first reliable pipeline appears.',
+    ai: 'Runs detection, orchestration and reporting continuously across every channel.', human: 'Owns every conversation, decision and relationship end to end.',
+    control: 'You set strategy direction, brand voice and quarterly priorities.', receive: 'A fully staffed outbound function without the hiring and management burden.',
+    steps: [{n:'01',text:'Full onboarding into your market and offer.'},{n:'02',text:'The complete system is configured and launched.'},{n:'03',text:'The team runs signal, outreach and qualification together.'},{n:'04',text:'Continuous optimization from real results.'}],
+    faqQ: 'Does this replace hiring entirely?', faqA: 'For most clients, yes, this is designed to be the complete outbound function rather than a supplement to one.' },
+  'cold-email': { visual: 'email', title: 'Cold Email and Messaging', role: 'OUTREACH', accent: '#8B5CF6',
+    channels: 'Email sequencing, coordinated with LinkedIn and calling cadence.',
+    quality: 'A strategist reviews every sequence for tone and claims before it sends.',
+    purpose: 'Personalized sequences at scale, supervised for tone, timing and relevance rather than run on autopilot.',
+    problem: 'Generic templated email at scale gets ignored or marked as spam, damaging deliverability and brand.',
+    ai: 'Drafts and schedules personalized messaging at scale based on account signal.', human: 'Reviews tone, timing and cadence before anything sends.',
+    control: 'You approve messaging voice and any claims made on your behalf.', receive: 'A messaging engine that reads like your best rep wrote it.',
+    steps: [{n:'01',text:'Define voice and positioning together.'},{n:'02',text:'Sequences are drafted against live signal.'},{n:'03',text:'A strategist reviews before send.'},{n:'04',text:'Replies are routed to human handling.'}],
+    faqQ: 'How is deliverability protected?', faqA: 'Volume, cadence and personalization are all tuned to stay well within safe sending practices for your domain.' },
+  'linkedin-outreach': { visual: 'linkedin', title: 'LinkedIn Outreach', role: 'OUTREACH', accent: '#3E7BFA',
+    channels: 'Connection requests, messaging and engagement, coordinated with email and calling.',
+    quality: 'Every reply is handled personally by a human, never an automated responder.',
+    purpose: 'Social-first engagement coordinated with every other channel, not run as an isolated campaign.',
+    problem: 'LinkedIn outreach run in isolation from email and calling often repeats or contradicts other touchpoints.',
+    ai: 'Identifies the right moment and sequence for social touchpoints based on account activity.', human: 'Handles every reply and relationship personally.',
+    control: 'You approve the profile voice and connection strategy.', receive: 'Consistent presence in front of decision-makers where they already spend time.',
+    steps: [{n:'01',text:'Align LinkedIn cadence with email and calling.'},{n:'02',text:'Connection and message sequences launch.'},{n:'03',text:'A human manages every reply.'},{n:'04',text:'Engagement feeds back into account scoring.'}],
+    faqQ: 'Whose profile is used?', faqA: 'Typically a designated team member\u2019s profile, configured and supervised by us, so the voice stays authentically yours.' },
+  'cold-calling': { visual: 'calling', title: 'Cold Calling', role: 'EXECUTION', accent: '#E94FA8',
+    channels: 'Outbound calling, prioritized by live signal and prior multi-channel engagement.',
+    quality: 'Calls are made only by experienced human representatives, reviewed against your talk-track standards.',
+    purpose: 'Experienced reps calling warm signal, not cold lists dialed at random.',
+    problem: 'Calling from a cold list wastes rep time and produces poor first impressions with prospects.',
+    ai: 'Prioritizes who to call and when, based on live signal strength and prior engagement.', human: 'Makes every call and handles every objection personally.',
+    control: 'You define talk tracks, boundaries and escalation rules.', receive: 'Conversations with people who already have a reason to listen.',
+    steps: [{n:'01',text:'Define call scripts and boundaries together.'},{n:'02',text:'Calls are prioritized by signal strength.'},{n:'03',text:'Experienced reps handle every conversation.'},{n:'04',text:'Outcomes are logged and fed back into scoring.'}],
+    faqQ: 'Who makes the calls?', faqA: 'Experienced human representatives, never a robocaller or synthetic voice.' },
+  'presales-gtm': { visual: 'strategy', title: 'Pre-Sales and GTM Strategy', role: 'STRATEGY', accent: '#8B5CF6',
+    channels: 'Applies across every channel: it defines the plan that email, LinkedIn and calling then execute.',
+    quality: 'The final strategy is reviewed and approved by you before execution begins.',
+    purpose: 'Targeting, offer and channel design completed before a single message sends.',
+    problem: 'Outreach without a clear ICP, offer and channel plan produces activity without direction.',
+    ai: 'Models market segments and channel fit from available signal data.', human: 'Designs positioning and go-to-market plan directly with you.',
+    control: 'You approve the final strategy and priority markets.', receive: 'A revenue system built around your actual market, not a generic playbook.',
+    steps: [{n:'01',text:'Discovery on your business and market.'},{n:'02',text:'ICP and segment modeling.'},{n:'03',text:'Offer and channel plan is designed together.'},{n:'04',text:'The plan becomes the blueprint for execution.'}],
+    faqQ: 'Is this a one-time engagement?', faqA: 'It can be standalone, or it becomes the foundation for an ongoing Hybrid SDR engagement.' }
+};
+const TITLES = Object.keys(SERVICES).map(k => ({ slug: k, title: SERVICES[k].title }));
+
+function getSlug() {
+  try { return new URLSearchParams(window.location.search).get('slug') || 'lead-generation'; } catch (e) { return 'lead-generation'; }
+}
+
+class Component extends DCLogic {
+  state = { transitioning: false };
+
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+
+  componentDidMount() {
+    const els = document.querySelectorAll('[data-reveal]');
+    els.forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('is-in'); });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-in'); });
+      }, { threshold: 0.1 });
+      els.forEach(el => io.observe(el));
+      this._io = io;
+    } else { els.forEach(el => el.classList.add('is-in')); }
+  }
+  componentWillUnmount() { if (this._io) this._io.disconnect(); }
+
+  renderVals() {
+    const slug = getSlug();
+    const service = SERVICES[slug] || SERVICES['lead-generation'];
+    const related = TITLES.filter(t => t.slug !== slug).slice(0, 3).map(t => ({
+      title: t.title, href: 'Axieonex Service Detail.dc.html?slug=' + t.slug, navTransition: (e) => this.navTransition(e)
+    }));
+    return {
+      transitionClass: this.state.transitioning ? 'is-active' : '',
+      navTransition: (e) => this.navTransition(e),
+      service, related,
+      isVisualLeadGen: service.visual === 'leadgen',
+      isVisualAppt: service.visual === 'appt',
+      isVisualHybrid: service.visual === 'hybrid',
+      isVisualEmail: service.visual === 'email',
+      isVisualLinkedin: service.visual === 'linkedin',
+      isVisualCalling: service.visual === 'calling',
+      isVisualStrategy: service.visual === 'strategy'
+    };
+  }
+}
+</script>
+</body>
+</html>

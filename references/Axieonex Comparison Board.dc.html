@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Instrument+Serif&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body { margin:0; background:#F7F6F3; color:#14161A; -webkit-font-smoothing:antialiased; }
+  a { color:#14161A; }
+  a:hover { color:#C7643C; }
+</style>
+</helmet>
+
+<div style="font-family:Archivo,'Helvetica Neue',Helvetica,Arial,sans-serif; background:#F7F6F3; color:#14161A; padding:0 0 120px">
+  <div style="max-width:1420px; margin:0 auto; padding:0 48px">
+
+    <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:40px; padding:80px 0 34px; border-bottom:1px solid #E2E0DA">
+      <div style="max-width:720px">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.14em; color:#8A8E94">PHASE 04 &amp; 05 · COMPARISON BOARD</div>
+        <h1 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:64px; line-height:1; margin:20px 0 16px; letter-spacing:-0.01em">Four concepts, identical conditions</h1>
+        <p style="margin:0; font-size:17px; line-height:1.55; color:#4B4F56; max-width:62ch; text-wrap:pretty">Same sizes, same placements, same neutral chrome. The mockups are deliberately plain — no photography, no glow, no decoration — so you are judging the marks, not the presentation.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6E7278; padding-bottom:8px">
+        <a href="Axieonex Brand Exploration.dc.html" style="text-decoration:none">← STRATEGY &amp; CONCEPTS</a>
+        <a href="#scores" style="text-decoration:none">SCORING MATRIX</a>
+        <a href="#specs" style="text-decoration:none">PLATFORM SPECS</a>
+        <a href="#reco" style="text-decoration:none; color:#C7643C">RECOMMENDATION</a>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:132px repeat(4,1fr); gap:1px; background:#E2E0DA; border:1px solid #E2E0DA; margin-top:40px">
+
+      <!-- header -->
+      <div style="background:#F7F6F3"></div>
+      <div style="background:#FFFFFF; padding:16px 18px"><div style="font-size:15px; font-weight:600">A · Twin Apex</div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#8A8E94; margin-top:3px">REFINED EVOLUTION</div></div>
+      <div style="background:#FFFFFF; padding:16px 18px"><div style="font-size:15px; font-weight:600">B · Convergence</div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#8A8E94; margin-top:3px">ORCHESTRATION</div></div>
+      <div style="background:#FFFFFF; padding:16px 18px"><div style="font-size:15px; font-weight:600">C · Compound</div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#8A8E94; margin-top:3px">PRECISION + MOMENTUM</div></div>
+      <div style="background:#FFFFFF; padding:16px 18px"><div style="font-size:15px; font-weight:600">D · Open Quadrant</div><div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#8A8E94; margin-top:3px">WILDCARD</div></div>
+
+      <!-- ROW: white -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">WHITE BG</div>
+      <div style="background:#FFFFFF; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#12161B; flex:none"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:600; letter-spacing:0.1em; color:#12161B">AXIEONEX</div></div>
+      <div style="background:#FFFFFF; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#101A2B; flex:none"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:500; letter-spacing:0.1em; color:#101A2B">AXIEONEX</div></div>
+      <div style="background:#FFFFFF; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#0C0D10; flex:none"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:500; letter-spacing:0.12em; color:#0C0D10">AXIEONEX</div></div>
+      <div style="background:#FFFFFF; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#191720; flex:none"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:500; letter-spacing:0.11em; color:#191720">AXIEONEX</div></div>
+
+      <!-- ROW: dark -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">DARK BG</div>
+      <div style="background:#12161B; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#F4F2ED; flex:none"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:600; letter-spacing:0.1em; color:#F4F2ED">AXIEONEX</div></div>
+      <div style="background:#101A2B; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#F5F5F2; flex:none"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:500; letter-spacing:0.1em; color:#F5F5F2">AXIEONEX</div></div>
+      <div style="background:#0C0D10; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#F6F4EF; flex:none"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:500; letter-spacing:0.12em; color:#F6F4EF">AXIEONEX</div></div>
+      <div style="background:#191720; padding:26px; display:flex; align-items:center; gap:12px"><div style="width:38px; height:38px; color:#F7F6F3; flex:none"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><div style="font-size:19px; font-weight:500; letter-spacing:0.11em; color:#F7F6F3">AXIEONEX</div></div>
+
+      <!-- ROW: nav bar -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">WEB NAV</div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="border:1px solid #E8E6E1; background:#FFFFFF; padding:11px 14px; display:flex; align-items:center; gap:10px">
+          <div style="width:22px; height:22px; color:#12161B; flex:none"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:12.5px; font-weight:600; letter-spacing:0.09em; color:#12161B">AXIEONEX</div>
+          <div style="margin-left:auto; display:flex; gap:10px; font-size:9.5px; color:#8A8E94">Services<span>Platform</span><span>About</span></div>
+          <div style="background:#12161B; color:#FFF; font-size:9px; padding:6px 9px">Book a call</div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="border:1px solid #E8E6E1; background:#FFFFFF; padding:11px 14px; display:flex; align-items:center; gap:10px">
+          <div style="width:22px; height:22px; color:#101A2B; flex:none"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:12.5px; font-weight:500; letter-spacing:0.09em; color:#101A2B">AXIEONEX</div>
+          <div style="margin-left:auto; display:flex; gap:10px; font-size:9.5px; color:#8A8E94">Services<span>Platform</span><span>About</span></div>
+          <div style="background:#0E9A8A; color:#FFF; font-size:9px; padding:6px 9px">Book a call</div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="border:1px solid #E8E6E1; background:#FFFFFF; padding:11px 14px; display:flex; align-items:center; gap:10px">
+          <div style="width:22px; height:22px; color:#0C0D10; flex:none"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:12.5px; font-weight:500; letter-spacing:0.11em; color:#0C0D10">AXIEONEX</div>
+          <div style="margin-left:auto; display:flex; gap:10px; font-size:9.5px; color:#8A8E94">Services<span>Platform</span><span>About</span></div>
+          <div style="background:#0C0D10; color:#FFF; font-size:9px; padding:6px 9px">Book a call</div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="border:1px solid #E8E6E1; background:#FFFFFF; padding:11px 14px; display:flex; align-items:center; gap:10px">
+          <div style="width:22px; height:22px; color:#191720; flex:none"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:12.5px; font-weight:500; letter-spacing:0.1em; color:#191720">AXIEONEX</div>
+          <div style="margin-left:auto; display:flex; gap:10px; font-size:9.5px; color:#8A8E94">Services<span>Platform</span><span>About</span></div>
+          <div style="background:#6E5DE7; color:#FFF; font-size:9px; padding:6px 9px">Book a call</div>
+        </div>
+      </div>
+
+      <!-- ROW: hero -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">WEB HERO</div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="background:#F4F2ED; padding:22px 20px 26px">
+          <div style="width:20px; height:20px; color:#12161B; margin-bottom:16px"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:20px; font-weight:600; line-height:1.15; letter-spacing:-0.01em; color:#12161B">Predictable pipeline, engineered.</div>
+          <div style="font-size:10.5px; color:#5C6066; margin-top:9px; line-height:1.5">AI orchestration plus senior human SDRs, in one accountable revenue system.</div>
+          <div style="display:flex; gap:8px; margin-top:16px"><span style="background:#12161B; color:#FFF; font-size:9.5px; padding:8px 12px">Book a call</span><span style="border:1px solid #C6C2B9; font-size:9.5px; padding:8px 12px; color:#12161B">See the engine</span></div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="background:#101A2B; padding:22px 20px 26px">
+          <div style="width:20px; height:20px; color:#0E9A8A; margin-bottom:16px"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:20px; font-weight:500; line-height:1.15; letter-spacing:-0.01em; color:#F5F5F2">Predictable pipeline, engineered.</div>
+          <div style="font-size:10.5px; color:#9AA6B4; margin-top:9px; line-height:1.5">AI orchestration plus senior human SDRs, in one accountable revenue system.</div>
+          <div style="display:flex; gap:8px; margin-top:16px"><span style="background:#0E9A8A; color:#04231F; font-size:9.5px; padding:8px 12px">Book a call</span><span style="border:1px solid #2E3B4E; font-size:9.5px; padding:8px 12px; color:#F5F5F2">See the engine</span></div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="background:#F6F4EF; padding:22px 20px 26px">
+          <div style="width:20px; height:20px; color:#0C0D10; margin-bottom:16px"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:20px; font-weight:500; line-height:1.15; letter-spacing:-0.01em; color:#0C0D10">Predictable pipeline, engineered.</div>
+          <div style="font-size:10.5px; color:#5C6066; margin-top:9px; line-height:1.5">AI orchestration plus senior human SDRs, in one accountable revenue system.</div>
+          <div style="display:flex; gap:8px; margin-top:16px"><span style="background:#0C0D10; color:#FFF; font-size:9.5px; padding:8px 12px">Book a call</span><span style="border:1px solid #D9A227; font-size:9.5px; padding:8px 12px; color:#0C0D10">See the engine</span></div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF; padding:20px">
+        <div style="background:#191720; padding:22px 20px 26px">
+          <div style="width:20px; height:20px; color:#6E5DE7; margin-bottom:16px"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div>
+          <div style="font-size:20px; font-weight:500; line-height:1.15; letter-spacing:-0.01em; color:#F7F6F3">Predictable pipeline, engineered.</div>
+          <div style="font-size:10.5px; color:#A3A0AE; margin-top:9px; line-height:1.5">AI orchestration plus senior human SDRs, in one accountable revenue system.</div>
+          <div style="display:flex; gap:8px; margin-top:16px"><span style="background:#6E5DE7; color:#FFF; font-size:9.5px; padding:8px 12px">Book a call</span><span style="border:1px solid #3A3648; font-size:9.5px; padding:8px 12px; color:#F7F6F3">See the engine</span></div>
+        </div>
+      </div>
+
+      <!-- ROW: dashboard sidebar -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">SAAS SIDEBAR</div>
+      <div style="background:#FFFFFF; padding:20px"><div style="display:flex; border:1px solid #E8E6E1; height:132px">
+        <div style="width:52px; background:#12161B; padding:12px 0; display:flex; flex-direction:column; align-items:center; gap:14px"><div style="width:20px; height:20px; color:#F4F2ED"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><div style="width:18px; height:3px; background:#3A3E44"></div><div style="width:18px; height:3px; background:#3A3E44"></div><div style="width:18px; height:3px; background:#3A3E44"></div></div>
+        <div style="flex:1; background:#FBFAF8; padding:12px"><div style="width:52%; height:7px; background:#DEDBD4"></div><div style="display:flex; gap:8px; margin-top:12px"><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div></div><div style="height:32px; margin-top:8px; border:1px solid #E8E6E1"></div></div>
+      </div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="display:flex; border:1px solid #E8E6E1; height:132px">
+        <div style="width:52px; background:#101A2B; padding:12px 0; display:flex; flex-direction:column; align-items:center; gap:14px"><div style="width:20px; height:20px; color:#0E9A8A"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><div style="width:18px; height:3px; background:#2E3B4E"></div><div style="width:18px; height:3px; background:#2E3B4E"></div><div style="width:18px; height:3px; background:#2E3B4E"></div></div>
+        <div style="flex:1; background:#FBFAF8; padding:12px"><div style="width:52%; height:7px; background:#DEDBD4"></div><div style="display:flex; gap:8px; margin-top:12px"><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div></div><div style="height:32px; margin-top:8px; border:1px solid #E8E6E1"></div></div>
+      </div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="display:flex; border:1px solid #E8E6E1; height:132px">
+        <div style="width:52px; background:#0C0D10; padding:12px 0; display:flex; flex-direction:column; align-items:center; gap:14px"><div style="width:20px; height:20px; color:#D9A227"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><div style="width:18px; height:3px; background:#33363B"></div><div style="width:18px; height:3px; background:#33363B"></div><div style="width:18px; height:3px; background:#33363B"></div></div>
+        <div style="flex:1; background:#FBFAF8; padding:12px"><div style="width:52%; height:7px; background:#DEDBD4"></div><div style="display:flex; gap:8px; margin-top:12px"><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div></div><div style="height:32px; margin-top:8px; border:1px solid #E8E6E1"></div></div>
+      </div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="display:flex; border:1px solid #E8E6E1; height:132px">
+        <div style="width:52px; background:#191720; padding:12px 0; display:flex; flex-direction:column; align-items:center; gap:14px"><div style="width:20px; height:20px; color:#6E5DE7"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><div style="width:18px; height:3px; background:#3A3648"></div><div style="width:18px; height:3px; background:#3A3648"></div><div style="width:18px; height:3px; background:#3A3648"></div></div>
+        <div style="flex:1; background:#FBFAF8; padding:12px"><div style="width:52%; height:7px; background:#DEDBD4"></div><div style="display:flex; gap:8px; margin-top:12px"><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div><div style="flex:1; height:34px; border:1px solid #E8E6E1"></div></div><div style="height:32px; margin-top:8px; border:1px solid #E8E6E1"></div></div>
+      </div></div>
+
+      <!-- ROW: avatars -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">AVATARS<br />LI · IG · FB</div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:14px">
+        <div style="width:56px; height:56px; border-radius:50%; background:#12161B; display:flex; align-items:center; justify-content:center"><div style="width:29px; height:29px; color:#F4F2ED"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:40px; height:40px; border-radius:50%; background:#F4F2ED; border:1px solid #E2E0DA; display:flex; align-items:center; justify-content:center"><div style="width:21px; height:21px; color:#12161B"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:28px; height:28px; border-radius:50%; background:#12161B; display:flex; align-items:center; justify-content:center"><div style="width:15px; height:15px; color:#F4F2ED"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div></div>
+      </div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:14px">
+        <div style="width:56px; height:56px; border-radius:50%; background:#101A2B; display:flex; align-items:center; justify-content:center"><div style="width:29px; height:29px; color:#F5F5F2"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:40px; height:40px; border-radius:50%; background:#F5F5F2; border:1px solid #E2E0DA; display:flex; align-items:center; justify-content:center"><div style="width:21px; height:21px; color:#101A2B"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:28px; height:28px; border-radius:50%; background:#101A2B; display:flex; align-items:center; justify-content:center"><div style="width:15px; height:15px; color:#F5F5F2"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div></div>
+      </div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:14px">
+        <div style="width:56px; height:56px; border-radius:50%; background:#0C0D10; display:flex; align-items:center; justify-content:center"><div style="width:29px; height:29px; color:#F6F4EF"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:40px; height:40px; border-radius:50%; background:#F6F4EF; border:1px solid #E2E0DA; display:flex; align-items:center; justify-content:center"><div style="width:21px; height:21px; color:#0C0D10"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:28px; height:28px; border-radius:50%; background:#0C0D10; display:flex; align-items:center; justify-content:center"><div style="width:15px; height:15px; color:#F6F4EF"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div></div>
+      </div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:14px">
+        <div style="width:56px; height:56px; border-radius:50%; background:#191720; display:flex; align-items:center; justify-content:center"><div style="width:29px; height:29px; color:#F7F6F3"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:40px; height:40px; border-radius:50%; background:#F7F6F3; border:1px solid #E2E0DA; display:flex; align-items:center; justify-content:center"><div style="width:21px; height:21px; color:#191720"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div></div>
+        <div style="width:28px; height:28px; border-radius:50%; background:#191720; display:flex; align-items:center; justify-content:center"><div style="width:15px; height:15px; color:#F7F6F3"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div></div>
+      </div>
+
+      <!-- ROW: linkedin cover -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">LINKEDIN COVER<br />1128×191</div>
+      <div style="background:#FFFFFF; padding:20px"><div style="position:relative">
+        <div style="background:#12161B; aspect-ratio:1128/191; display:flex; align-items:center; justify-content:center"><div style="text-align:center"><div style="font-size:11px; font-weight:600; letter-spacing:0.14em; color:#F4F2ED">AXIEONEX</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.2em; color:#C7643C; margin-top:4px">REVENUE, ENGINEERED</div></div></div>
+        <div style="position:absolute; left:14px; bottom:-16px; width:36px; height:36px; border-radius:50%; background:#F4F2ED; border:2px solid #FFF; display:flex; align-items:center; justify-content:center"><div style="width:19px; height:19px; color:#12161B"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div></div>
+      </div><div style="height:22px"></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="position:relative">
+        <div style="background:#101A2B; aspect-ratio:1128/191; display:flex; align-items:center; justify-content:center"><div style="text-align:center"><div style="font-size:11px; font-weight:500; letter-spacing:0.14em; color:#F5F5F2">AXIEONEX</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.2em; color:#0E9A8A; margin-top:4px">REVENUE, ENGINEERED</div></div></div>
+        <div style="position:absolute; left:14px; bottom:-16px; width:36px; height:36px; border-radius:50%; background:#F5F5F2; border:2px solid #FFF; display:flex; align-items:center; justify-content:center"><div style="width:19px; height:19px; color:#101A2B"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div></div>
+      </div><div style="height:22px"></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="position:relative">
+        <div style="background:#0C0D10; aspect-ratio:1128/191; display:flex; align-items:center; justify-content:center"><div style="text-align:center"><div style="font-size:11px; font-weight:500; letter-spacing:0.16em; color:#F6F4EF">AXIEONEX</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.2em; color:#D9A227; margin-top:4px">REVENUE, ENGINEERED</div></div></div>
+        <div style="position:absolute; left:14px; bottom:-16px; width:36px; height:36px; border-radius:50%; background:#F6F4EF; border:2px solid #FFF; display:flex; align-items:center; justify-content:center"><div style="width:19px; height:19px; color:#0C0D10"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div></div>
+      </div><div style="height:22px"></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="position:relative">
+        <div style="background:#191720; aspect-ratio:1128/191; display:flex; align-items:center; justify-content:center"><div style="text-align:center"><div style="font-size:11px; font-weight:500; letter-spacing:0.15em; color:#F7F6F3">AXIEONEX</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.2em; color:#8E80F0; margin-top:4px">REVENUE, ENGINEERED</div></div></div>
+        <div style="position:absolute; left:14px; bottom:-16px; width:36px; height:36px; border-radius:50%; background:#F7F6F3; border:2px solid #FFF; display:flex; align-items:center; justify-content:center"><div style="width:19px; height:19px; color:#191720"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div></div>
+      </div><div style="height:22px"></div></div>
+
+      <!-- ROW: facebook cover -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">FACEBOOK COVER<br />820×312</div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#F4F2ED; aspect-ratio:820/312; padding:14px; display:flex; flex-direction:column; justify-content:space-between"><div style="width:24px; height:24px; color:#12161B"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><div><div style="font-size:13px; font-weight:600; color:#12161B; letter-spacing:-0.01em">AI orchestration for B2B revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.16em; color:#8A8E94; margin-top:5px">AXIEONEX.COM</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#101A2B; aspect-ratio:820/312; padding:14px; display:flex; flex-direction:column; justify-content:space-between"><div style="width:24px; height:24px; color:#0E9A8A"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><div><div style="font-size:13px; font-weight:500; color:#F5F5F2; letter-spacing:-0.01em">AI orchestration for B2B revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.16em; color:#7C8899; margin-top:5px">AXIEONEX.COM</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#F6F4EF; aspect-ratio:820/312; padding:14px; display:flex; flex-direction:column; justify-content:space-between"><div style="width:24px; height:24px; color:#0C0D10"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><div><div style="font-size:13px; font-weight:500; color:#0C0D10; letter-spacing:-0.01em">AI orchestration for B2B revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.16em; color:#A97C15; margin-top:5px">AXIEONEX.COM</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#191720; aspect-ratio:820/312; padding:14px; display:flex; flex-direction:column; justify-content:space-between"><div style="width:24px; height:24px; color:#6E5DE7"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><div><div style="font-size:13px; font-weight:500; color:#F7F6F3; letter-spacing:-0.01em">AI orchestration for B2B revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.16em; color:#8E80F0; margin-top:5px">AXIEONEX.COM</div></div></div></div>
+
+      <!-- ROW: app icon + favicon -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">APP ICON<br />+ FAVICON</div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:16px">
+        <div style="width:52px; height:52px; border-radius:12px; background:#12161B; display:flex; align-items:center; justify-content:center"><div style="width:28px; height:28px; color:#F4F2ED"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div></div>
+        <div style="flex:1; min-width:0"><div style="display:flex; align-items:center; gap:6px; background:#EDEBE6; border-radius:6px 6px 0 0; padding:6px 8px"><div style="width:12px; height:12px; color:#12161B; flex:none"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; color:#5C6066; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">Axieonex — Revenue, engineered</span></div><div style="height:14px; background:#FFF; border:1px solid #EDEBE6; border-top:0"></div></div>
+      </div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:16px">
+        <div style="width:52px; height:52px; border-radius:12px; background:#101A2B; display:flex; align-items:center; justify-content:center"><div style="width:28px; height:28px; color:#0E9A8A"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div></div>
+        <div style="flex:1; min-width:0"><div style="display:flex; align-items:center; gap:6px; background:#EDEBE6; border-radius:6px 6px 0 0; padding:6px 8px"><div style="width:12px; height:12px; color:#101A2B; flex:none"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; color:#5C6066; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">Axieonex — Revenue, engineered</span></div><div style="height:14px; background:#FFF; border:1px solid #EDEBE6; border-top:0"></div></div>
+      </div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:16px">
+        <div style="width:52px; height:52px; border-radius:12px; background:#0C0D10; display:flex; align-items:center; justify-content:center"><div style="width:28px; height:28px; color:#D9A227"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div></div>
+        <div style="flex:1; min-width:0"><div style="display:flex; align-items:center; gap:6px; background:#EDEBE6; border-radius:6px 6px 0 0; padding:6px 8px"><div style="width:12px; height:12px; color:#0C0D10; flex:none"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; color:#5C6066; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">Axieonex — Revenue, engineered</span></div><div style="height:14px; background:#FFF; border:1px solid #EDEBE6; border-top:0"></div></div>
+      </div>
+      <div style="background:#FFFFFF; padding:22px; display:flex; align-items:center; gap:16px">
+        <div style="width:52px; height:52px; border-radius:12px; background:#191720; display:flex; align-items:center; justify-content:center"><div style="width:28px; height:28px; color:#6E5DE7"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div></div>
+        <div style="flex:1; min-width:0"><div style="display:flex; align-items:center; gap:6px; background:#EDEBE6; border-radius:6px 6px 0 0; padding:6px 8px"><div style="width:12px; height:12px; color:#191720; flex:none"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; color:#5C6066; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">Axieonex — Revenue, engineered</span></div><div style="height:14px; background:#FFF; border:1px solid #EDEBE6; border-top:0"></div></div>
+      </div>
+
+      <!-- ROW: business card -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">BUSINESS CARD<br />85×55</div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#F4F2ED; aspect-ratio:85/55; padding:14px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid #EDEBE6"><div style="width:22px; height:22px; color:#12161B"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><div><div style="font-size:10px; font-weight:600; color:#12161B">Name Surname</div><div style="font-size:8px; color:#6E7278; margin-top:2px">Head of Revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.12em; color:#C7643C; margin-top:8px">AXIEONEX.COM</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#101A2B; aspect-ratio:85/55; padding:14px; display:flex; flex-direction:column; justify-content:space-between"><div style="width:22px; height:22px; color:#0E9A8A"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><div><div style="font-size:10px; font-weight:500; color:#F5F5F2">Name Surname</div><div style="font-size:8px; color:#8E9AA8; margin-top:2px">Head of Revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.12em; color:#0E9A8A; margin-top:8px">AXIEONEX.COM</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#0C0D10; aspect-ratio:85/55; padding:14px; display:flex; flex-direction:column; justify-content:space-between"><div style="width:22px; height:22px; color:#D9A227"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><div><div style="font-size:10px; font-weight:500; color:#F6F4EF">Name Surname</div><div style="font-size:8px; color:#8B8E93; margin-top:2px">Head of Revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.12em; color:#D9A227; margin-top:8px">AXIEONEX.COM</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#F7F6F3; aspect-ratio:85/55; padding:14px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid #EDEBE6"><div style="width:22px; height:22px; color:#191720"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><div><div style="font-size:10px; font-weight:500; color:#191720">Name Surname</div><div style="font-size:8px; color:#6E7278; margin-top:2px">Head of Revenue</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.12em; color:#6E5DE7; margin-top:8px">AXIEONEX.COM</div></div></div></div>
+
+      <!-- ROW: title slide -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">TITLE SLIDE<br />16:9</div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#12161B; aspect-ratio:16/9; padding:18px; display:flex; flex-direction:column; justify-content:space-between"><div style="display:flex; align-items:center; gap:8px"><div style="width:16px; height:16px; color:#F4F2ED"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; font-weight:600; letter-spacing:0.16em; color:#F4F2ED">AXIEONEX</span></div><div><div style="font-size:17px; font-weight:600; line-height:1.15; color:#F4F2ED; letter-spacing:-0.01em">Outbound as an engineered system</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#C7643C; margin-top:8px">PROPOSAL · Q4 2026</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#101A2B; aspect-ratio:16/9; padding:18px; display:flex; flex-direction:column; justify-content:space-between"><div style="display:flex; align-items:center; gap:8px"><div style="width:16px; height:16px; color:#0E9A8A"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; font-weight:500; letter-spacing:0.16em; color:#F5F5F2">AXIEONEX</span></div><div><div style="font-size:17px; font-weight:500; line-height:1.15; color:#F5F5F2; letter-spacing:-0.01em">Outbound as an engineered system</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#0E9A8A; margin-top:8px">PROPOSAL · Q4 2026</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#F6F4EF; aspect-ratio:16/9; padding:18px; display:flex; flex-direction:column; justify-content:space-between"><div style="display:flex; align-items:center; gap:8px"><div style="width:16px; height:16px; color:#0C0D10"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; font-weight:500; letter-spacing:0.18em; color:#0C0D10">AXIEONEX</span></div><div><div style="font-size:17px; font-weight:500; line-height:1.15; color:#0C0D10; letter-spacing:-0.01em">Outbound as an engineered system</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#A97C15; margin-top:8px">PROPOSAL · Q4 2026</div></div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#191720; aspect-ratio:16/9; padding:18px; display:flex; flex-direction:column; justify-content:space-between"><div style="display:flex; align-items:center; gap:8px"><div style="width:16px; height:16px; color:#6E5DE7"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><span style="font-size:8.5px; font-weight:500; letter-spacing:0.16em; color:#F7F6F3">AXIEONEX</span></div><div><div style="font-size:17px; font-weight:500; line-height:1.15; color:#F7F6F3; letter-spacing:-0.01em">Outbound as an engineered system</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#8E80F0; margin-top:8px">PROPOSAL · Q4 2026</div></div></div></div>
+
+      <!-- ROW: social post -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">SOCIAL POST<br />1080×1080</div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#F4F2ED; aspect-ratio:1/1; padding:18px; display:flex; flex-direction:column; justify-content:space-between; max-width:210px; margin:0 auto"><div style="width:20px; height:20px; color:#12161B"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><div style="font-size:15px; font-weight:600; line-height:1.2; color:#12161B; letter-spacing:-0.01em">Your pipeline should not depend on who you hired last quarter.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#C7643C">AXIEONEX</div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#101A2B; aspect-ratio:1/1; padding:18px; display:flex; flex-direction:column; justify-content:space-between; max-width:210px; margin:0 auto"><div style="width:20px; height:20px; color:#0E9A8A"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><div style="font-size:15px; font-weight:500; line-height:1.2; color:#F5F5F2; letter-spacing:-0.01em">Your pipeline should not depend on who you hired last quarter.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#0E9A8A">AXIEONEX</div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#0C0D10; aspect-ratio:1/1; padding:18px; display:flex; flex-direction:column; justify-content:space-between; max-width:210px; margin:0 auto"><div style="width:20px; height:20px; color:#D9A227"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><div style="font-size:15px; font-weight:500; line-height:1.2; color:#F6F4EF; letter-spacing:-0.01em">Your pipeline should not depend on who you hired last quarter.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#D9A227">AXIEONEX</div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#191720; aspect-ratio:1/1; padding:18px; display:flex; flex-direction:column; justify-content:space-between; max-width:210px; margin:0 auto"><div style="width:20px; height:20px; color:#6E5DE7"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><div style="font-size:15px; font-weight:500; line-height:1.2; color:#F7F6F3; letter-spacing:-0.01em">Your pipeline should not depend on who you hired last quarter.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.14em; color:#8E80F0">AXIEONEX</div></div></div>
+
+      <!-- ROW: story -->
+      <div style="background:#F7F6F3; padding:16px 12px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; color:#6E7278">STORY<br />1080×1920</div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#12161B; aspect-ratio:9/16; padding:16px; display:flex; flex-direction:column; justify-content:space-between; max-width:126px; margin:0 auto"><div style="width:18px; height:18px; color:#F4F2ED"><dc-import name="SymbolA" hint-size="100%,100%"></dc-import></div><div style="font-size:13px; font-weight:600; line-height:1.2; color:#F4F2ED">Revenue, engineered.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.14em; color:#C7643C">AXIEONEX.COM</div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#101A2B; aspect-ratio:9/16; padding:16px; display:flex; flex-direction:column; justify-content:space-between; max-width:126px; margin:0 auto"><div style="width:18px; height:18px; color:#0E9A8A"><dc-import name="SymbolB" hint-size="100%,100%"></dc-import></div><div style="font-size:13px; font-weight:500; line-height:1.2; color:#F5F5F2">Revenue, engineered.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.14em; color:#0E9A8A">AXIEONEX.COM</div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#F6F4EF; aspect-ratio:9/16; padding:16px; display:flex; flex-direction:column; justify-content:space-between; max-width:126px; margin:0 auto"><div style="width:18px; height:18px; color:#0C0D10"><dc-import name="SymbolC" hint-size="100%,100%"></dc-import></div><div style="font-size:13px; font-weight:500; line-height:1.2; color:#0C0D10">Revenue, engineered.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.14em; color:#A97C15">AXIEONEX.COM</div></div></div>
+      <div style="background:#FFFFFF; padding:20px"><div style="background:#191720; aspect-ratio:9/16; padding:16px; display:flex; flex-direction:column; justify-content:space-between; max-width:126px; margin:0 auto"><div style="width:18px; height:18px; color:#6E5DE7"><dc-import name="SymbolD" hint-size="100%,100%"></dc-import></div><div style="font-size:13px; font-weight:500; line-height:1.2; color:#F7F6F3">Revenue, engineered.</div><div style="font-family:'IBM Plex Mono',monospace; font-size:6.5px; letter-spacing:0.14em; color:#8E80F0">AXIEONEX.COM</div></div></div>
+
+    </div>
+
+    <p style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8A8E94; margin:14px 0 0">MOCKUPS ARE NEUTRAL BY DESIGN — NO PHOTOGRAPHY, NO EFFECTS, NO INVENTED CLIENTS, LOGOS, FOLLOWER COUNTS OR RESULTS.</p>
+
+    <!-- SCORING -->
+    <section id="scores" style="margin-top:80px; padding-top:44px; border-top:1px solid #E2E0DA">
+      <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:44px; line-height:1.05; margin:0 0 10px">Scoring matrix</h2>
+      <p style="margin:0 0 26px; font-size:16px; line-height:1.55; color:#4B4F56; max-width:70ch">My own assessment, 1–10, applied consistently. Scores are judgements about construction and behaviour, not popularity — and they are an argument, not a verdict for you to accept.</p>
+
+      <div style="display:grid; grid-template-columns:1.1fr 54px 54px 54px 54px 2.3fr; gap:1px; background:#E2E0DA; border:1px solid #E2E0DA; font-size:14px">
+        <div style="background:#14161A; color:#F7F6F3; padding:13px 16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em">CRITERION</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:13px 0; text-align:center; font-weight:600">A</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:13px 0; text-align:center; font-weight:600">B</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:13px 0; text-align:center; font-weight:600">C</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:13px 0; text-align:center; font-weight:600">D</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:13px 16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em">WHY</div>
+
+        <div style="background:#FFF; padding:13px 16px">Distinctiveness</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">5</div><div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">A sits in the most crowded space in tech (chevron “A”). B and C are structurally clean but have close neighbours in logistics and analytics. D's asymmetric diamond is the only silhouette here that is hard to confuse with anything.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Memorability</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">6</div><div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">Drawable-from-memory test: D (three of four quadrants) and C (three leaning columns) are one-sentence marks. B needs two sentences. A is remembered as “an A”.</div>
+
+        <div style="background:#FFF; padding:13px 16px">B2B credibility</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">8</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">B and C read as infrastructure — a CFO would not blink. A is credible but unremarkable. D is credible with the violet disciplined; loosen the colour and it drifts toward consumer AI.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Premium appearance</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">C's ink-on-bone with a single gold accent is the most expensive-looking combination and needs no effects to hold. A's copper is warm but familiar; B's teal is safe; D depends on restraint.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Small-size legibility</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">10</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">At 16&nbsp;px: C's three solid masses stay separate; D's gutters hold but tighten; B's notch and A's crossbar are the first details to close up. Compare the 16&nbsp;px row on the concepts page.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Digital scalability</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">8</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">All four are 1–3 path marks with no filters. C and D also scale as pattern and motion systems; A and B are single objects only.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Social-media performance</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">In a circular crop at feed size, C and D still read; B's exiting bar fights the circle and needs extra inset; A becomes a generic triangle among competitors.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Monochrome performance</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">10</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">Every concept was drawn as one solid colour first, so all four survive black, white, engraving and embroidery. C is best because its counters are the widest.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Website compatibility</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">8</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">In a 22&nbsp;px nav slot next to the wordmark, B and C balance best. D's diamond needs optical scaling up to feel the same weight; A blends into the type.</div>
+
+        <div style="background:#FFF; padding:13px 16px">Future SaaS compatibility</div>
+        <div style="background:#FFF; padding:13px 0; text-align:center">7</div><div style="background:#FFF; padding:13px 0; text-align:center">8</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">9</div><div style="background:#FFF; padding:13px 0; text-align:center; font-weight:600">10</div>
+        <div style="background:#FFF; padding:13px 16px; font-size:13.5px; color:#4B4F56; line-height:1.5">D is a component system: quadrants become product icons, states and a loader. C extends naturally into stage/progress UI. A and B stay decorative marks.</div>
+
+        <div style="background:#14161A; color:#F7F6F3; padding:14px 16px; font-weight:600">Total (of 100)</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:14px 0; text-align:center; font-weight:600">72</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:14px 0; text-align:center; font-weight:600">79</div>
+        <div style="background:#14161A; color:#D9A227; padding:14px 0; text-align:center; font-weight:700">89</div>
+        <div style="background:#14161A; color:#8E80F0; padding:14px 0; text-align:center; font-weight:700">87</div>
+        <div style="background:#14161A; color:#B9BEC4; padding:14px 16px; font-size:13.5px; line-height:1.5">C wins on craft and durability; D wins on distinctiveness and system range. The gap between them is smaller than the numbers suggest — it is a strategic choice, not an arithmetic one.</div>
+      </div>
+    </section>
+
+    <!-- SPECS -->
+    <section id="specs" style="margin-top:72px; padding-top:44px; border-top:1px solid #E2E0DA">
+      <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:40px; line-height:1.05; margin:0 0 10px">Platform specs used, and how they were checked</h2>
+      <p style="margin:0 0 24px; font-size:16px; line-height:1.55; color:#4B4F56; max-width:74ch">LinkedIn figures were verified against current published guidance on <strong style="font-weight:600">2 September 2026</strong>; Instagram and Facebook figures are the long-stable platform standards and should be re-checked at production. Platforms change these without notice — re-verify before any final export.</p>
+      <div style="display:grid; grid-template-columns:1.4fr 1fr 1.9fr; gap:1px; background:#E2E0DA; border:1px solid #E2E0DA; font-size:14px">
+        <div style="background:#14161A; color:#F7F6F3; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em">PLACEMENT</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em">SIZE</div>
+        <div style="background:#14161A; color:#F7F6F3; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em">SAFE-AREA RULE APPLIED</div>
+
+        <div style="background:#FFF; padding:12px 16px">LinkedIn company logo</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">400 × 400</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">Symbol only, no tagline. Circle crop — 18% inset on all sides so nothing clips; tested down to a 24&nbsp;px comment avatar.</div>
+        <div style="background:#FFF; padding:12px 16px">LinkedIn company cover</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">4200 × 700 upload<br />renders ≈1128 × 191</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">Content centred: mobile crops toward the centre and the page logo overlaps the lower left, so the left ~20% and lower-right corner are kept empty.</div>
+        <div style="background:#FFF; padding:12px 16px">Instagram profile image</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">320 × 320 (up to 1080²)</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">Symbol only, circle crop, same 18% inset. Reversed (light symbol on ink) for contrast against the feed.</div>
+        <div style="background:#FFF; padding:12px 16px">Facebook profile image</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">360 × 360 (upload 1080²)</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">Symbol only; circle crop on Pages, so identical inset to LinkedIn/Instagram.</div>
+        <div style="background:#FFF; padding:12px 16px">Facebook cover</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">820 × 312 desktop<br />640 × 360 mobile view</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">All content inside the centre 640 × 312 so nothing is lost on either crop; nothing in the lower-left where the profile image sits.</div>
+        <div style="background:#FFF; padding:12px 16px">Square / portrait post</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">1080 × 1080 · 1080 × 1350</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">7% margin all round; nothing critical in the bottom 15% (UI overlays on document and carousel posts).</div>
+        <div style="background:#FFF; padding:12px 16px">Story</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">1080 × 1920</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">Top 250&nbsp;px and bottom 300&nbsp;px treated as unusable chrome.</div>
+        <div style="background:#FFF; padding:12px 16px">Favicon / app icon</div><div style="background:#FFF; padding:12px 16px; font-family:'IBM Plex Mono',monospace; font-size:12.5px">16 / 32 / 48 · 180 · 512 · 1024</div><div style="background:#FFF; padding:12px 16px; color:#4B4F56; font-size:13.5px">Symbol only, reversed on ink, optically enlarged ~8% at 16 and 32&nbsp;px to compensate for the tighter frame.</div>
+      </div>
+    </section>
+
+    <!-- RECOMMENDATION -->
+    <section id="reco" style="margin-top:72px; background:#14161A; color:#F7F6F3; padding:52px 54px">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#9AA0A8">MY PROFESSIONAL RECOMMENDATION</div>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:48px; line-height:1.05; margin:16px 0 22px; max-width:24ch">Develop C. Keep D on the table as the bolder option.</h2>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:36px; max-width:1080px">
+        <div>
+          <p style="margin:0 0 14px; font-size:16px; line-height:1.6; color:#C4C9CF"><strong style="color:#FFF; font-weight:600">Why C.</strong> It is the most durable mark in the set: three solid masses, no thin details, best-in-set behaviour at 16&nbsp;px and in one colour, and it says “measurable, staged, accelerating” to a numbers audience without a single chart or arrow cliché. Ink-on-bone with one gold accent also reads premium with no effects — which is exactly the failure mode we are correcting.</p>
+          <p style="margin:0; font-size:16px; line-height:1.6; color:#C4C9CF"><strong style="color:#FFF; font-weight:600">Why D stays in play.</strong> If the ambition is to look unlike anyone else in outbound, D is the more distinctive and the more extensible identity — quadrants become product icons, states and motion. It costs you all existing recognition and demands more discipline in application.</p>
+        </div>
+        <div>
+          <p style="margin:0 0 14px; font-size:16px; line-height:1.6; color:#C4C9CF"><strong style="color:#FFF; font-weight:600">On A and B.</strong> Choose A only if continuity with the current mark genuinely matters commercially — it is the least distinctive option and inherits a crowded category. B is the best <em style="font-style:normal; border-bottom:1px solid #4A4E54">explanatory</em> mark: pick it if the priority is a cold audience understanding the business from the logo alone.</p>
+          <p style="margin:0; font-size:16px; line-height:1.6; color:#C4C9CF"><strong style="color:#FFF; font-weight:600">Sanctioned combinations.</strong> If you want to blend, blend exactly two things: <em style="font-style:normal">C's symbol with D's system thinking</em> (stage columns as product icons), or <em style="font-style:normal">C's geometry with B's navy-and-teal palette</em> if gold feels too editorial. Nothing else — combining more would rebuild the problem we just removed.</p>
+        </div>
+      </div>
+      <div style="margin-top:34px; padding-top:26px; border-top:1px solid #2C3036; display:flex; gap:36px; flex-wrap:wrap; font-size:14.5px; color:#9AA0A8">
+        <span>Not selected · Not published · Website untouched · Existing assets intact · No palette locked</span>
+        <span style="margin-left:auto">Next: your pick of <strong style="color:#FFF">A / B / C / D</strong> or a two-element combination.</span>
+      </div>
+    </section>
+
+    <div style="margin-top:30px; display:flex; gap:14px; flex-wrap:wrap">
+      <a href="Axieonex Brand Exploration.dc.html" style="border:1px solid #14161A; color:#14161A; text-decoration:none; padding:15px 26px; font-size:14px; font-weight:500">← Strategy &amp; concepts</a>
+      <a href="Axieonex Website Directions.dc.html" style="background:#14161A; color:#F7F6F3; text-decoration:none; padding:15px 26px; font-size:14px; font-weight:600">Website directions →</a>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

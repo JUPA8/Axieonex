@@ -1,0 +1,7 @@
+Concept C — Compound
+Recommended type: Archivo Medium, wide tracking (production: Founders Grotesk / Neue Haas Medium)
+Ink: #0C0D10   Accent: #D9A227
+
+All symbol files are pure paths, no filters, no rasters, no gradients.
+Wordmark/lockup files use live <text> with a fallback stack for review only —
+outline the type (convert to paths) before any production use.

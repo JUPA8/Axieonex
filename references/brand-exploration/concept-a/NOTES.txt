@@ -1,0 +1,7 @@
+Concept A — Twin Apex
+Recommended type: Archivo SemiBold (production: Söhne / Aeonik SemiBold)
+Ink: #12161B   Accent: #C7643C
+
+All symbol files are pure paths, no filters, no rasters, no gradients.
+Wordmark/lockup files use live <text> with a fallback stack for review only —
+outline the type (convert to paths) before any production use.

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  body{margin:0;background:#0C0D12;color:#EDEDF2;-webkit-font-smoothing:antialiased}
+  a{color:#EDEDF2;text-decoration:none}
+  a:hover{color:#B79CEF}
+  :focus-visible{outline:2px solid #B79CEF;outline-offset:3px}
+  [data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+  [data-reveal].is-in{opacity:1;transform:translateY(0)}
+  @media (prefers-reduced-motion: reduce){ [data-reveal]{opacity:1!important;transform:none!important;transition:none!important} }
+  .axNavLink{font-size:14.5px;color:#8E8E9A}
+  .axNavLink[aria-current="true"]{color:#EDEDF2;font-weight:600}
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .32s ease;background:#0C0D12}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:64px;height:64px;transform:scale(.5) rotate(-8deg);opacity:.7;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .42s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1.15) rotate(0deg);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+
+  @keyframes axFragmentSettle{0%{opacity:0;transform:translateY(-16px) scale(.9)}100%{opacity:1;transform:translateY(0) scale(1)}}
+  .axArticleRow{animation:axFragmentSettle .5s cubic-bezier(.2,.8,.2,1) both}
+  @media (prefers-reduced-motion: reduce){ .axArticleRow{animation:none} }
+  .axFilterChip{border:1px solid rgba(255,255,255,0.14);background:none;color:#B7B7C4;font-size:13px;padding:8px 14px;border-radius:2px}
+  .axFilterChip.is-active{background:#B79CEF;border-color:#B79CEF;color:#0C0D12}
+  .axSearchInput{background:#15161C;border:1px solid rgba(255,255,255,0.12);color:#EDEDF2;padding:14px 16px;font-size:15px;width:100%;border-radius:2px}
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:#0C0D12;color:#EDEDF2">
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:20px 40px;background:rgba(12,13,18,0.88);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" aria-label="Axieonex home" style="display:flex;align-items:center;gap:10px;justify-self:start">
+      <div style="width:26px;height:26px"><dc-import name="LogoMark" hint-size="26px,26px"></dc-import></div>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px">AXIEONEX</span>
+    </a>
+    <div style="display:flex;gap:26px;flex-wrap:wrap;justify-self:center">
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}">Home</a>
+      <a class="axNavLink" href="Axieonex About.dc.html" onClick="{{ navTransition }}">About</a>
+      <a class="axNavLink" href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}">How We Work</a>
+      <a class="axNavLink" href="Axieonex Services.dc.html" onClick="{{ navTransition }}">Services</a>
+      <a class="axNavLink" href="Axieonex Pricing.dc.html" onClick="{{ navTransition }}">Pricing</a>
+      <a class="axNavLink" href="Axieonex Insights.dc.html" aria-current="true">Insights</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" style="justify-self:end;background:linear-gradient(120deg,#8B5CF6,#B79CEF);color:#0C0D12;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:2px;white-space:nowrap">Book a strategy call</a>
+  </nav>
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="64px,64px"></dc-import></div></div>
+
+  <!-- HERO -->
+  <section style="max-width:1000px;margin:0 auto;padding:170px 40px 60px;text-align:center">
+    <div data-reveal style="font-size:13px;font-weight:600;color:#B79CEF;margin-bottom:16px">Insights</div>
+    <h1 data-reveal style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(30px,4.2vw,50px);line-height:1.1;margin:0 0 16px;letter-spacing:-0.01em">How revenue systems actually work.</h1>
+    <p data-reveal style="margin:0 auto;font-size:16px;line-height:1.6;color:#AFAFC0;max-width:56ch">Research and operating notes on AI orchestration, human execution and predictable pipeline, written for revenue leaders.</p>
+  </section>
+
+  <!-- SEARCH AND FILTERS -->
+  <section data-reveal style="max-width:1000px;margin:0 auto;padding:0 40px 20px">
+    <input class="axSearchInput" type="text" value="{{ query }}" onChange="{{ setQuery }}" placeholder="Search insights" aria-label="Search articles" />
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+      <button class="axFilterChip {{ catAllClass }}" onClick="{{ setCatAll }}">All</button>
+      <button class="axFilterChip {{ catOpClass }}" onClick="{{ setCatOp }}">Operating model</button>
+      <button class="axFilterChip {{ catHireClass }}" onClick="{{ setCatHire }}">Hiring</button>
+      <button class="axFilterChip {{ catStratClass }}" onClick="{{ setCatStrat }}">Strategy</button>
+      <button class="axFilterChip {{ catEconClass }}" onClick="{{ setCatEcon }}">Economics</button>
+    </div>
+    <p style="margin:16px 0 0;font-size:13px;color:#7A7A88">{{ resultsLabel }}</p>
+  </section>
+
+  <!-- RESULTS -->
+  <section style="max-width:1000px;margin:0 auto;padding:10px 40px 100px">
+    <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ articles }}" as="a" hint-placeholder-count="6">
+          <a class="axArticleRow axLinkUnderline" href="{{ a.href }}" onClick="{{ a.navTransition }}" style="display:grid;grid-template-columns:110px 1fr;gap:24px;padding:26px 0;border-top:1px solid rgba(255,255,255,0.08);align-items:baseline">
+            <div style="font-size:11px;font-weight:600;color:{{ a.color }}">{{ a.category }}</div>
+            <div style="font-size:19px;font-weight:600;line-height:1.35;font-family:'Bricolage Grotesque',sans-serif">{{ a.title }}</div>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+    <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:60px 0;text-align:center">
+        <p style="margin:0 0 6px;font-size:17px;font-weight:600">No insights match that search.</p>
+        <p style="margin:0;font-size:14px;color:#8E8E9A">Try a different term or clear the filters.</p>
+      </div>
+    </sc-if>
+  </section>
+
+  <section data-reveal style="background:#111218;padding:90px 40px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+    <div style="max-width:600px;margin:0 auto">
+      <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(24px,3.2vw,34px);margin:0 0 16px">See it applied to your pipeline.</h2>
+      <a href="Axieonex Book Strategy Call.dc.html" style="display:inline-block;margin-top:8px;background:linear-gradient(120deg,#8B5CF6,#B79CEF);color:#0C0D12;font-size:15px;font-weight:600;padding:15px 26px;border-radius:2px">Book a strategy call</a>
+    </div>
+  </section>
+
+  <footer style="background:#08090C;padding:40px;text-align:center;font-size:12.5px;color:#6E6E76">
+    info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.<br />&#169; 2026 Axieonex Sales. All rights reserved.
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ARTICLES = [
+  { title: 'How We Use an AI and Human Hybrid Model to Build Predictable Revenue', category: 'Operating model', color: '#3E7BFA', href: 'Axieonex Article.dc.html?slug=ai-human-hybrid-revenue-systems' },
+  { title: 'AI-Powered Sales Systems vs. Traditional Human Teams', category: 'Operating model', color: '#3E7BFA', href: 'Axieonex Article.dc.html?slug=ai-sales-systems-vs-traditional-sdr-teams' },
+  { title: 'Why Hiring SDRs Is Broken', category: 'Hiring', color: '#E94FA8', href: 'Axieonex Article.dc.html?slug=why-internal-sdr-hiring-is-broken' },
+  { title: 'From Cold Outreach to Revenue Systems', category: 'Strategy', color: '#35D3E0', href: 'Axieonex Article.dc.html?slug=modern-b2b-revenue-systems' },
+  { title: 'Why Most AI Sales Tools Fail Without Human Oversight', category: 'Operating model', color: '#3E7BFA', href: 'Axieonex Article.dc.html?slug=why-ai-sales-tools-fail-without-human-oversight' },
+  { title: 'The True Cost of In-House Sales Teams vs. Outsourced AI-Driven Systems', category: 'Economics', color: '#8B5CF6', href: 'Axieonex Article.dc.html?slug=real-cost-internal-sales-team-vs-outsourced' }
+];
+const CAT_MAP = { op: 'Operating model', hire: 'Hiring', strat: 'Strategy', econ: 'Economics' };
+
+class Component extends DCLogic {
+  state = { transitioning: false, query: '', category: 'all' };
+
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+
+  componentDidMount() {
+    const els = document.querySelectorAll('[data-reveal]');
+    els.forEach(el => { if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('is-in'); });
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-in'); });
+      }, { threshold: 0.1 });
+      els.forEach(el => io.observe(el));
+      this._io = io;
+    } else { els.forEach(el => el.classList.add('is-in')); }
+  }
+  componentWillUnmount() { if (this._io) this._io.disconnect(); }
+
+  renderVals() {
+    const s = this.state;
+    const q = s.query.trim().toLowerCase();
+    const filtered = ARTICLES.filter(a => {
+      const matchesCat = s.category === 'all' || a.category === CAT_MAP[s.category];
+      const matchesQ = !q || a.title.toLowerCase().includes(q);
+      return matchesCat && matchesQ;
+    }).map(a => ({ ...a, navTransition: (e) => this.navTransition(e) }));
+
+    return {
+      transitionClass: s.transitioning ? 'is-active' : '',
+      navTransition: (e) => this.navTransition(e),
+      query: s.query,
+      setQuery: (e) => this.setState({ query: e.target.value }),
+      catAllClass: s.category === 'all' ? 'is-active' : '',
+      catOpClass: s.category === 'op' ? 'is-active' : '',
+      catHireClass: s.category === 'hire' ? 'is-active' : '',
+      catStratClass: s.category === 'strat' ? 'is-active' : '',
+      catEconClass: s.category === 'econ' ? 'is-active' : '',
+      setCatAll: () => this.setState({ category: 'all' }),
+      setCatOp: () => this.setState({ category: 'op' }),
+      setCatHire: () => this.setState({ category: 'hire' }),
+      setCatStrat: () => this.setState({ category: 'strat' }),
+      setCatEcon: () => this.setState({ category: 'econ' }),
+      articles: filtered,
+      hasResults: filtered.length > 0,
+      showEmpty: filtered.length === 0,
+      resultsLabel: filtered.length + (filtered.length === 1 ? ' insight' : ' insights')
+    };
+  }
+}
+</script>
+</body>
+</html>

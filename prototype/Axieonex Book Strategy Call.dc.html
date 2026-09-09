@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  body{margin:0;background:#08090F;color:#EDEFF6;-webkit-font-smoothing:antialiased}
+  a{color:#EDEFF6;text-decoration:none}
+  a:hover{color:#B79CEF}
+  :focus-visible{outline:2px solid #8B5CF6;outline-offset:3px}
+  .axNavLink{font-size:14.5px;color:#8E8E9A}
+  .axNavLink[aria-current="true"]{color:#EDEFF6;font-weight:600}
+  .axPageTransition{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease;background:#08090F}
+  .axPageTransition.is-active{opacity:1;pointer-events:all}
+  .axPageTransitionMark{width:56px;height:56px;transform:scale(.6);opacity:.7;transition:transform .38s ease,opacity .38s ease}
+  .axPageTransition.is-active .axPageTransitionMark{transform:scale(1.1);opacity:1}
+  @media (prefers-reduced-motion: reduce){ .axPageTransition{display:none!important} }
+
+  .axStepDot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.16);transition:background .3s ease}
+  .axStepDot.is-done{background:#8B5CF6}
+  .axField{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+  .axField label{font-size:13px;color:#B7BBCB}
+  .axField input,.axField select,.axField textarea{background:#12141C;border:1px solid rgba(255,255,255,0.14);border-radius:4px;color:#EDEFF6;padding:12px 14px;font-size:14.5px;font-family:inherit}
+  .axField input:focus,.axField select:focus,.axField textarea:focus{border-color:#8B5CF6}
+  .axFieldError{border-color:#E94FA8!important}
+  .axErrorText{font-size:12.5px;color:#E94FA8;margin:0}
+  .axSlotBtn{border:1px solid rgba(255,255,255,0.14);background:#12141C;color:#EDEFF6;border-radius:4px;padding:10px;font-size:13px;text-align:center}
+  .axSlotBtn.is-selected{border-color:#35D3E0;background:rgba(53,211,224,0.1)}
+  @keyframes axStepIn{0%{opacity:0;transform:translateX(14px)}100%{opacity:1;transform:translateX(0)}}
+  .axStepPanel{animation:axStepIn .35s ease both}
+  @media (prefers-reduced-motion: reduce){ .axStepPanel{animation:none} }
+</style>
+<link rel="stylesheet" href="./axieonex-tokens.css" />
+<script src="./axTransition.js"></script>
+</helmet>
+
+<div style="font-family:'Work Sans',Helvetica,Arial,sans-serif;background:#08090F;color:#EDEFF6">
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:20px 40px;background:rgba(8,9,15,0.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.06)">
+    <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" aria-label="Axieonex home" style="display:flex;align-items:center;gap:10px;justify-self:start">
+      <div style="width:26px;height:26px"><dc-import name="LogoMark" hint-size="26px,26px"></dc-import></div>
+      <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px">AXIEONEX</span>
+    </a>
+    <div style="display:flex;gap:26px;flex-wrap:wrap;justify-self:center">
+      <a class="axNavLink" href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}">Home</a>
+      <a class="axNavLink" href="Axieonex About.dc.html" onClick="{{ navTransition }}">About</a>
+      <a class="axNavLink" href="Axieonex How We Work.dc.html" onClick="{{ navTransition }}">How We Work</a>
+      <a class="axNavLink" href="Axieonex Services.dc.html" onClick="{{ navTransition }}">Services</a>
+      <a class="axNavLink" href="Axieonex Pricing.dc.html" onClick="{{ navTransition }}">Pricing</a>
+      <a class="axNavLink" href="Axieonex Insights.dc.html" onClick="{{ navTransition }}">Insights</a>
+      <a class="axNavLink" href="Axieonex Contact.dc.html" onClick="{{ navTransition }}">Contact</a>
+    </div>
+    <a href="Axieonex Book Strategy Call.dc.html" aria-current="true" style="justify-self:end;background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);color:#fff;font-size:13.5px;font-weight:600;padding:11px 20px;border-radius:2px;white-space:nowrap">Book a strategy call</a>
+  </nav>
+  <div class="axPageTransition {{ transitionClass }}" aria-hidden="true"><div class="axPageTransitionMark"><dc-import name="LogoMark" hint-size="56px,56px"></dc-import></div></div>
+
+  <section style="max-width:640px;margin:0 auto;padding:160px 40px 100px">
+
+    <sc-if value="{{ showIntro }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#B79CEF;margin-bottom:16px">Strategy session</div>
+        <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(28px,4vw,42px);line-height:1.15;margin:0 0 18px">Let's map your revenue system.</h1>
+        <p style="margin:0 0 30px;font-size:16px;line-height:1.65;color:#B7BBCB">Thirty minutes, no deck. We will look at your market, your current outbound approach, and what a qualified conversation should look like for you, then propose a scope. Five short steps, roughly three minutes.</p>
+        <button onClick="{{ nextStep }}" style="background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);border:none;color:#fff;font-size:15px;font-weight:600;padding:15px 28px;border-radius:2px">Start</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showWizard }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;gap:8px;margin-bottom:34px">
+        <span class="axStepDot {{ dot1 }}"></span><span class="axStepDot {{ dot2 }}"></span><span class="axStepDot {{ dot3 }}"></span><span class="axStepDot {{ dot4 }}"></span><span class="axStepDot {{ dot5 }}"></span>
+      </div>
+
+      <sc-if value="{{ bookingSuccess }}" hint-placeholder-val="{{ false }}">
+        <div class="axStepPanel" style="text-align:center;padding:20px 0">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(53,211,224,0.14);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;color:#35D3E0;font-size:26px">&#10003;</div>
+          <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:26px;margin:0 0 14px">Call requested.</h2>
+          <p style="font-size:15px;line-height:1.6;color:#B7BBCB;margin:0 0 26px">We will confirm your slot by email shortly, with a short pre-call brief covering what triggered your interest and what we will cover together.</p>
+          <a href="Axieonex Homepage V2 - Revenue in Motion.dc.html" onClick="{{ navTransition }}" style="display:inline-block;background:#EDEFF6;color:#08090F;font-size:14.5px;font-weight:600;padding:14px 24px;border-radius:2px">Back to home</a>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showServerError }}" hint-placeholder-val="{{ false }}">
+        <div class="axStepPanel" style="text-align:center;padding:20px 0">
+          <p class="axErrorText" style="font-size:15px;margin:0 0 20px">Something went wrong submitting your request. Nothing you entered was lost.</p>
+          <button onClick="{{ retrySubmit }}" style="background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);border:none;color:#fff;font-size:14.5px;font-weight:600;padding:13px 24px;border-radius:2px">Try again</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showStep1 }}" hint-placeholder-val="{{ false }}">
+        <div class="axStepPanel">
+          <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Personal details</h2>
+          <div class="axField"><label>Full name</label><input class="{{ nameErrClass }}" value="{{ data.name }}" onChange="{{ setName }}" /><sc-if value="{{ nameErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your full name.</p></sc-if></div>
+          <div class="axField"><label>Business email</label><input class="{{ emailErrClass }}" value="{{ data.email }}" onChange="{{ setEmail }}" /><sc-if value="{{ emailErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter a valid email address.</p></sc-if></div>
+          <div class="axField"><label>Phone number</label><input class="{{ phoneErrClass }}" value="{{ data.phone }}" onChange="{{ setPhone }}" /><sc-if value="{{ phoneErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter a valid phone number.</p></sc-if></div>
+          <div class="axField"><label>Role</label><input class="{{ roleErrClass }}" value="{{ data.role }}" onChange="{{ setRole }}" /><sc-if value="{{ roleErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your role.</p></sc-if></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showStep2 }}" hint-placeholder-val="{{ false }}">
+        <div class="axStepPanel">
+          <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Company profile</h2>
+          <div class="axField"><label>Company name</label><input class="{{ companyErrClass }}" value="{{ data.company }}" onChange="{{ setCompany }}" /><sc-if value="{{ companyErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your company name.</p></sc-if></div>
+          <div class="axField"><label>Company website</label><input class="{{ websiteErrClass }}" value="{{ data.website }}" onChange="{{ setWebsite }}" placeholder="yourcompany.com" /><sc-if value="{{ websiteErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter a valid website.</p></sc-if></div>
+          <div class="axField"><label>Country</label><input class="{{ countryErrClass }}" value="{{ data.country }}" onChange="{{ setCountry }}" /><sc-if value="{{ countryErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your country.</p></sc-if></div>
+          <div class="axField"><label>Company size</label><select class="{{ sizeErrClass }}" value="{{ data.size }}" onChange="{{ setSize }}"><option value="">Select</option><option value="1-10">1 to 10</option><option value="11-50">11 to 50</option><option value="51-200">51 to 200</option><option value="201+">201 or more</option></select><sc-if value="{{ sizeErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please select a company size.</p></sc-if></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showStep3 }}" hint-placeholder-val="{{ false }}">
+        <div class="axStepPanel">
+          <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Revenue situation</h2>
+          <div class="axField"><label>Current outbound approach</label><textarea class="{{ challengeErrClass }}" rows="3" value="{{ data.challenge }}" onChange="{{ setChallenge }}"></textarea><sc-if value="{{ challengeErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please describe your current approach.</p></sc-if></div>
+          <div class="axField"><label>Desired outcome</label><textarea class="{{ outcomeErrClass }}" rows="3" value="{{ data.outcome }}" onChange="{{ setOutcome }}"></textarea><sc-if value="{{ outcomeErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please describe your desired outcome.</p></sc-if></div>
+          <div class="axField"><label>Target market</label><input class="{{ marketErrClass }}" value="{{ data.market }}" onChange="{{ setMarket }}" /><sc-if value="{{ marketErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please enter your target market.</p></sc-if></div>
+          <div class="axField"><label>Monthly engagement range</label><select class="{{ budgetErrClass }}" value="{{ data.budget }}" onChange="{{ setBudget }}"><option value="">Select</option><option value="under-3k">Under $3,000</option><option value="3k-8k">$3,000 to $8,000</option><option value="8k-20k">$8,000 to $20,000</option><option value="20k-plus">$20,000 and above</option></select><sc-if value="{{ budgetErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText">Please select a range.</p></sc-if></div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showStep4 }}" hint-placeholder-val="{{ false }}">
+        <div class="axStepPanel">
+          <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 6px">Select a date and time</h2>
+          <p style="margin:0 0 20px;font-size:13.5px;color:#8A8FA3">Your timezone: {{ timezone }}</p>
+          <sc-if value="{{ scheduleErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText" style="margin-bottom:14px">Please select a date and time.</p></sc-if>
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <sc-for list="{{ availability }}" as="day" hint-placeholder-count="5">
+              <div>
+                <div style="font-size:13.5px;font-weight:600;margin-bottom:8px">{{ day.label }}</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+                  <sc-for list="{{ day.slots }}" as="slot" hint-placeholder-count="4">
+                    <button class="axSlotBtn {{ slot.selectedClass }}" onClick="{{ slot.select }}">{{ slot.time }}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showStep5 }}" hint-placeholder-val="{{ false }}">
+        <div class="axStepPanel">
+          <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:22px;margin:0 0 22px">Review and confirm</h2>
+          <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:#D8DAE5;margin-bottom:22px">
+            <div><strong style="color:#EDEFF6">{{ data.name }}</strong> &#183; {{ data.role }}</div>
+            <div>{{ data.email }} &#183; {{ data.phone }}</div>
+            <div>{{ data.company }} &#183; {{ data.website }} &#183; {{ data.size }} employees &#183; {{ data.country }}</div>
+            <div style="padding-top:8px;border-top:1px solid rgba(255,255,255,0.08)">Target market: {{ data.market }}</div>
+            <div>Current approach: {{ data.challenge }}</div>
+            <div>Desired outcome: {{ data.outcome }}</div>
+            <div>Engagement range: {{ data.budget }}</div>
+            <div style="padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);color:#35D3E0">{{ selectedSlotLabel }}</div>
+          </div>
+          <button onClick="{{ editFromReview }}" style="background:none;border:1px solid rgba(255,255,255,0.16);color:#EDEFF6;font-size:13px;padding:9px 16px;border-radius:2px;margin-bottom:18px">Edit details</button>
+          <label style="display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:#B7BBCB;margin-bottom:8px"><input type="checkbox" checked="{{ data.consent }}" onChange="{{ toggleConsent }}" style="margin-top:2px" /><span>I agree to be contacted about this request and have read the <a href="Axieonex Privacy Policy.dc.html" style="text-decoration:underline">Privacy Policy</a> and <a href="Axieonex Terms of Service.dc.html" style="text-decoration:underline">Terms of Service</a>.</span></label>
+          <sc-if value="{{ consentErr }}" hint-placeholder-val="{{ false }}"><p class="axErrorText" style="margin:0 0 18px">Please accept the privacy terms to continue.</p></sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showFooterNav }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;justify-content:space-between;margin-top:28px">
+          <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ prevStep }}" style="background:none;border:1px solid rgba(255,255,255,0.16);color:#EDEFF6;font-size:14px;padding:12px 22px;border-radius:2px">Back</button></sc-if>
+          <div style="margin-left:auto">
+            <sc-if value="{{ showNext }}" hint-placeholder-val="{{ true }}"><button onClick="{{ nextStep }}" style="background:#EDEFF6;color:#08090F;border:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:2px">Next</button></sc-if>
+            <sc-if value="{{ showSubmit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ submitBooking }}" disabled="{{ submitting }}" style="background:linear-gradient(120deg,#3E7BFA,#8B5CF6 55%,#E94FA8);color:#fff;border:none;font-size:14px;font-weight:600;padding:12px 24px;border-radius:2px">{{ submitLabel }}</button></sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+
+  </section>
+
+  <footer style="background:#050609;padding:40px;text-align:center;font-size:12.5px;color:#5C5C66">
+    info@axieonexsales.net. Operating globally, serving clients across North America, Europe and selected international markets.<br />&#169; 2026 Axieonex Sales. All rights reserved.
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[0-9+()\-\s]{7,}$/;
+const WEBSITE_RE = /^(https?:\/\/)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+.*$/;
+
+class Component extends DCLogic {
+  state = {
+    transitioning: false, started: false, step: 1, submitting: false, success: false, serverError: false,
+    touchedErrors: {}, selectedSlot: null,
+    data: { name:'', email:'', phone:'', role:'', company:'', website:'', country:'', size:'', challenge:'', outcome:'', market:'', budget:'', consent:false }
+  };
+
+  navTransition(e) {
+    if (window.AxTransition) { window.AxTransition.go(e); return; }
+    const href = e.currentTarget.getAttribute('href');
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    window.location.href = href;
+  }
+
+  updateField(key, value) { this.setState(s => ({ data: { ...s.data, [key]: value } })); }
+
+  validateStep(step) {
+    const d = this.state.data;
+    const errs = {};
+    if (step === 1) {
+      if (!d.name.trim()) errs.name = true;
+      if (!EMAIL_RE.test(d.email)) errs.email = true;
+      if (!PHONE_RE.test(d.phone)) errs.phone = true;
+      if (!d.role.trim()) errs.role = true;
+    } else if (step === 2) {
+      if (!d.company.trim()) errs.company = true;
+      if (!WEBSITE_RE.test(d.website)) errs.website = true;
+      if (!d.country.trim()) errs.country = true;
+      if (!d.size) errs.size = true;
+    } else if (step === 3) {
+      if (!d.challenge.trim()) errs.challenge = true;
+      if (!d.outcome.trim()) errs.outcome = true;
+      if (!d.market.trim()) errs.market = true;
+      if (!d.budget) errs.budget = true;
+    } else if (step === 4) {
+      if (!this.state.selectedSlot) errs.schedule = true;
+    } else if (step === 5) {
+      if (!d.consent) errs.consent = true;
+    }
+    this.setState({ touchedErrors: errs });
+    return Object.keys(errs).length === 0;
+  }
+
+  nextStep() {
+    if (!this.state.started) { this.setState({ started: true }); return; }
+    if (!this.validateStep(this.state.step)) return;
+    if (this.state.step === 5) { this.submitBooking(); return; }
+    this.setState(s => ({ step: s.step + 1, touchedErrors: {} }));
+  }
+  prevStep() { this.setState(s => ({ step: Math.max(1, s.step - 1), touchedErrors: {} })); }
+  editFromReview() { this.setState({ step: 1, touchedErrors: {} }); }
+
+  submitBooking() {
+    if (!this.validateStep(5)) return;
+    this.setState({ submitting: true, serverError: false });
+    setTimeout(() => { this.setState({ submitting: false, success: true }); }, 900);
+  }
+  retrySubmit() { this.setState({ serverError: false }); this.submitBooking(); }
+
+  buildAvailability() {
+    const days = [];
+    const today = new Date();
+    let added = 0, offset = 1;
+    const times = ['9:00 AM', '11:00 AM', '1:00 PM', '3:00 PM'];
+    while (added < 4) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + offset);
+      offset++;
+      if (d.getDay() === 0 || d.getDay() === 6) continue;
+      const label = d.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+      const key = d.toISOString().slice(0, 10);
+      days.push({
+        label,
+        slots: times.map(t => {
+          const slotKey = key + '_' + t;
+          return {
+            time: t,
+            selectedClass: this.state.selectedSlot === slotKey ? 'is-selected' : '',
+            select: () => this.setState({ selectedSlot: slotKey, touchedErrors: { ...this.state.touchedErrors, schedule: false } }),
+            _label: label + ' at ' + t
+          };
+        })
+      });
+      added++;
+    }
+    return days;
+  }
+
+  componentDidMount() {} 
+
+  renderVals() {
+    const s = this.state;
+    const step = s.step;
+    const err = s.touchedErrors;
+    const availability = this.buildAvailability();
+    let selectedSlotLabel = 'No time selected yet.';
+    for (const day of availability) for (const slot of day.slots) {
+      if (slot.selectedClass === 'is-selected') selectedSlotLabel = day.label + ' at ' + slot.time;
+    }
+
+    return {
+      transitionClass: s.transitioning ? 'is-active' : '',
+      navTransition: (e) => this.navTransition(e),
+      showIntro: !s.started,
+      showWizard: s.started,
+      bookingSuccess: s.success,
+      showServerError: s.serverError && !s.success,
+      submitting: s.submitting,
+      data: s.data,
+      timezone: (Intl.DateTimeFormat().resolvedOptions().timeZone) || 'Local time',
+      availability,
+      selectedSlotLabel,
+
+      dot1: step >= 1 ? 'is-done' : '', dot2: step >= 2 ? 'is-done' : '', dot3: step >= 3 ? 'is-done' : '', dot4: step >= 4 ? 'is-done' : '', dot5: step >= 5 ? 'is-done' : '',
+
+      showStep1: !s.success && !s.serverError && step === 1,
+      showStep2: !s.success && !s.serverError && step === 2,
+      showStep3: !s.success && !s.serverError && step === 3,
+      showStep4: !s.success && !s.serverError && step === 4,
+      showStep5: !s.success && !s.serverError && step === 5,
+      showFooterNav: !s.success && !s.serverError,
+      showBack: step > 1,
+      showNext: step < 5,
+      showSubmit: step === 5,
+      submitLabel: s.submitting ? 'Submitting...' : 'Confirm request',
+      nextStep: () => this.nextStep(),
+      prevStep: () => this.prevStep(),
+      editFromReview: () => this.editFromReview(),
+      submitBooking: () => this.submitBooking(),
+      retrySubmit: () => this.retrySubmit(),
+
+      setName: (e) => this.updateField('name', e.target.value),
+      setEmail: (e) => this.updateField('email', e.target.value),
+      setPhone: (e) => this.updateField('phone', e.target.value),
+      setRole: (e) => this.updateField('role', e.target.value),
+      setCompany: (e) => this.updateField('company', e.target.value),
+      setWebsite: (e) => this.updateField('website', e.target.value),
+      setCountry: (e) => this.updateField('country', e.target.value),
+      setSize: (e) => this.updateField('size', e.target.value),
+      setChallenge: (e) => this.updateField('challenge', e.target.value),
+      setOutcome: (e) => this.updateField('outcome', e.target.value),
+      setMarket: (e) => this.updateField('market', e.target.value),
+      setBudget: (e) => this.updateField('budget', e.target.value),
+      toggleConsent: (e) => this.updateField('consent', e.target.checked),
+
+      nameErr: !!err.name, emailErr: !!err.email, phoneErr: !!err.phone, roleErr: !!err.role,
+      companyErr: !!err.company, websiteErr: !!err.website, countryErr: !!err.country, sizeErr: !!err.size,
+      challengeErr: !!err.challenge, outcomeErr: !!err.outcome, marketErr: !!err.market, budgetErr: !!err.budget,
+      scheduleErr: !!err.schedule, consentErr: !!err.consent,
+      nameErrClass: err.name ? 'axFieldError' : '', emailErrClass: err.email ? 'axFieldError' : '',
+      phoneErrClass: err.phone ? 'axFieldError' : '', roleErrClass: err.role ? 'axFieldError' : '',
+      companyErrClass: err.company ? 'axFieldError' : '', websiteErrClass: err.website ? 'axFieldError' : '',
+      countryErrClass: err.country ? 'axFieldError' : '', sizeErrClass: err.size ? 'axFieldError' : '',
+      challengeErrClass: err.challenge ? 'axFieldError' : '', outcomeErrClass: err.outcome ? 'axFieldError' : '',
+      marketErrClass: err.market ? 'axFieldError' : '', budgetErrClass: err.budget ? 'axFieldError' : ''
+    };
+  }
+}
+</script>
+</body>
+</html>
