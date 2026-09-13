@@ -23,6 +23,12 @@ function toArticle(record: ArticleRecord): Article {
     h2b: record.h2b,
     bodyB: record.bodyB,
     closing: record.closing,
+    // Always set by the write path whenever published is true (see
+    // src/app/admin/(dashboard)/articles/actions.ts); publishedAt is only
+    // nullable in the schema for unpublished drafts, which these read
+    // functions never return. The fallback here is just type-safety, not an
+    // expected runtime path.
+    publishedAt: record.publishedAt?.toISOString(),
   };
 }
 

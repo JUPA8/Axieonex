@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { ArticleTemplate } from "@/components/article/ArticleTemplate";
 import { getPublishedArticleBySlug } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
+import { buildArticleSchema } from "@/lib/structuredData";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 // Content is admin-editable (Phase 2), so this route reads Postgres on every
 // request rather than freezing at build time.
@@ -22,13 +24,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
-// TODO(seo): Article JSON-LD schema is intentionally not emitted here. The
-// Article model has publishedAt, but no author field exists anywhere in the
-// schema, admin CRUD form, or rendered article template. Inventing an author
-// value isn't acceptable, so this is blocked on an owner decision: either
-// add a real author field (e.g. "Axieonex Editorial Team" as an
-// Organization-type author) or confirm the site intentionally publishes
-// unattributed articles.
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const article = await getPublishedArticleBySlug(slug).catch((error) => {
@@ -36,5 +31,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     return null;
   });
   if (!article) notFound();
-  return <ArticleTemplate article={article} />;
+  const schema = buildArticleSchema(article, `${SITE_URL}/insights/${slug}`);
+  return (
+    <>
+      {schema && <JsonLd data={schema} />}
+      <ArticleTemplate article={article} />
+    </>
+  );
 }

@@ -16,6 +16,9 @@ export type Article = {
   h2b: string;
   bodyB: string;
   closing: string;
+  /** ISO timestamp. Only present for DB-backed reads (src/lib/articles.ts); the
+   *  historical seed literals in src/content/articles.ts don't carry one. */
+  publishedAt?: string;
 };
 
 export type ServiceVisual = "radar" | "calendar" | "rings" | "envelope" | "network" | "waveform" | "blueprint";
