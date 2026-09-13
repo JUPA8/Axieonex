@@ -1,4 +1,9 @@
-export type ArticleCategory = "Operating model" | "Hiring" | "Strategy" | "Economics";
+/**
+ * Free text as of Phase 2 (admin-editable via /admin/articles), not a fixed
+ * enum: the 4 categories below are the ones seeded from the originally
+ * approved copy, not an exhaustive list an admin is limited to.
+ */
+export type ArticleCategory = "Operating model" | "Hiring" | "Strategy" | "Economics" | (string & {});
 
 export type Article = {
   slug: string;

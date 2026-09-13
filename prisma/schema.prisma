@@ -1,10 +1,9 @@
-// AXIEONEX backend data model, Phase 1 (foundation).
+// AXIEONEX backend data model.
 //
-// Scope for this phase: persist the Contact and Book Strategy Call form
-// submissions for real, and let admins log in to see what came in. No live
-// calendar/CRM integration yet (Phase 2) and no consent-platform/analytics
-// wiring yet (Phase 3), see BookingRequest.status and the *SyncedAt fields
-// below for the seams those phases will use.
+// Phase 1 (foundation): Admin, ContactSubmission, BookingRequest.
+// Phase 2 (this pass): Article (DB-backed Insights content), plus
+// BookingRequest.calendarBookingUid and the *SyncedAt columns going live.
+// No consent-platform/analytics wiring yet (Phase 3).
 
 generator client {
   provider = "prisma-client-js"
@@ -81,12 +80,18 @@ model BookingRequest {
   market   String
   budget   String
 
-  /// The slot the visitor picked, stored as plain data, Phase 1 has no live
-  /// calendar to check it against (see BookingWizard's mock 4-weekday
-  /// availability). Phase 2 replaces this with a real provider and updates
-  /// `status` accordingly.
+  /// The slot the visitor picked. When no calendar provider is configured,
+  /// this is plain data from the mocked 4-weekday generator
+  /// (src/lib/availability.ts) and `status` stays PENDING. When one is
+  /// configured, this is the real slot start time and `calendarBookingUid`
+  /// / `status` reflect the actual calendar API response.
   slotId    String
   slotLabel String
+
+  /// Set once a real calendar provider confirms the booking. Null for
+  /// mocked-availability requests and for any request made before a
+  /// provider was configured.
+  calendarBookingUid String?
 
   status    BookingStatus @default(PENDING)
   createdAt DateTime      @default(now())
@@ -97,4 +102,34 @@ model BookingRequest {
   crmSyncedAt DateTime?
 
   @@map("booking_requests")
+}
+
+/// One Insights article. Replaces the previous titles-only placeholder
+/// content (src/content/articles.ts) as of Phase 2, the Insights hub and
+/// article routes now read published rows from here.
+model Article {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  category  String
+  /// Hex color used for the article's accent border on cards and the
+  /// article page itself, matching the approved design's per-category
+  /// color coding.
+  color     String
+  intro     String
+  h2a       String
+  bodyA     String
+  h2b       String
+  bodyB     String
+  closing   String
+
+  /// Drafts (published: false) are visible in /admin but never on the
+  /// public site.
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("articles")
 }

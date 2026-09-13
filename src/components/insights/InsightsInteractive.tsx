@@ -2,23 +2,25 @@
 
 import { useMemo, useState } from "react";
 import { TransitionLink } from "@/components/transition/TransitionLink";
-import { ARTICLES } from "@/content/articles";
 import { cn } from "@/lib/cn";
+import type { Article } from "@/types/content";
 
-const CATEGORIES = ["All", "Operating model", "Hiring", "Strategy", "Economics"] as const;
+const ALL = "All";
 
-export function InsightsInteractive() {
+export function InsightsInteractive({ articles }: { articles: Article[] }) {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
+  const [category, setCategory] = useState<string>(ALL);
+
+  const categories = useMemo(() => [ALL, ...Array.from(new Set(articles.map((a) => a.category)))], [articles]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ARTICLES.filter((article) => {
-      const matchesCategory = category === "All" || article.category === category;
+    return articles.filter((article) => {
+      const matchesCategory = category === ALL || article.category === category;
       const matchesQuery = q.length === 0 || article.title.toLowerCase().includes(q) || article.category.toLowerCase().includes(q);
       return matchesCategory && matchesQuery;
     });
-  }, [query, category]);
+  }, [articles, query, category]);
 
   return (
     <div>
@@ -37,7 +39,7 @@ export function InsightsInteractive() {
           />
         </div>
         <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <button
               key={c}
               type="button"

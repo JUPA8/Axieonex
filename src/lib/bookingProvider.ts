@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import { createCalcomBooking } from "@/lib/calendar/calcom";
+import { pushToCrm } from "@/lib/crm";
 import { sendNotificationEmail } from "@/lib/email";
 import type { BookingData } from "@/types/booking";
 
@@ -9,13 +11,21 @@ export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | 
 /**
  * Server-side persistence boundary for the Book Strategy Call wizard.
  *
- * Phase 1: writes the request to Postgres first (status PENDING); that
- * write is the source of truth for "did this submission succeed." No live
- * calendar exists yet (see BookingWizard's mocked 4-weekday availability),
- * so nothing is actually confirmed against a real calendar here; Phase 2
- * replaces this with a real provider and updates `status` accordingly. A
- * best-effort Resend notification email follows the same never-lose-the-
- * submission pattern as the contact form.
+ * Writes the request to Postgres first (status PENDING); that write is the
+ * source of truth for "did this submission succeed," independent of
+ * whether a calendar provider is configured or whether it's reachable.
+ *
+ * Phase 2: if CALENDAR_PROVIDER_API_KEY/CALENDAR_ID are configured (see
+ * src/lib/calendar/calcom.ts), attempts a real Cal.com booking for the
+ * selected slot (whose id, by that point, is a real ISO start time from
+ * getCalcomAvailability, not the mock generator's date-only key) and
+ * updates the row to CONFIRMED with the returned booking UID. If that call
+ * fails, the row stays PENDING rather than being silently marked CONFIRMED
+ * or CANCELLED, an admin can follow up manually. Unconfigured or mocked
+ * requests also stay PENDING, matching Phase 1's behavior exactly.
+ *
+ * A best-effort Resend notification email follows the same never-lose-the-
+ * submission pattern regardless of calendar outcome.
  */
 export async function submitBooking(payload: BookingSubmission): Promise<SendResult> {
   let requestId: string;
@@ -45,6 +55,24 @@ export async function submitBooking(payload: BookingSubmission): Promise<SendRes
     return { ok: false, reason: "not_configured" };
   }
 
+  const calendarResult = await createCalcomBooking({
+    slotStartIso: payload.slotId,
+    name: payload.name,
+    email: payload.email,
+    notes: `Target market: ${payload.market}. Current approach: ${payload.approach}. Desired outcome: ${payload.outcome}.`,
+  });
+
+  if (calendarResult.ok) {
+    await prisma.bookingRequest
+      .update({ where: { id: requestId }, data: { status: "CONFIRMED", calendarBookingUid: calendarResult.bookingUid } })
+      .catch((error) => console.error("[bookingProvider] Booked with Cal.com but failed to record the UID:", error));
+  } else if (calendarResult.reason !== "not_configured") {
+    // A real provider is configured but this specific request failed to
+    // confirm; leave the row PENDING for manual follow-up rather than
+    // guessing at CONFIRMED or CANCELLED.
+    console.error("[bookingProvider] Cal.com booking failed, request left PENDING for manual follow-up:", calendarResult.reason);
+  }
+
   const emailResult = await sendNotificationEmail({
     subject: `New strategy call request: ${payload.company}`,
     text: [
@@ -57,11 +85,25 @@ export async function submitBooking(payload: BookingSubmission): Promise<SendRes
       `Desired outcome: ${payload.outcome}`,
       `Engagement range: ${payload.budget}`,
       `Requested slot: ${payload.slotLabel}`,
+      calendarResult.ok ? `Confirmed on Cal.com: ${calendarResult.bookingUid}` : "Not yet confirmed on a calendar.",
     ].join("\n"),
   });
 
   if (emailResult.sent) {
     await prisma.bookingRequest.update({ where: { id: requestId }, data: { emailSentAt: new Date() } }).catch(() => {});
+  }
+
+  const crmResult = await pushToCrm({
+    name: payload.name,
+    email: payload.email,
+    company: payload.company,
+    phone: payload.phone,
+    message: `Target market: ${payload.market}. Budget: ${payload.budget}. Requested slot: ${payload.slotLabel}.`,
+    source: "book_strategy_call",
+  });
+
+  if (crmResult.ok) {
+    await prisma.bookingRequest.update({ where: { id: requestId }, data: { crmSyncedAt: new Date() } }).catch(() => {});
   }
 
   return { ok: true };

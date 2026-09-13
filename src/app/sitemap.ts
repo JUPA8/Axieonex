@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { ARTICLES } from "@/content/articles";
+import { getPublishedArticles } from "@/lib/articles";
 import { SERVICES } from "@/content/services";
 import { SITE_URL } from "@/lib/site";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -26,7 +26,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const articleRoutes: MetadataRoute.Sitemap = ARTICLES.map((article) => ({
+  // Article routes are admin-editable (Phase 2); a DB failure here should
+  // shrink the sitemap by a few URLs, not break sitemap.xml generation for
+  // the entire site.
+  const articles = await getPublishedArticles().catch((error) => {
+    console.error("[sitemap] Failed to load articles from the database:", error);
+    return [];
+  });
+  const articleRoutes: MetadataRoute.Sitemap = articles.map((article) => ({
     url: `${SITE_URL}/insights/${article.slug}`,
     lastModified: now,
     priority: 0.5,

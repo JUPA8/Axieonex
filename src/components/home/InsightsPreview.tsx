@@ -1,7 +1,14 @@
 import { TransitionLink } from "@/components/transition/TransitionLink";
-import { ARTICLES } from "@/content/articles";
+import { getPublishedArticles } from "@/lib/articles";
 
-export function InsightsPreview() {
+export async function InsightsPreview() {
+  const articles = await getPublishedArticles().catch((error) => {
+    console.error("[InsightsPreview] Failed to load articles from the database:", error);
+    return [];
+  });
+
+  if (articles.length === 0) return null;
+
   return (
     <section id="articles" className="relative bg-ax-pearl-1 px-5 py-28 text-ax-text-primary-on-light sm:px-10 sm:py-32">
       <div className="mx-auto max-w-[1160px]">
@@ -12,7 +19,7 @@ export function InsightsPreview() {
           </TransitionLink>
         </div>
         <div data-reveal="scale" className="grid gap-9" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
-          {ARTICLES.map((article) => (
+          {articles.slice(0, 6).map((article) => (
             <TransitionLink
               key={article.slug}
               href={`/insights/${article.slug}`}

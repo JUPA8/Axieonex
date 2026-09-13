@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { pushToCrm } from "@/lib/crm";
 import { sendNotificationEmail } from "@/lib/email";
 
 export type ContactFormPayload = {
@@ -15,12 +16,12 @@ export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | 
 /**
  * Server-side persistence boundary for the Contact form.
  *
- * Phase 1: writes the submission to Postgres first; that write is the
- * source of truth for "did this submission succeed." A best-effort Resend
- * notification email follows; if it fails or EMAIL_PROVIDER_API_KEY isn't
- * set, the submission is still considered successful (its emailSentAt stays
- * null, visible to admins in /admin, but nothing is lost and the visitor
- * never sees a failure for something outside their control).
+ * Writes the submission to Postgres first; that write is the source of
+ * truth for "did this submission succeed." A best-effort Resend
+ * notification email and HubSpot CRM push follow (Phase 2 for the CRM
+ * push); if either fails or its env vars aren't set, the submission is
+ * still considered successful, nothing is lost and the visitor never sees
+ * a failure for something outside their control.
  *
  * If DATABASE_URL itself isn't configured, Prisma throws on the first query;
  * that's caught here and reported as "not_configured" rather than crashing
@@ -60,6 +61,18 @@ export async function sendContactForm(payload: ContactFormPayload): Promise<Send
   if (emailResult.sent) {
     // Best-effort: failure to record this timestamp is not worth failing the request over.
     await prisma.contactSubmission.update({ where: { id: submissionId }, data: { emailSentAt: new Date() } }).catch(() => {});
+  }
+
+  const crmResult = await pushToCrm({
+    name: payload.name,
+    email: payload.email,
+    company: payload.company || undefined,
+    message: `[${payload.purpose}] ${payload.message}`,
+    source: "contact_form",
+  });
+
+  if (crmResult.ok) {
+    await prisma.contactSubmission.update({ where: { id: submissionId }, data: { crmSyncedAt: new Date() } }).catch(() => {});
   }
 
   return { ok: true };

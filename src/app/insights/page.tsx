@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { InsightsInteractive } from "@/components/insights/InsightsInteractive";
 import { CtaSection } from "@/components/ui/CtaSection";
+import { getPublishedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 
 const CANONICAL = `${SITE_URL}/insights`;
@@ -12,7 +13,21 @@ export const metadata: Metadata = {
   openGraph: { title: "Insights | AXIEONEX", description: "Research and perspective on AI-orchestrated revenue systems.", url: CANONICAL },
 };
 
-export default function InsightsPage() {
+// Content is admin-editable (Phase 2: DB-backed via /admin/articles), so this
+// route must not be frozen at build time the way purely static marketing
+// pages are.
+export const dynamic = "force-dynamic";
+
+export default async function InsightsPage() {
+  let articles: Awaited<ReturnType<typeof getPublishedArticles>> = [];
+  let unavailable = false;
+  try {
+    articles = await getPublishedArticles();
+  } catch (error) {
+    console.error("[insights] Failed to load articles from the database:", error);
+    unavailable = true;
+  }
+
   return (
     <div data-theme="insights" className="bg-ax-ink-5 text-ax-text-primary">
       <section className="px-5 pb-16 pt-28 text-center sm:px-10 sm:pt-36">
@@ -30,7 +45,14 @@ export default function InsightsPage() {
 
       <section className="px-5 pb-24 sm:px-10">
         <div className="mx-auto max-w-[1160px]">
-          <InsightsInteractive />
+          {unavailable ? (
+            <div role="alert" className="border-t border-ax-border-subtle py-16 text-center">
+              <h2 className="mb-2 text-lg font-bold">Insights are temporarily unavailable.</h2>
+              <p className="text-sm text-ax-text-muted">Please check back shortly.</p>
+            </div>
+          ) : (
+            <InsightsInteractive articles={articles} />
+          )}
         </div>
       </section>
 

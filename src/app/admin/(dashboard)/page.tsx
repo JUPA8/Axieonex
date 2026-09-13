@@ -72,6 +72,7 @@ export default async function AdminDashboardPage() {
                 <th className="px-4 py-3 font-semibold">Email</th>
                 <th className="px-4 py-3 font-semibold">Requested slot</th>
                 <th className="px-4 py-3 font-semibold">Status</th>
+                <th className="px-4 py-3 font-semibold">Calendar UID</th>
                 <th className="px-4 py-3 font-semibold">Email sent</th>
               </tr>
             </thead>
@@ -91,6 +92,7 @@ export default async function AdminDashboardPage() {
                     <td className="px-4 py-3">{row.email}</td>
                     <td className="px-4 py-3">{row.slotLabel}</td>
                     <td className="px-4 py-3">{row.status}</td>
+                    <td className="px-4 py-3 text-ax-text-muted">{row.calendarBookingUid ?? "None"}</td>
                     <td className="px-4 py-3">{row.emailSentAt ? "Yes" : "No"}</td>
                   </tr>
                 ))

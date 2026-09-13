@@ -1,6 +1,12 @@
 import type { Article } from "@/types/content";
 
 /**
+ * Historical source data only, as of Backend Phase 2. The live site now
+ * reads articles from Postgres (src/lib/articles.ts) so they're editable
+ * from /admin without a redeploy; this array is kept solely as the input
+ * for prisma/seed.ts, which copied it into the database once. Editing this
+ * file no longer changes anything on the live site.
+ *
  * Canonical article slugs come from axieonex-routes.json (the routing authority).
  * The prototype's Insights/Article `.dc.html` files use a different, mutually
  * inconsistent slug set (e.g. "modern-b2b-revenue-systems" instead of

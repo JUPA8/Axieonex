@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { buildAvailability } from "@/lib/availability";
+import { getAvailabilityAction } from "@/app/book-strategy-call/actions";
 import { cn } from "@/lib/cn";
 import type { AvailabilityDay } from "@/types/booking";
 
@@ -15,15 +15,18 @@ export function SlotSelector({
   const [days, setDays] = useState<AvailabilityDay[] | null>(null);
   const [timezone, setTimezone] = useState("Local time");
 
-  // This route is statically prerendered, so "today" must be computed on the
-  // client per-visit rather than baked in at build time (which would freeze
-  // "the next 4 weekdays" as of the last deploy for every visitor). Timezone
-  // is similarly client/locale-dependent. Both are intentionally deferred to
-  // after mount rather than computed during render.
+  // This route is statically prerendered, so availability must be fetched
+  // per-visit rather than baked in at build time. The real Cal.com API key
+  // must never reach the client bundle, so this always goes through a
+  // server action, whether the result ends up being real or mocked
+  // availability. Timezone is separately deferred to after mount since it's
+  // client/locale-dependent.
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDays(buildAvailability());
+    getAvailabilityAction().then((result) => {
+      setDays(result.days);
+    });
     try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone || "Local time");
     } catch {
       setTimezone("Local time");

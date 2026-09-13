@@ -23,6 +23,13 @@ export const metadata: Metadata = {
   },
 };
 
+// The page is otherwise fully static; only the Insights preview section
+// reads from the database (Phase 2, admin-editable articles). Revalidating
+// every 5 minutes keeps the marketing page's performance/caching mostly
+// intact while still surfacing newly published or unpublished articles
+// without requiring a full redeploy.
+export const revalidate = 300;
+
 export default function HomePage() {
   return (
     <div data-theme="home">
