@@ -6,13 +6,14 @@ import { BookingIntro } from "@/components/booking/BookingIntro";
 import { ReviewStep } from "@/components/booking/ReviewStep";
 import { SlotSelector } from "@/components/booking/SlotSelector";
 import { Button } from "@/components/ui/Button";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
 import { validateStep1, validateStep2, validateStep3, validateStep4, validateStep5 } from "@/lib/bookingValidation";
 import { cn } from "@/lib/cn";
 import { CONTACT_EMAIL } from "@/lib/site";
 import { EMPTY_BOOKING_DATA, type BookingData, type BookingFieldErrors } from "@/types/booking";
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5;
-type SubmitPhase = "idle" | "submitting" | "success" | "unavailable" | "error";
+type SubmitPhase = "idle" | "submitting" | "success" | "unavailable" | "error" | "rate_limited";
 
 const SIZE_OPTIONS = [
   { value: "", label: "Select" },
@@ -59,13 +60,15 @@ function Field({
 const INPUT_CLASSES =
   "min-h-11 rounded-md border border-ax-border-default bg-ax-surface-raised px-3.5 py-3 text-[14.5px] text-ax-text-primary focus:border-ax-violet";
 
-export function BookingWizard() {
+export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string }) {
   const [step, setStep] = useState<Step>(0);
   const [data, setData] = useState<BookingData>(EMPTY_BOOKING_DATA);
   const [errors, setErrors] = useState<BookingFieldErrors>({});
   const [slotId, setSlotId] = useState<string | null>(null);
   const [slotLabel, setSlotLabel] = useState<string | null>(null);
   const [phase, setPhase] = useState<SubmitPhase>("idle");
+  const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -99,9 +102,10 @@ export function BookingWizard() {
     if (Object.keys(consentErrors).length > 0) return;
 
     setPhase("submitting");
-    const result = await submitBookingAction(data, slotLabel ?? "");
+    const result = await submitBookingAction(data, slotId ?? "", slotLabel ?? "", honeypot, turnstileToken);
     if (result.status === "success") setPhase("success");
     else if (result.status === "unavailable") setPhase("unavailable");
+    else if (result.status === "rate_limited") setPhase("rate_limited");
     else setPhase("error");
   }
 
@@ -139,6 +143,28 @@ export function BookingWizard() {
         <Button href="/" variant="secondary">
           Back to home
         </Button>
+      </div>
+    );
+  }
+
+  if (phase === "rate_limited") {
+    return (
+      <div role="alert" className="text-center">
+        <h1 className="mb-4 text-2xl font-bold">Too many requests sent recently.</h1>
+        <p className="mx-auto mb-8 max-w-[52ch] text-[15px] leading-relaxed text-ax-text-muted">
+          Please wait a few minutes and try again, or email us directly at{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
+            {CONTACT_EMAIL}
+          </a>
+          . Nothing you entered was lost.
+        </p>
+        <button
+          type="button"
+          onClick={handleRetry}
+          className="min-h-11 rounded-sm border border-white/15 px-7 py-3.5 text-sm font-semibold text-ax-text-primary"
+        >
+          Back
+        </button>
       </div>
     );
   }
@@ -181,6 +207,21 @@ export function BookingWizard() {
       <h1 ref={headingRef} tabIndex={-1} className="mb-7 text-xl font-bold outline-none">
         {stepLabels[step - 1]}
       </h1>
+
+      {/* Honeypot: visually hidden and unreachable by keyboard/AT, left
+          empty by real visitors. A filled value marks the submission as spam. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}>
+        <label htmlFor="booking-website-confirm">Leave this field blank</label>
+        <input
+          id="booking-website-confirm"
+          name="booking-website-confirm"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+        />
+      </div>
 
       {step === 1 && (
         <div className="flex flex-col gap-5">
@@ -260,13 +301,18 @@ export function BookingWizard() {
       )}
 
       {step === 5 && (
-        <ReviewStep
-          data={data}
-          slotLabel={slotLabel}
-          consentError={errors.consent}
-          onConsentChange={(value) => update("consent", value)}
-          onEdit={() => setStep(1)}
-        />
+        <>
+          <ReviewStep
+            data={data}
+            slotLabel={slotLabel}
+            consentError={errors.consent}
+            onConsentChange={(value) => update("consent", value)}
+            onEdit={() => setStep(1)}
+          />
+          <div className="mt-6">
+            <TurnstileWidget siteKey={turnstileSiteKey} onVerify={setTurnstileToken} />
+          </div>
+        </>
       )}
 
       <div className="mt-9 flex justify-between">

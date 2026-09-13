@@ -1,0 +1,100 @@
+// AXIEONEX backend data model — Phase 1 (foundation).
+//
+// Scope for this phase: persist the Contact and Book Strategy Call form
+// submissions for real, and let admins log in to see what came in. No live
+// calendar/CRM integration yet (Phase 2) and no consent-platform/analytics
+// wiring yet (Phase 3) — see BookingRequest.status and the *SyncedAt fields
+// below for the seams those phases will use.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Prisma 7: the connection URL is no longer read from this block. The CLI
+// (migrate/generate) reads it from prisma.config.ts; the running app passes
+// it to a @prisma/adapter-pg driver adapter in src/lib/prisma.ts.
+datasource db {
+  provider = "postgresql"
+}
+
+/// A user who can sign in to /admin. Single flat role for this phase: every
+/// admin has equal access, there is no permission-tier system.
+model Admin {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastLoginAt  DateTime?
+
+  @@map("admins")
+}
+
+/// One submission of the /contact form.
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  purpose   String
+  name      String
+  email     String
+  company   String?
+  message   String
+  createdAt DateTime @default(now())
+
+  /// IP address at submission time, used only for rate-limiting/abuse review.
+  ipAddress String?
+
+  /// Set once a Resend notification email is actually sent. Null means no
+  /// provider was configured (EMAIL_PROVIDER_API_KEY unset) or the send
+  /// attempt failed — the submission itself is never lost either way.
+  emailSentAt DateTime?
+
+  /// Phase 2 seam: set once this record has been pushed to the CRM. Null
+  /// until CRM_API_KEY/CRM_WORKSPACE_ID are configured and wired up.
+  crmSyncedAt DateTime?
+
+  @@map("contact_submissions")
+}
+
+enum BookingStatus {
+  /// Submitted and persisted, but not yet checked against a real calendar.
+  PENDING
+  /// Phase 2: confirmed against a real calendar provider.
+  CONFIRMED
+  /// Phase 2: the requested slot could not be honored.
+  CANCELLED
+}
+
+/// One submission of the /book-strategy-call wizard.
+model BookingRequest {
+  id       String @id @default(cuid())
+  name     String
+  email    String
+  phone    String
+  role     String
+  company  String
+  website  String
+  country  String
+  size     String
+  approach String
+  outcome  String
+  market   String
+  budget   String
+
+  /// The slot the visitor picked, stored as plain data — Phase 1 has no live
+  /// calendar to check it against (see BookingWizard's mock 4-weekday
+  /// availability). Phase 2 replaces this with a real provider and updates
+  /// `status` accordingly.
+  slotId    String
+  slotLabel String
+
+  status    BookingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+
+  ipAddress String?
+
+  emailSentAt DateTime?
+  crmSyncedAt DateTime?
+
+  @@map("booking_requests")
+}

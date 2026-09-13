@@ -4,6 +4,8 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { submitContactAction, type ContactFormState } from "@/app/contact/actions";
 import { TransitionLink } from "@/components/transition/TransitionLink";
+import { TurnstileWidget } from "@/components/security/TurnstileWidget";
+import { HONEYPOT_FIELD_NAME } from "@/lib/security/honeypot";
 import { CONTACT_EMAIL } from "@/lib/site";
 
 const INITIAL_STATE: ContactFormState = { status: "idle", errors: {} };
@@ -30,7 +32,7 @@ function SubmitButton() {
   );
 }
 
-export function ContactForm() {
+export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string }) {
   const [state, formAction] = useActionState(submitContactAction, INITIAL_STATE);
 
   if (state.status === "success") {
@@ -63,6 +65,21 @@ export function ContactForm() {
     );
   }
 
+  if (state.status === "rate_limited") {
+    return (
+      <div role="alert" className="rounded-lg border border-ax-warning/40 bg-ax-warning/10 p-10 text-center">
+        <h2 className="mb-3 text-xl font-bold">Too many messages sent recently.</h2>
+        <p className="text-sm leading-relaxed text-ax-text-muted">
+          Please wait a few minutes and try again, or write to us directly at{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
+            {CONTACT_EMAIL}
+          </a>
+          .
+        </p>
+      </div>
+    );
+  }
+
   return (
     <form action={formAction} noValidate className="flex flex-col gap-5">
       {state.status === "error" && (
@@ -70,6 +87,13 @@ export function ContactForm() {
           Something went wrong sending your message. Please try again.
         </p>
       )}
+
+      {/* Honeypot: visually hidden and unreachable by keyboard/AT, left
+          empty by real visitors. A filled value marks the submission as spam. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", width: 1, height: 1, overflow: "hidden" }}>
+        <label htmlFor={HONEYPOT_FIELD_NAME}>Leave this field blank</label>
+        <input id={HONEYPOT_FIELD_NAME} name={HONEYPOT_FIELD_NAME} type="text" tabIndex={-1} autoComplete="off" />
+      </div>
 
       <div className="flex flex-col gap-2">
         <label htmlFor="purpose" className="text-[13px] text-ax-text-muted">
@@ -192,6 +216,8 @@ export function ContactForm() {
           {state.errors.consent}
         </p>
       )}
+
+      <TurnstileWidget siteKey={turnstileSiteKey} />
 
       <div className="mt-2 flex items-center gap-5">
         <SubmitButton />

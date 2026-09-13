@@ -32,7 +32,7 @@ export default function ContactPage() {
 
       <section className="px-5 pb-28 sm:px-10">
         <div className="mx-auto max-w-[560px]">
-          <ContactForm />
+          <ContactForm turnstileSiteKey={process.env.CAPTCHA_SITE_KEY} />
         </div>
       </section>
     </div>

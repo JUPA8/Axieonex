@@ -1,27 +1,68 @@
+import { prisma } from "@/lib/prisma";
+import { sendNotificationEmail } from "@/lib/email";
 import type { BookingData } from "@/types/booking";
 
-export type BookingSubmission = BookingData & { slotLabel: string };
+export type BookingSubmission = BookingData & { slotId: string; slotLabel: string; ipAddress: string };
 
 export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | "send_failed" };
 
 /**
- * Server-side booking submission boundary. No calendar provider has been
- * selected yet (see axieonex-integrations.json, "Strategy Call booking and
- * calendar", status: mocked pending calendar provider selection). Until
- * CALENDAR_PROVIDER_API_KEY and CALENDAR_ID are configured, this honestly
- * reports "not_configured" instead of confirming a booking that was never
- * created. Also responsible for server-side slot re-validation once a real
- * calendar is wired up, to prevent double-booking.
+ * Server-side persistence boundary for the Book Strategy Call wizard.
+ *
+ * Phase 1: writes the request to Postgres first (status PENDING); that
+ * write is the source of truth for "did this submission succeed." No live
+ * calendar exists yet (see BookingWizard's mocked 4-weekday availability),
+ * so nothing is actually confirmed against a real calendar here; Phase 2
+ * replaces this with a real provider and updates `status` accordingly. A
+ * best-effort Resend notification email follows the same never-lose-the-
+ * submission pattern as the contact form.
  */
 export async function submitBooking(payload: BookingSubmission): Promise<SendResult> {
-  const apiKey = process.env.CALENDAR_PROVIDER_API_KEY;
-  const calendarId = process.env.CALENDAR_ID;
-  if (!apiKey || !calendarId) {
+  let requestId: string;
+  try {
+    const request = await prisma.bookingRequest.create({
+      data: {
+        name: payload.name,
+        email: payload.email,
+        phone: payload.phone,
+        role: payload.role,
+        company: payload.company,
+        website: payload.website,
+        country: payload.country,
+        size: payload.size,
+        approach: payload.approach,
+        outcome: payload.outcome,
+        market: payload.market,
+        budget: payload.budget,
+        slotId: payload.slotId,
+        slotLabel: payload.slotLabel,
+        ipAddress: payload.ipAddress,
+      },
+    });
+    requestId = request.id;
+  } catch (error) {
+    console.error("[bookingProvider] Failed to persist booking request:", error);
     return { ok: false, reason: "not_configured" };
   }
 
-  // No calendar provider is integrated yet; this branch is unreachable until
-  // one is selected and implemented against its real API.
-  console.error("submitBooking: no calendar provider integration implemented", { email: payload.email });
-  return { ok: false, reason: "send_failed" };
+  const emailResult = await sendNotificationEmail({
+    subject: `New strategy call request: ${payload.company}`,
+    text: [
+      `Name: ${payload.name} (${payload.role})`,
+      `Email: ${payload.email}`,
+      `Phone: ${payload.phone}`,
+      `Company: ${payload.company}, ${payload.website}, ${payload.size} employees, ${payload.country}`,
+      `Target market: ${payload.market}`,
+      `Current approach: ${payload.approach}`,
+      `Desired outcome: ${payload.outcome}`,
+      `Engagement range: ${payload.budget}`,
+      `Requested slot: ${payload.slotLabel}`,
+    ].join("\n"),
+  });
+
+  if (emailResult.sent) {
+    await prisma.bookingRequest.update({ where: { id: requestId }, data: { emailSentAt: new Date() } }).catch(() => {});
+  }
+
+  return { ok: true };
 }
