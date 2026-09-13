@@ -1,9 +1,9 @@
-// AXIEONEX backend data model — Phase 1 (foundation).
+// AXIEONEX backend data model, Phase 1 (foundation).
 //
 // Scope for this phase: persist the Contact and Book Strategy Call form
 // submissions for real, and let admins log in to see what came in. No live
 // calendar/CRM integration yet (Phase 2) and no consent-platform/analytics
-// wiring yet (Phase 3) — see BookingRequest.status and the *SyncedAt fields
+// wiring yet (Phase 3), see BookingRequest.status and the *SyncedAt fields
 // below for the seams those phases will use.
 
 generator client {
@@ -46,7 +46,7 @@ model ContactSubmission {
 
   /// Set once a Resend notification email is actually sent. Null means no
   /// provider was configured (EMAIL_PROVIDER_API_KEY unset) or the send
-  /// attempt failed — the submission itself is never lost either way.
+  /// attempt failed, the submission itself is never lost either way.
   emailSentAt DateTime?
 
   /// Phase 2 seam: set once this record has been pushed to the CRM. Null
@@ -81,7 +81,7 @@ model BookingRequest {
   market   String
   budget   String
 
-  /// The slot the visitor picked, stored as plain data — Phase 1 has no live
+  /// The slot the visitor picked, stored as plain data, Phase 1 has no live
   /// calendar to check it against (see BookingWizard's mock 4-weekday
   /// availability). Phase 2 replaces this with a real provider and updates
   /// `status` accordingly.

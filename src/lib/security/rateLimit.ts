@@ -25,7 +25,7 @@ function getLimiter(): Ratelimit | null {
 
 /**
  * Sliding-window rate limit (5 submissions per 10 minutes) keyed by a caller
- * identifier — typically the requester's IP. If Upstash isn't configured
+ * identifier, typically the requester's IP. If Upstash isn't configured
  * (UPSTASH_REDIS_REST_URL/TOKEN unset), this logs once and always allows the
  * request through rather than blocking every submission for lack of a
  * provider.
@@ -48,6 +48,6 @@ export function warnIfRateLimitUnconfigured() {
   if (warnedOnce) return;
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
     warnedOnce = true;
-    console.warn("[rateLimit] UPSTASH_REDIS_REST_URL/TOKEN not set — public forms are not rate-limited.");
+    console.warn("[rateLimit] UPSTASH_REDIS_REST_URL/TOKEN not set, public forms are not rate-limited.");
   }
 }

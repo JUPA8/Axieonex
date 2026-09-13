@@ -1,13 +1,13 @@
 /**
  * Creates (or updates the password for) an AXIEONEX admin account.
- * Never invents credentials — reads them from you, one way or another:
+ * Never invents credentials, reads them from you, one way or another:
  *
  *   pnpm admin:create --email you@example.com --password "a real password"
  *   ADMIN_EMAIL=you@example.com ADMIN_PASSWORD="a real password" pnpm admin:create
  *   pnpm admin:create                      # prompts interactively
  *
  * Requires DATABASE_URL to be set (reads from .env.local automatically via
- * Next.js conventions is NOT active here since this runs outside Next — load
+ * Next.js conventions is NOT active here since this runs outside Next, load
  * it yourself first, e.g. `set -a && source .env.local && set +a`).
  */
 import { createInterface } from "node:readline/promises";

@@ -5,11 +5,11 @@ import { prisma } from "@/lib/prisma";
 
 /**
  * Auth.js v5, Credentials-only, single flat admin role (no permission
- * tiers — every row in `Admin` has equal access to /admin).
+ * tiers; every row in `Admin` has equal access to /admin).
  *
  * Deliberately no @auth/prisma-adapter here: the adapter exists to persist
  * OAuth accounts and database-backed sessions, neither of which applies to
- * a Credentials-only setup — Auth.js's own docs note Credentials always
+ * a Credentials-only setup. Auth.js's own docs note Credentials always
  * uses JWT sessions regardless of whether an adapter is configured. Prisma
  * is used directly in `authorize()` to look up the Admin row; wiring an
  * unused adapter on top would only add dead schema (User/Account/Session/

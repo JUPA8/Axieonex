@@ -1,5 +1,5 @@
 // Prisma 7 config for the CLI (migrate/generate/studio). The Next.js app
-// itself never imports this file — it constructs PrismaClient with a
+// itself never imports this file, it constructs PrismaClient with a
 // driver adapter directly (see src/lib/prisma.ts), reading DATABASE_URL the
 // normal Next.js way. This file exists only so `prisma migrate`/`generate`/
 // `studio` know where the schema, migrations, and DB connection are when

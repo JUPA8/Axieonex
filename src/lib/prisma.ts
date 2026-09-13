@@ -6,11 +6,11 @@ const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 function createClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
-    // Prisma 7 requires a driver adapter up front — `new PrismaClient()`
+    // Prisma 7 requires a driver adapter up front, `new PrismaClient()`
     // with none throws immediately at construction, not lazily on the
     // first query. Throwing here (rather than constructing without an
     // adapter) keeps that failure inside whichever try/catch actually
-    // triggered client creation — contactProvider/bookingProvider catch it
+    // triggered client creation, contactProvider/bookingProvider catch it
     // and report an honest "not configured" state instead of crashing.
     throw new Error("DATABASE_URL is not set.");
   }

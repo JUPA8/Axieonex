@@ -5,7 +5,7 @@ import { headers } from "next/headers";
  * standard proxy headers (Vercel and most reverse proxies set
  * x-forwarded-for; some set x-real-ip instead). Returns "unknown" if
  * neither is present, or if called outside a request scope (e.g. a unit
- * test invoking a Server Action directly) — callers should still work
+ * test invoking a Server Action directly), callers should still work
  * (rate limiting just degrades to grouping all such requests together)
  * rather than throw.
  */

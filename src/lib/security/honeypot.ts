@@ -1,6 +1,6 @@
 /**
  * Name of the hidden honeypot field added to public forms. Legitimate users
- * never see or fill it (visually hidden, not `type="hidden"` — real bots
+ * never see or fill it (visually hidden, not `type="hidden"`, real bots
  * that fill every visible-looking input will still catch it, while
  * `display:none`/`aria-hidden` keeps it invisible and unannounced to screen
  * readers). A submission with this field non-empty is treated as spam.

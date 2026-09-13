@@ -8,7 +8,7 @@ export type TurnstileResult =
 /**
  * Verifies a Cloudflare Turnstile token server-side. If CAPTCHA_SECRET isn't
  * set yet (no Turnstile site configured), this returns "not_configured"
- * rather than blocking every submission — the caller decides how strict to
+ * rather than blocking every submission, the caller decides how strict to
  * be in that case (Phase 1 logs a warning and lets the submission through,
  * since honeypot + rate limiting still apply).
  */
