@@ -5,7 +5,7 @@ the design handoff's `axieonex-integrations.json` (that file lives in the
 separate handoff package), so this document is the source of truth for
 integration status going forward. Updated at the end of each backend phase.
 
-## Current status (after Backend Phase 2)
+## Current status (after Backend Phase 3)
 
 | Integration | Status | Notes |
 |---|---|---|
@@ -20,9 +20,10 @@ integration status going forward. Updated at the end of each backend phase.
 | Calendar availability + booking | **Real, optional, unverified against a live account** | Cal.com API v2 (`src/lib/calendar/calcom.ts`), gated on `CALENDAR_PROVIDER_API_KEY` + `CALENDAR_ID`. Unset or on any API failure: falls back to the Phase 1 mocked next-4-weekdays generator and the request stays `PENDING`. Implemented against Cal.com's documented v2 shapes but not exercised against a real account (none was available); verify before relying on it in production. |
 | CRM push | **Real, optional, unverified against a live account** | HubSpot Contacts API v3 (`src/lib/crm.ts`), gated on `CRM_API_KEY`. Same caveat as Cal.com: implemented against HubSpot's documented shape, not tested against a live account. `crmSyncedAt` is set on both submission models when the push succeeds. |
 | Article content | **Real** | `Article` model in Postgres, admin CRUD at `/admin/articles`. `/insights` and `/insights/[slug]` read published rows only (`src/lib/articles.ts`); `src/content/articles.ts` is now only the one-time seed source (`prisma/seed.ts`), not read by the live app. |
-| Cookie consent persistence | **Still mocked** | `localStorage` only (`src/lib/consent.ts`). Phase 3. |
-| Analytics | **Not wired** | Phase 3. |
-| Error monitoring | **Not wired** | Phase 3. |
+| Cookie consent persistence | **Real** | `ConsentRecord` in Postgres (`src/app/api/consent/route.ts`), correlated to the visitor via an httpOnly cookie, not a third-party tracker. `localStorage` (`src/lib/consent.ts`) is a fast synchronous read cache in front of it, reconciled on load by `ConsentSync`; a failed server write is logged but never rolls back the visitor's in-browser choice. |
+| Analytics | **Real, optional** | Plausible Analytics (`src/components/analytics/AnalyticsScript.tsx`), gated on `ANALYTICS_PROVIDER_ID` **and** live analytics consent (re-checked on every consent change, not just at page load). Unset, or consent not granted: the script never renders, not even a disabled/stubbed tag. |
+| Error monitoring | **Real, optional** | Sentry (`@sentry/nextjs`), gated on `ERROR_MONITORING_DSN`. Covers server, edge, and client runtimes (`sentry.server.config.ts`, `sentry.edge.config.ts`, `src/instrumentation-client.ts`) plus root-layout render crashes (`src/app/global-error.tsx`). Unset: `Sentry.init()` is never called anywhere, verified by a full production build with the var absent. |
+| SEO structured data | **Real, partial** | Organization schema on `/`, Service schema on all 7 `/services/[slug]` pages (`src/lib/structuredData.ts`). Article schema is intentionally **not** emitted: the `Article` model and admin CRUD form have no author field and no byline is rendered anywhere, so adding `author` would mean inventing a fact. See the TODO in `src/app/insights/[slug]/page.tsx`; blocked on an owner decision. |
 
 ## Architecture notes for future phases
 
@@ -54,3 +55,16 @@ integration status going forward. Updated at the end of each backend phase.
   single-file provider modules specifically so swapping providers later
   (Google Calendar instead of Cal.com, a different CRM) means replacing one
   file, not hunting through `contactProvider.ts`/`bookingProvider.ts`.
+- `@sentry/nextjs` v10 deprecated `withSentryConfig` on its main entry point;
+  it must be imported from `@sentry/nextjs/config` (`next.config.ts`). The
+  client-side DSN is inlined via `next.config.ts`'s `env` map so
+  `src/instrumentation-client.ts` can gate on the same `ERROR_MONITORING_DSN`
+  var as the server/edge configs, instead of requiring a duplicate
+  `NEXT_PUBLIC_`-prefixed copy; a Sentry DSN is a public identifier by
+  design, so shipping it to the browser is the intended, documented usage.
+- Consent is intentionally two-layer: `localStorage` stays the synchronous
+  source every consent-gated script checks (so `AnalyticsScript` never
+  blocks on a network round trip), while Postgres via `/api/consent` is the
+  durable, auditable copy. `writeConsent()` updates the local cache before
+  attempting the server write for exactly this reason; don't reorder it to
+  await the network call first.

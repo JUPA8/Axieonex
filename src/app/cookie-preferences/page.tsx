@@ -13,6 +13,8 @@ export const metadata: Metadata = {
 };
 
 export default function CookiePreferencesPage() {
+  const analyticsConfigured = Boolean(process.env.ANALYTICS_PROVIDER_ID);
+
   return (
     <div data-theme="legal" className="bg-ax-surface-legal text-ax-text-primary">
       <div className="mx-auto max-w-[760px] px-5 pb-24 pt-28 sm:px-10 sm:pt-36">
@@ -27,12 +29,13 @@ export default function CookiePreferencesPage() {
         </p>
 
         <div role="note" className="mb-10 rounded-md border border-ax-warning/40 bg-ax-warning/10 px-5 py-4 text-sm leading-relaxed text-ax-text-body">
-          Your choice is currently saved to this browser only (localStorage), as explicitly disclosed pending a
-          production consent-management platform, see axieonex-integrations.json. No optional script (analytics or
-          marketing) is loaded by this site regardless of your selection, since none has been integrated yet.
+          Your choice is recorded both in this browser and on our server (see the Privacy Policy), so it can be
+          proven if ever audited and can be recovered here if your browser data is cleared. No marketing script is
+          integrated yet, so that category currently has no effect regardless of your selection. See
+          axieonex-integrations.json for full integration status.
         </div>
 
-        <CookiePreferencesManager />
+        <CookiePreferencesManager analyticsConfigured={analyticsConfigured} />
 
         <TransitionLink href="/" className="mt-16 inline-block text-sm text-ax-text-muted hover:text-ax-text-primary">
           ← Back to the main website

@@ -10,6 +10,8 @@ import { FAQ } from "@/components/ui/FAQ";
 import { CtaSection } from "@/components/ui/CtaSection";
 import { HOME_FAQ } from "@/content/homeFaq";
 import { SITE_URL } from "@/lib/site";
+import { buildOrganizationSchema } from "@/lib/structuredData";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
   title: "AXIEONEX | AI-Orchestrated, Human-Executed Revenue Systems",
@@ -33,6 +35,7 @@ export const revalidate = 300;
 export default function HomePage() {
   return (
     <div data-theme="home">
+      <JsonLd data={buildOrganizationSchema()} />
       <HeroSignalReveal />
 
       <section data-reveal="mask-left" className="relative bg-ax-pearl-1 px-5 py-24 text-ax-text-primary-on-light sm:px-10 sm:py-32">

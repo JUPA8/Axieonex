@@ -22,6 +22,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+// TODO(seo): Article JSON-LD schema is intentionally not emitted here. The
+// Article model has publishedAt, but no author field exists anywhere in the
+// schema, admin CRUD form, or rendered article template. Inventing an author
+// value isn't acceptable, so this is blocked on an owner decision: either
+// add a real author field (e.g. "Axieonex Editorial Team" as an
+// Organization-type author) or confirm the site intentionally publishes
+// unattributed articles.
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const article = await getPublishedArticleBySlug(slug).catch((error) => {

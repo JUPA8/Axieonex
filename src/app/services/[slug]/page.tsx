@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { ServiceDetailTemplate } from "@/components/services/ServiceDetailTemplate";
 import { SERVICES, getService } from "@/content/services";
 import { SITE_URL } from "@/lib/site";
+import { buildServiceSchema } from "@/lib/structuredData";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export function generateStaticParams() {
   return SERVICES.map((service) => ({ slug: service.slug }));
@@ -26,5 +28,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const { slug } = await params;
   const service = getService(slug);
   if (!service) notFound();
-  return <ServiceDetailTemplate service={service} />;
+  return (
+    <>
+      <JsonLd data={buildServiceSchema(service, `${SITE_URL}/services/${slug}`)} />
+      <ServiceDetailTemplate service={service} />
+    </>
+  );
 }

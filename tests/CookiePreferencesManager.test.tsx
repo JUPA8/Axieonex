@@ -54,4 +54,14 @@ describe("CookiePreferencesManager", () => {
     expect(readConsent()?.categories.functional).toBe(true);
     expect(readConsent()?.categories.analytics).toBe(false);
   });
+
+  it("describes analytics as unconfigured when no analytics provider is set", () => {
+    render(<CookiePreferencesManager analyticsConfigured={false} />);
+    expect(screen.getByText(/No analytics script is confirmed active/)).toBeInTheDocument();
+  });
+
+  it("describes the real analytics provider once one is configured", () => {
+    render(<CookiePreferencesManager analyticsConfigured />);
+    expect(screen.getByText(/Loads Plausible Analytics/)).toBeInTheDocument();
+  });
 });

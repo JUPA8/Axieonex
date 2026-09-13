@@ -5,6 +5,8 @@ import { PageTransitionProvider } from "@/components/transition/PageTransitionPr
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Footer } from "@/components/layout/Footer";
 import { CookieConsentBanner } from "@/components/cookies/CookieConsentBanner";
+import { ConsentSync } from "@/components/cookies/ConsentSync";
+import { AnalyticsScript } from "@/components/analytics/AnalyticsScript";
 import { RevealController } from "@/components/motion/RevealController";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -58,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <PageTransitionProvider>
           <RevealController />
+          <ConsentSync />
           <SiteHeader />
           <main id="main-content" className="flex-1 pt-[88px]">
             {children}
@@ -65,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <CookieConsentBanner />
         </PageTransitionProvider>
+        <AnalyticsScript domain={process.env.ANALYTICS_PROVIDER_ID} />
       </body>
     </html>
   );

@@ -10,36 +10,41 @@ import {
   type ConsentState,
 } from "@/lib/consent";
 
-const CATEGORIES: { key: ConsentCategory; name: string; description: string; locked?: boolean }[] = [
-  {
-    key: "necessary",
-    name: "Strictly Necessary",
-    description: "Required for core site function, such as navigation and security. These cannot be switched off and do not require consent.",
-    locked: true,
-  },
-  {
-    key: "functional",
-    name: "Functional",
-    description: "Remembers choices you make, such as these cookie preferences, so you do not need to re-select them on return visits.",
-  },
-  {
-    key: "analytics",
-    name: "Analytics",
-    description: "Would help us understand how visitors use the site, if and once an analytics tool is implemented. No analytics script is confirmed active; see the Cookies Policy.",
-  },
-  {
-    key: "preferences",
-    name: "Preferences",
-    description: "Stores settings such as display or regional preferences where applicable to the site.",
-  },
-  {
-    key: "marketing",
-    name: "Marketing",
-    description: "Would be used only if a marketing or advertising tool is implemented, to measure or personalize communications. No such tool is confirmed active.",
-  },
-];
+function buildCategories(analyticsConfigured: boolean): { key: ConsentCategory; name: string; description: string; locked?: boolean }[] {
+  return [
+    {
+      key: "necessary",
+      name: "Strictly Necessary",
+      description: "Required for core site function, such as navigation and security. These cannot be switched off and do not require consent.",
+      locked: true,
+    },
+    {
+      key: "functional",
+      name: "Functional",
+      description: "Remembers choices you make, such as these cookie preferences, so you do not need to re-select them on return visits.",
+    },
+    {
+      key: "analytics",
+      name: "Analytics",
+      description: analyticsConfigured
+        ? "Loads Plausible Analytics, a cookie-free, privacy-focused analytics tool, once you consent here. See the Cookies Policy for detail."
+        : "Would help us understand how visitors use the site, if and once an analytics tool is implemented. No analytics script is confirmed active; see the Cookies Policy.",
+    },
+    {
+      key: "preferences",
+      name: "Preferences",
+      description: "Stores settings such as display or regional preferences where applicable to the site.",
+    },
+    {
+      key: "marketing",
+      name: "Marketing",
+      description: "Would be used only if a marketing or advertising tool is implemented, to measure or personalize communications. No such tool is confirmed active.",
+    },
+  ];
+}
 
-export function CookiePreferencesManager() {
+export function CookiePreferencesManager({ analyticsConfigured = false }: { analyticsConfigured?: boolean }) {
+  const CATEGORIES = buildCategories(analyticsConfigured);
   const [prefs, setPrefs] = useState<ConsentState>(() => readConsent()?.categories ?? DEFAULT_CONSENT);
   const [savedMessage, setSavedMessage] = useState(false);
 

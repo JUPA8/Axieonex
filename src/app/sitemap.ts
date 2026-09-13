@@ -14,7 +14,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/pricing`, lastModified: now, priority: 0.8 },
     { url: `${SITE_URL}/insights`, lastModified: now, priority: 0.6 },
     { url: `${SITE_URL}/contact`, lastModified: now, priority: 0.5 },
-    { url: `${SITE_URL}/book-strategy-call`, lastModified: now, priority: 0.6 },
+    // book-strategy-call is deliberately noindex,follow (see its own
+    // metadata), so it's excluded here rather than sending Google a mixed
+    // signal via a sitemap entry for a page marked not to be indexed.
     { url: `${SITE_URL}/privacy`, lastModified: now, priority: 0.2 },
     { url: `${SITE_URL}/cookies`, lastModified: now, priority: 0.2 },
     { url: `${SITE_URL}/terms`, lastModified: now, priority: 0.2 },
