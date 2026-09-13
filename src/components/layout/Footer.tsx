@@ -23,7 +23,14 @@ export function Footer() {
             <ul className="flex list-none flex-col gap-3">
               {group.links.map((link) => (
                 <li key={link.href}>
-                  <TransitionLink href={link.href} className="text-sm text-ax-text-body hover:text-ax-text-primary">
+                  {/* py-1.5/-my-1.5 grow the tap target into the gap-3 whitespace
+                      without shifting visual position: 6px is the largest
+                      offset that can't overlap the next link's own 6px offset
+                      into that same 12px gap. */}
+                  <TransitionLink
+                    href={link.href}
+                    className="inline-block -my-1.5 py-1.5 text-sm text-ax-text-body hover:text-ax-text-primary"
+                  >
                     {link.label}
                   </TransitionLink>
                 </li>
