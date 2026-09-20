@@ -1,19 +1,33 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { submitBookingAction } from "@/app/book-strategy-call/actions";
+import { submitBookingAction, verifyBookingGateAction } from "@/app/book-strategy-call/actions";
 import { BookingIntro } from "@/components/booking/BookingIntro";
+import { CalendlyEmbed } from "@/components/booking/CalendlyEmbed";
 import { ReviewStep } from "@/components/booking/ReviewStep";
-import { SlotSelector } from "@/components/booking/SlotSelector";
 import { Button } from "@/components/ui/Button";
 import { TurnstileWidget } from "@/components/security/TurnstileWidget";
-import { validateStep1, validateStep2, validateStep3, validateStep4, validateStep5 } from "@/lib/bookingValidation";
+import { validateStep1, validateStep2, validateStep3, validateStep5 } from "@/lib/bookingValidation";
 import { cn } from "@/lib/cn";
 import { CONTACT_EMAIL } from "@/lib/site";
 import { EMPTY_BOOKING_DATA, type BookingData, type BookingFieldErrors } from "@/types/booking";
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5;
-type SubmitPhase = "idle" | "submitting" | "success" | "unavailable" | "error" | "rate_limited";
+type SubmitPhase = "idle" | "gate_checking" | "scheduling" | "finalizing" | "success" | "error" | "rate_limited";
+
+function formatCalendlyTime(iso: string): string {
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(new Date(iso));
+  } catch {
+    return iso;
+  }
+}
 
 const SIZE_OPTIONS = [
   { value: "", label: "Select" },
@@ -60,12 +74,11 @@ function Field({
 const INPUT_CLASSES =
   "min-h-11 rounded-md border border-ax-border-default bg-ax-surface-raised px-3.5 py-3 text-[14.5px] text-ax-text-primary focus:border-ax-violet";
 
-export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string }) {
+export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSiteKey?: string; calendlyUrl?: string }) {
   const [step, setStep] = useState<Step>(0);
   const [data, setData] = useState<BookingData>(EMPTY_BOOKING_DATA);
   const [errors, setErrors] = useState<BookingFieldErrors>({});
-  const [slotId, setSlotId] = useState<string | null>(null);
-  const [slotLabel, setSlotLabel] = useState<string | null>(null);
+  const [calendlySlotIso, setCalendlySlotIso] = useState<string | null>(null);
   const [phase, setPhase] = useState<SubmitPhase>("idle");
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -84,7 +97,6 @@ export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string 
     if (step === 1) stepErrors = validateStep1(data);
     if (step === 2) stepErrors = validateStep2(data);
     if (step === 3) stepErrors = validateStep3(data);
-    if (step === 4) stepErrors = validateStep4(slotId);
 
     setErrors(stepErrors);
     if (Object.keys(stepErrors).length > 0) return;
@@ -96,17 +108,50 @@ export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string 
     setStep((s) => Math.max(1, s - 1) as Step);
   }
 
-  async function handleSubmit() {
+  /**
+   * Gates the real Calendly scheduler behind consent + spam/rate-limit
+   * checks before it's ever revealed: unlike the contact form, showing
+   * Calendly IS the sensitive action (a bot could spam real slots on the
+   * real calendar), so this can't wait until after a slot is picked.
+   */
+  async function handleContinueToScheduling() {
     const consentErrors = validateStep5(data);
     setErrors(consentErrors);
     if (Object.keys(consentErrors).length > 0) return;
 
-    setPhase("submitting");
-    const result = await submitBookingAction(data, slotId ?? "", slotLabel ?? "", honeypot, turnstileToken);
-    if (result.status === "success") setPhase("success");
-    else if (result.status === "unavailable") setPhase("unavailable");
-    else if (result.status === "rate_limited") setPhase("rate_limited");
-    else setPhase("error");
+    setPhase("gate_checking");
+    const result = await verifyBookingGateAction(data, honeypot, turnstileToken);
+    if (result.status === "ok") {
+      setPhase("idle");
+      setStep(5);
+    } else if (result.status === "spam") {
+      // Reported as a normal success without ever mounting the live
+      // Calendly embed: the honeypot is pointless if a bot can tell its
+      // submission was rejected.
+      setPhase("success");
+    } else if (result.status === "rate_limited") {
+      setPhase("rate_limited");
+    } else if (result.status === "error") {
+      setPhase("error");
+    } else {
+      setPhase("idle");
+    }
+  }
+
+  /**
+   * Calendly has already booked the meeting for real by the time this
+   * fires; the customer-facing outcome is success regardless of whether our
+   * own record-keeping write below succeeds, since a failure there doesn't
+   * change the fact a real Calendly invite was just sent.
+   */
+  async function handleCalendlyScheduled(eventUri: string) {
+    setPhase("finalizing");
+    const label = calendlySlotIso ? formatCalendlyTime(calendlySlotIso) : "your selected time";
+    const result = await submitBookingAction(data, calendlySlotIso ?? eventUri, label, eventUri);
+    if (result.status !== "success") {
+      console.error("[BookingWizard] Calendly confirmed the meeting, but our own record-keeping write failed:", result.status);
+    }
+    setPhase("success");
   }
 
   function handleRetry() {
@@ -116,29 +161,12 @@ export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string 
   if (phase === "success") {
     return (
       <div role="status" aria-live="polite" className="text-center">
-        <h1 className="mb-4 text-2xl font-bold">Call requested.</h1>
+        <h1 className="mb-4 text-2xl font-bold">Call booked.</h1>
         <p className="mx-auto mb-8 max-w-[52ch] text-[15px] leading-relaxed text-ax-text-muted">
-          We will confirm your slot by email shortly, with a short pre-call brief covering what triggered your
-          interest and what we will cover together.
-        </p>
-        <Button href="/" variant="secondary">
-          Back to home
-        </Button>
-      </div>
-    );
-  }
-
-  if (phase === "unavailable") {
-    return (
-      <div role="alert" className="rounded-lg border border-ax-warning/40 bg-ax-warning/10 p-10 text-center">
-        <h1 className="mb-4 text-2xl font-bold">Booking isn&apos;t connected yet.</h1>
-        <p className="mx-auto mb-8 max-w-[56ch] text-[15px] leading-relaxed text-ax-text-muted">
-          Your details are validated and ready, but no calendar provider has been configured for this environment
-          yet, so nothing has been booked. Please email us directly at{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
-            {CONTACT_EMAIL}
-          </a>{" "}
-          and we will schedule your call by hand in the meantime. Nothing you entered was lost.
+          {calendlySlotIso
+            ? `You're booked for ${formatCalendlyTime(calendlySlotIso)}. `
+            : ""}
+          Check your inbox for a confirmation email and calendar invite from Calendly.
         </p>
         <Button href="/" variant="secondary">
           Back to home
@@ -191,7 +219,7 @@ export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string 
     return <BookingIntro onStart={() => setStep(1)} />;
   }
 
-  const stepLabels = ["Personal details", "Company profile", "Revenue situation", "Select a date and time", "Review and confirm"];
+  const stepLabels = ["Personal details", "Company profile", "Revenue situation", "Review and confirm", "Select a date and time"];
 
   return (
     <div>
@@ -287,24 +315,9 @@ export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string 
       )}
 
       {step === 4 && (
-        <div>
-          <SlotSelector
-            selectedId={slotId}
-            onSelect={(id, label) => {
-              setSlotId(id);
-              setSlotLabel(label);
-              setErrors({});
-            }}
-          />
-          {errors.slot && <p className="mt-4 text-[12.5px] text-ax-error">{errors.slot}</p>}
-        </div>
-      )}
-
-      {step === 5 && (
         <>
           <ReviewStep
             data={data}
-            slotLabel={slotLabel}
             consentError={errors.consent}
             onConsentChange={(value) => update("consent", value)}
             onEdit={() => setStep(1)}
@@ -315,11 +328,31 @@ export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string 
         </>
       )}
 
+      {step === 5 && (
+        <div>
+          {phase === "finalizing" ? (
+            <p className="py-16 text-center text-sm text-ax-text-muted">Finalizing your booking...</p>
+          ) : (
+            <CalendlyEmbed
+              url={calendlyUrl}
+              name={data.name}
+              email={data.email}
+              onDateTimeSelected={setCalendlySlotIso}
+              onScheduled={(eventUri) => {
+                void handleCalendlyScheduled(eventUri);
+              }}
+            />
+          )}
+        </div>
+      )}
+
       <div className="mt-9 flex justify-between">
-        <button type="button" onClick={goBack} className="min-h-11 rounded-sm border border-white/15 px-6 py-3 text-sm text-ax-text-primary">
-          Back
-        </button>
-        {step < 5 ? (
+        {phase !== "finalizing" && (
+          <button type="button" onClick={goBack} className="min-h-11 rounded-sm border border-white/15 px-6 py-3 text-sm text-ax-text-primary">
+            Back
+          </button>
+        )}
+        {step < 4 && (
           <button
             type="button"
             onClick={goNext}
@@ -327,14 +360,15 @@ export function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string 
           >
             Next
           </button>
-        ) : (
+        )}
+        {step === 4 && (
           <button
             type="button"
-            onClick={handleSubmit}
-            disabled={phase === "submitting"}
+            onClick={handleContinueToScheduling}
+            disabled={phase === "gate_checking"}
             className="min-h-11 rounded-sm bg-[image:var(--ax-gradient-spectral)] px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
           >
-            {phase === "submitting" ? "Submitting..." : "Confirm request"}
+            {phase === "gate_checking" ? "Checking..." : "Continue to scheduling"}
           </button>
         )}
       </div>

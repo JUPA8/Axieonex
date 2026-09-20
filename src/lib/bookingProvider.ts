@@ -1,31 +1,29 @@
 import { prisma } from "@/lib/prisma";
-import { createCalcomBooking } from "@/lib/calendar/calcom";
 import { pushToCrm } from "@/lib/crm";
 import { sendNotificationEmail } from "@/lib/email";
 import type { BookingData } from "@/types/booking";
 
-export type BookingSubmission = BookingData & { slotId: string; slotLabel: string; ipAddress: string };
+export type BookingSubmission = BookingData & {
+  slotId: string;
+  slotLabel: string;
+  calendarBookingUid: string;
+  ipAddress: string;
+};
 
 export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | "send_failed" };
 
 /**
  * Server-side persistence boundary for the Book Strategy Call wizard.
  *
- * Writes the request to Postgres first (status PENDING); that write is the
- * source of truth for "did this submission succeed," independent of
- * whether a calendar provider is configured or whether it's reachable.
- *
- * Phase 2: if CALENDAR_PROVIDER_API_KEY/CALENDAR_ID are configured (see
- * src/lib/calendar/calcom.ts), attempts a real Cal.com booking for the
- * selected slot (whose id, by that point, is a real ISO start time from
- * getCalcomAvailability, not the mock generator's date-only key) and
- * updates the row to CONFIRMED with the returned booking UID. If that call
- * fails, the row stays PENDING rather than being silently marked CONFIRMED
- * or CANCELLED, an admin can follow up manually. Unconfigured or mocked
- * requests also stay PENDING, matching Phase 1's behavior exactly.
- *
- * A best-effort Resend notification email follows the same never-lose-the-
- * submission pattern regardless of calendar outcome.
+ * By the time this runs, the visitor has already scheduled a real time slot
+ * directly in the embedded Calendly widget
+ * (src/components/booking/CalendlyEmbed.tsx), which is the actual source of
+ * truth for the booking: calendarBookingUid is the real Calendly event URI
+ * it reported back via postMessage. This function only durably records that
+ * outcome for our own CRM/notification purposes; it never attempts or
+ * reverses the booking itself, so a failure here must never be presented to
+ * the visitor as "your call isn't booked" (it is, on Calendly's side
+ * regardless of what happens here).
  */
 export async function submitBooking(payload: BookingSubmission): Promise<SendResult> {
   let requestId: string;
@@ -46,31 +44,15 @@ export async function submitBooking(payload: BookingSubmission): Promise<SendRes
         budget: payload.budget,
         slotId: payload.slotId,
         slotLabel: payload.slotLabel,
+        calendarBookingUid: payload.calendarBookingUid,
+        status: "CONFIRMED",
         ipAddress: payload.ipAddress,
       },
     });
     requestId = request.id;
   } catch (error) {
-    console.error("[bookingProvider] Failed to persist booking request:", error);
+    console.error("[bookingProvider] Failed to persist a Calendly-confirmed booking (the meeting is still real):", error);
     return { ok: false, reason: "not_configured" };
-  }
-
-  const calendarResult = await createCalcomBooking({
-    slotStartIso: payload.slotId,
-    name: payload.name,
-    email: payload.email,
-    notes: `Target market: ${payload.market}. Current approach: ${payload.approach}. Desired outcome: ${payload.outcome}.`,
-  });
-
-  if (calendarResult.ok) {
-    await prisma.bookingRequest
-      .update({ where: { id: requestId }, data: { status: "CONFIRMED", calendarBookingUid: calendarResult.bookingUid } })
-      .catch((error) => console.error("[bookingProvider] Booked with Cal.com but failed to record the UID:", error));
-  } else if (calendarResult.reason !== "not_configured") {
-    // A real provider is configured but this specific request failed to
-    // confirm; leave the row PENDING for manual follow-up rather than
-    // guessing at CONFIRMED or CANCELLED.
-    console.error("[bookingProvider] Cal.com booking failed, request left PENDING for manual follow-up:", calendarResult.reason);
   }
 
   const emailResult = await sendNotificationEmail({
@@ -84,8 +66,8 @@ export async function submitBooking(payload: BookingSubmission): Promise<SendRes
       `Current approach: ${payload.approach}`,
       `Desired outcome: ${payload.outcome}`,
       `Engagement range: ${payload.budget}`,
-      `Requested slot: ${payload.slotLabel}`,
-      calendarResult.ok ? `Confirmed on Cal.com: ${calendarResult.bookingUid}` : "Not yet confirmed on a calendar.",
+      `Confirmed slot: ${payload.slotLabel}`,
+      `Calendly event: ${payload.calendarBookingUid}`,
     ].join("\n"),
   });
 
@@ -98,7 +80,7 @@ export async function submitBooking(payload: BookingSubmission): Promise<SendRes
     email: payload.email,
     company: payload.company,
     phone: payload.phone,
-    message: `Target market: ${payload.market}. Budget: ${payload.budget}. Requested slot: ${payload.slotLabel}.`,
+    message: `Target market: ${payload.market}. Budget: ${payload.budget}. Confirmed slot: ${payload.slotLabel}.`,
     source: "book_strategy_call",
   });
 

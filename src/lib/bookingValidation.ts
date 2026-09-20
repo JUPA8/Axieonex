@@ -31,10 +31,6 @@ export function validateStep3(data: BookingData): BookingFieldErrors {
   return errors;
 }
 
-export function validateStep4(selectedSlot: string | null): BookingFieldErrors {
-  return selectedSlot ? {} : { slot: "Please select a date and time." };
-}
-
 export function validateStep5(data: BookingData): BookingFieldErrors {
   return data.consent ? {} : { consent: "Please accept the privacy terms to continue." };
 }

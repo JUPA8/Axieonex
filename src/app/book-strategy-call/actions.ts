@@ -1,49 +1,30 @@
 "use server";
 
-import { buildAvailability } from "@/lib/availability";
-import { getCalcomAvailability } from "@/lib/calendar/calcom";
 import { submitBooking } from "@/lib/bookingProvider";
 import { validateStep1, validateStep2, validateStep3, validateStep5 } from "@/lib/bookingValidation";
 import { getClientIp } from "@/lib/security/getClientIp";
 import { isHoneypotValueTripped } from "@/lib/security/honeypot";
 import { checkRateLimit, warnIfRateLimitUnconfigured } from "@/lib/security/rateLimit";
 import { verifyTurnstile } from "@/lib/security/turnstile";
-import type { AvailabilityDay, BookingData } from "@/types/booking";
+import type { BookingData } from "@/types/booking";
 
-export type AvailabilityResult = { source: "real" | "mock"; days: AvailabilityDay[] };
+export type BookingGateResult = { status: "ok" | "spam" } | { status: "invalid" } | { status: "rate_limited" } | { status: "error" };
 
 /**
- * Runs server-side because the real path needs CALENDAR_PROVIDER_API_KEY,
- * which must never reach the client bundle. Falls back to the Phase 1 mock
- * generator whenever a calendar provider isn't configured, or when the real
- * provider is configured but its request fails, rather than showing a hard
- * "unavailable" wall for what may be a transient issue with no user-facing
- * recovery path.
+ * Runs before the real Calendly scheduler is ever revealed to the visitor.
+ * Unlike the contact form (where "pretend success" costs nothing), revealing
+ * Calendly IS the sensitive action here: a bot that gets this far could spam
+ * real slots on the business's real calendar. So a honeypot trip returns
+ * "spam" rather than "ok", and the wizard shows the same success screen a
+ * real visitor would see, without ever mounting the live embed.
  */
-export async function getAvailabilityAction(): Promise<AvailabilityResult> {
-  const real = await getCalcomAvailability();
-  if (real && real.length > 0) return { source: "real", days: real };
-  return { source: "mock", days: buildAvailability() };
-}
-
-export type BookingSubmitResult =
-  | { status: "success" }
-  | { status: "unavailable" }
-  | { status: "error" }
-  | { status: "invalid" }
-  | { status: "rate_limited" };
-
-export async function submitBookingAction(
+export async function verifyBookingGateAction(
   data: BookingData,
-  slotId: string,
-  slotLabel: string,
   honeypotValue: string,
   turnstileToken: string | null,
-): Promise<BookingSubmitResult> {
-  // Spam caught here is reported as a normal success: the honeypot is
-  // pointless if bots can learn their submission was rejected.
+): Promise<BookingGateResult> {
   if (isHoneypotValueTripped(honeypotValue)) {
-    return { status: "success" };
+    return { status: "spam" };
   }
 
   const errors = {
@@ -52,7 +33,7 @@ export async function submitBookingAction(
     ...validateStep3(data),
     ...validateStep5(data),
   };
-  if (!slotId || !slotLabel || Object.keys(errors).length > 0) {
+  if (Object.keys(errors).length > 0) {
     return { status: "invalid" };
   }
 
@@ -70,7 +51,35 @@ export async function submitBookingAction(
     return { status: "error" };
   }
 
-  const result = await submitBooking({ ...data, slotId, slotLabel, ipAddress });
+  return { status: "ok" };
+}
+
+export type BookingSubmitResult = { status: "success" } | { status: "unavailable" } | { status: "error" } | { status: "invalid" };
+
+/**
+ * Called only after Calendly itself has already confirmed the booking
+ * (calendarBookingUid is the real event URI it reported back). This just
+ * durably records that outcome; see src/lib/bookingProvider.ts for why a
+ * failure here is never shown to the visitor as "not booked".
+ */
+export async function submitBookingAction(
+  data: BookingData,
+  slotId: string,
+  slotLabel: string,
+  calendarBookingUid: string,
+): Promise<BookingSubmitResult> {
+  const errors = {
+    ...validateStep1(data),
+    ...validateStep2(data),
+    ...validateStep3(data),
+    ...validateStep5(data),
+  };
+  if (!slotId || !slotLabel || !calendarBookingUid || Object.keys(errors).length > 0) {
+    return { status: "invalid" };
+  }
+
+  const ipAddress = await getClientIp();
+  const result = await submitBooking({ ...data, slotId, slotLabel, calendarBookingUid, ipAddress });
   if (result.ok) return { status: "success" };
   if (result.reason === "not_configured") return { status: "unavailable" };
   return { status: "error" };

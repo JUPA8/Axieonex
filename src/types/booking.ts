@@ -30,16 +30,4 @@ export const EMPTY_BOOKING_DATA: BookingData = {
   consent: false,
 };
 
-export type TimeSlot = {
-  id: string;
-  time: string;
-  label: string;
-};
-
-export type AvailabilityDay = {
-  id: string;
-  label: string;
-  slots: TimeSlot[];
-};
-
-export type BookingFieldErrors = Partial<Record<keyof BookingData | "slot", string>>;
+export type BookingFieldErrors = Partial<Record<keyof BookingData, string>>;

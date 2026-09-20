@@ -3,13 +3,11 @@ import type { BookingData } from "@/types/booking";
 
 export function ReviewStep({
   data,
-  slotLabel,
   consentError,
   onConsentChange,
   onEdit,
 }: {
   data: BookingData;
-  slotLabel: string | null;
   consentError?: string;
   onConsentChange: (value: boolean) => void;
   onEdit: () => void;
@@ -36,7 +34,6 @@ export function ReviewStep({
         <div>Current approach: {data.approach}</div>
         <div>Desired outcome: {data.outcome}</div>
         <div>Engagement range: {data.budget}</div>
-        <div className="border-t border-white/8 pt-2.5 text-ax-cyan-alt">{slotLabel ?? "No time selected yet."}</div>
       </div>
       {/*
         The checkbox is wrapped in the label for a large click target, but its

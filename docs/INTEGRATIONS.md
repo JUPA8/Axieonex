@@ -20,7 +20,7 @@ given variable is unset.
 | `EMAIL_PROVIDER_API_KEY` / `EMAIL_FROM_ADDRESS` | 1 | Resend notification email on submission. |
 | `CAPTCHA_SITE_KEY` / `CAPTCHA_SECRET` | 1 | Cloudflare Turnstile spam protection. |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | 1 | Upstash rate limiting. |
-| `CALENDAR_PROVIDER_API_KEY` / `CALENDAR_ID` | 2 | Cal.com API v2 availability + booking. |
+| `NEXT_PUBLIC_CALENDLY_URL` | 2 (revised) | Calendly inline embed URL for the final booking step. |
 | `CRM_API_KEY` / `CRM_WORKSPACE_ID` | 2 | HubSpot Contacts API v3 push. |
 | `ANALYTICS_PROVIDER_ID` | 3 | Plausible Analytics domain, gated on consent. |
 | `ERROR_MONITORING_DSN` | 3 | Sentry DSN (server, edge, and client). |
@@ -36,14 +36,14 @@ See the script's own header comment.
 | Integration | Status | Notes |
 |---|---|---|
 | Contact form persistence | **Real** | `ContactSubmission` in Postgres via Prisma. Writes first; a failed/unconfigured email or CRM push never loses the submission. |
-| Booking request persistence | **Real** | `BookingRequest` in Postgres. `status` is `PENDING` until a real calendar confirms it, then `CONFIRMED`. |
+| Booking request persistence | **Real** | `BookingRequest` in Postgres, written as `CONFIRMED` once Calendly itself has scheduled the meeting (see Calendar row below); `calendarBookingUid` is the real Calendly event URI. |
 | Email notifications | **Real, optional** | Resend, gated on `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS`. Unset: submissions still persist, `emailSentAt` stays null. |
 | Honeypot spam protection | **Real** | Hidden field on both public forms; a filled value is silently treated as success. |
 | Turnstile spam protection | **Real, optional** | Gated on `CAPTCHA_SITE_KEY` (client) / `CAPTCHA_SECRET` (server). Unset: widget doesn't render, server verification is skipped, honeypot + rate limiting still apply. |
 | Rate limiting | **Real, optional** | Upstash sliding window (5 / 10 min) on both public forms and admin login, gated on `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`. Unset: skipped (logged once), not enforced. |
 | Admin authentication | **Real** | Auth.js v5, Credentials provider, bcrypt, JWT sessions, session-signed with `AUTH_SECRET`. `/admin` gated by a server-side session check in `src/app/admin/(dashboard)/layout.tsx`. |
 | Admin submissions list | **Real** | `/admin` lists `ContactSubmission` and `BookingRequest` rows directly from Postgres, including calendar confirmation UID. |
-| Calendar availability + booking | **Real, optional, unverified against a live account** | Cal.com API v2 (`src/lib/calendar/calcom.ts`), gated on `CALENDAR_PROVIDER_API_KEY` + `CALENDAR_ID`. Unset or on any API failure: falls back to the Phase 1 mocked next-4-weekdays generator and the request stays `PENDING`. Implemented against Cal.com's documented v2 shapes but not exercised against a real account (none was available); verify before relying on it in production. |
+| Calendar scheduling | **Real** | Calendly inline embed (`src/components/booking/CalendlyEmbed.tsx`), gated on `NEXT_PUBLIC_CALENDLY_URL`. Replaces the original Cal.com-API design (Phase 2): Calendly itself owns availability, conflict handling, and the actual confirmation email/invite, reported back to the wizard via postMessage (`calendly.date_and_time_selected`, `calendly.event_scheduled`). Unset: the final step shows an honest "not connected yet" notice and no booking can be completed, rather than a broken embed. |
 | CRM push | **Real, optional, unverified against a live account** | HubSpot Contacts API v3 (`src/lib/crm.ts`), gated on `CRM_API_KEY` (`CRM_WORKSPACE_ID` is optional, attached only as an informational custom property if set). Same caveat as Cal.com: implemented against HubSpot's documented shape, not tested against a live account. `crmSyncedAt` is set on both submission models when the push succeeds. |
 | Article content | **Real** | `Article` model in Postgres, admin CRUD at `/admin/articles`. `/insights` and `/insights/[slug]` read published rows only (`src/lib/articles.ts`); `src/content/articles.ts` is now only the one-time seed source (`prisma/seed.ts`), not read by the live app. |
 | Cookie consent persistence | **Real** | `ConsentRecord` in Postgres (`src/app/api/consent/route.ts`), correlated to the visitor via an httpOnly cookie, not a third-party tracker. `localStorage` (`src/lib/consent.ts`) is a fast synchronous read cache in front of it, reconciled on load by `ConsentSync`; a failed server write is logged but never rolls back the visitor's in-browser choice. |
@@ -88,6 +88,29 @@ See the script's own header comment.
   var as the server/edge configs, instead of requiring a duplicate
   `NEXT_PUBLIC_`-prefixed copy; a Sentry DSN is a public identifier by
   design, so shipping it to the browser is the intended, documented usage.
+- **Cal.com → Calendly**: Phase 2 originally implemented a Cal.com API v2
+  integration (`src/lib/calendar/calcom.ts`) for calendar scheduling, but it
+  was never exercised against a real account. It's since been replaced
+  entirely (not kept alongside) with a real Calendly inline embed once a
+  real Calendly link was provided, since Calendly was the actual provider in
+  use. The old Cal.com module, its mocked-availability fallback
+  (`src/lib/availability.ts`), and `SlotSelector.tsx` were deleted rather
+  than left as unused dead code; revisit `git log` on this file before
+  Phase 2's tag if Cal.com is ever reconsidered.
+- The Book Strategy Call wizard gates the Calendly embed itself behind
+  consent + honeypot + Turnstile + rate-limit checks
+  (`verifyBookingGateAction` in `src/app/book-strategy-call/actions.ts`),
+  run *before* the widget is ever revealed. This differs from the contact
+  form's pattern (where a honeypot trip can safely "pretend success" after
+  the fact): revealing a live scheduling calendar is itself the sensitive
+  action, since a bot that reaches it could spam real slots on the real
+  calendar, not just waste a database row.
+- Because Calendly confirms bookings itself, `submitBookingAction` only runs
+  *after* `calendly.event_scheduled` fires and only records that outcome
+  for our own CRM/notification purposes. A failure in that write is logged
+  server-side but never shown to the visitor as "your call isn't booked":
+  it is, on Calendly's side, regardless of what happens in our own system
+  afterward.
 - Consent is intentionally two-layer: `localStorage` stays the synchronous
   source every consent-gated script checks (so `AnalyticsScript` never
   blocks on a network round trip), while Postgres via `/api/consent` is the

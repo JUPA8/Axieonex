@@ -16,7 +16,7 @@ export default function BookStrategyCallPage() {
     <div data-theme="strategy-call" className="bg-ax-ink-2 text-ax-text-primary">
       <section className="px-5 pb-24 pt-28 sm:px-10 sm:pt-36">
         <div className="mx-auto max-w-[560px]">
-          <BookingWizard turnstileSiteKey={process.env.CAPTCHA_SITE_KEY} />
+          <BookingWizard turnstileSiteKey={process.env.CAPTCHA_SITE_KEY} calendlyUrl={process.env.NEXT_PUBLIC_CALENDLY_URL} />
         </div>
       </section>
     </div>

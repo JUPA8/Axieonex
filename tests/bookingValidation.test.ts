@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { validateStep1, validateStep2, validateStep3, validateStep4, validateStep5 } from "@/lib/bookingValidation";
+import { validateStep1, validateStep2, validateStep3, validateStep5 } from "@/lib/bookingValidation";
 import { EMPTY_BOOKING_DATA } from "@/types/booking";
 
 describe("validateStep1", () => {
@@ -38,13 +38,6 @@ describe("validateStep3", () => {
   it("requires a budget selection", () => {
     const errors = validateStep3({ ...EMPTY_BOOKING_DATA, approach: "x", outcome: "y", market: "EU", budget: "" });
     expect(errors.budget).toBeTruthy();
-  });
-});
-
-describe("validateStep4", () => {
-  it("requires a selected slot", () => {
-    expect(validateStep4(null).slot).toBeTruthy();
-    expect(validateStep4("2026-01-01_9:00 AM")).toEqual({});
   });
 });
 
