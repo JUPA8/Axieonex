@@ -1,20 +1,17 @@
+import { isIP } from "node:net";
 import { headers } from "next/headers";
 
-/**
- * Best-effort caller IP for rate-limiting/abuse review, read from the
- * standard proxy headers (Vercel and most reverse proxies set
- * x-forwarded-for; some set x-real-ip instead). Returns "unknown" if
- * neither is present, or if called outside a request scope (e.g. a unit
- * test invoking a Server Action directly), callers should still work
- * (rate limiting just degrades to grouping all such requests together)
- * rather than throw.
- */
+const HEADER_NAME_PATTERN = /^[a-z0-9-]{1,64}$/;
+
+/** Reads only the single header explicitly configured as normalized by the
+ * deployment proxy. Raw forwarding headers are ignored by default. */
 export async function getClientIp(): Promise<string> {
+  const trustedHeader = process.env.TRUSTED_PROXY_IP_HEADER?.trim().toLowerCase();
+  if (!trustedHeader || !HEADER_NAME_PATTERN.test(trustedHeader)) return "unknown";
   try {
-    const headerList = await headers();
-    const forwardedFor = headerList.get("x-forwarded-for");
-    if (forwardedFor) return forwardedFor.split(",")[0].trim();
-    return headerList.get("x-real-ip")?.trim() || "unknown";
+    const value = (await headers()).get(trustedHeader)?.trim();
+    if (!value || value.includes(",") || isIP(value) === 0) return "unknown";
+    return value;
   } catch {
     return "unknown";
   }

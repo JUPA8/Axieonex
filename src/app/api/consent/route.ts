@@ -4,9 +4,12 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getClientIp } from "@/lib/security/getClientIp";
 import { CONSENT_VERSION, type ConsentState } from "@/lib/consent";
+import { parseConsentBody } from "@/lib/serverValidation";
 
 const VISITOR_COOKIE = "axieonex_visitor_id";
 const VISITOR_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year, matches typical CMP consent lifetimes.
+const MAX_REQUEST_BYTES = 16 * 1024;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /**
  * Durable, server-side consent store (Backend Phase 3). The client's
@@ -17,7 +20,7 @@ const VISITOR_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year, matches typical CM
 async function getOrCreateVisitorId(): Promise<{ visitorId: string; isNew: boolean }> {
   const cookieStore = await cookies();
   const existing = cookieStore.get(VISITOR_COOKIE)?.value;
-  if (existing) return { visitorId: existing, isNew: false };
+  if (existing && UUID_PATTERN.test(existing)) return { visitorId: existing, isNew: false };
   return { visitorId: randomUUID(), isNew: true };
 }
 
@@ -41,14 +44,14 @@ export async function GET() {
   try {
     const cookieStore = await cookies();
     const visitorId = cookieStore.get(VISITOR_COOKIE)?.value;
-    if (!visitorId) return NextResponse.json({ record: null });
+    if (!visitorId || !UUID_PATTERN.test(visitorId)) return NextResponse.json({ record: null });
 
     const record = await prisma.consentRecord.findUnique({ where: { visitorId } });
     if (!record || record.version !== CONSENT_VERSION) return NextResponse.json({ record: null });
 
     return NextResponse.json({ record: { version: record.version, categories: toConsentState(record), updatedAt: record.updatedAt } });
-  } catch (error) {
-    console.error("[api/consent] GET failed:", error);
+  } catch {
+    console.error("[api/consent] GET failed.");
     // Fail closed: the client falls back to treating this as "no server
     // record," never to assuming consent was granted.
     return NextResponse.json({ record: null }, { status: 200 });
@@ -58,14 +61,13 @@ export async function GET() {
 export async function POST(request: Request) {
   let categories: ConsentState;
   try {
-    const body = (await request.json()) as { categories?: Partial<ConsentState> };
-    categories = {
-      necessary: true,
-      functional: Boolean(body.categories?.functional),
-      analytics: Boolean(body.categories?.analytics),
-      preferences: Boolean(body.categories?.preferences),
-      marketing: Boolean(body.categories?.marketing),
-    };
+    const declaredLength = Number(request.headers.get("content-length") ?? "0");
+    if (declaredLength > MAX_REQUEST_BYTES) return NextResponse.json({ error: "Invalid request body." }, { status: 413 });
+    const rawBody = await request.text();
+    if (Buffer.byteLength(rawBody, "utf8") > MAX_REQUEST_BYTES) return NextResponse.json({ error: "Invalid request body." }, { status: 413 });
+    const parsed = parseConsentBody(JSON.parse(rawBody));
+    if (!parsed) return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    categories = parsed;
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
@@ -90,8 +92,8 @@ export async function POST(request: Request) {
       });
     }
     return response;
-  } catch (error) {
-    console.error("[api/consent] POST failed:", error);
+  } catch {
+    console.error("[api/consent] POST failed.");
     // The client already applied the choice optimistically to localStorage
     // and to any consent-gated scripts on this page load; a failure here
     // just means the server-side audit copy wasn't recorded this time.

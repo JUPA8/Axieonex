@@ -23,8 +23,8 @@ export default async function InsightsPage() {
   let unavailable = false;
   try {
     articles = await getPublishedArticles();
-  } catch (error) {
-    console.error("[insights] Failed to load articles from the database:", error);
+  } catch {
+    console.error("[insights] Failed to load articles from the database.");
     unavailable = true;
   }
 

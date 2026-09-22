@@ -31,8 +31,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Article routes are admin-editable (Phase 2); a DB failure here should
   // shrink the sitemap by a few URLs, not break sitemap.xml generation for
   // the entire site.
-  const articles = await getPublishedArticles().catch((error) => {
-    console.error("[sitemap] Failed to load articles from the database:", error);
+  const articles = await getPublishedArticles().catch(() => {
+    console.error("[sitemap] Failed to load articles from the database.");
     return [];
   });
   const articleRoutes: MetadataRoute.Sitemap = articles.map((article) => ({

@@ -30,8 +30,8 @@ export async function POST(request: Request): Promise<Response> {
   try {
     const result = await confirmPendingBooking(parsed.booking);
     return Response.json({ received: true, result });
-  } catch (error) {
-    console.error("[calendly-webhook] Booking confirmation failed:", error);
+  } catch {
+    console.error("[calendly-webhook] Booking confirmation failed.");
     return Response.json({ error: "Temporarily unavailable" }, { status: 503 });
   }
 }

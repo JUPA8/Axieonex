@@ -1,44 +1,39 @@
-import { Resend } from "resend";
+import "server-only";
+
 import { CONTACT_EMAIL } from "@/lib/site";
+import { fetchWithTimeout, ProviderTimeoutError } from "@/lib/security/providerRequest";
 
-export type EmailResult = { sent: true } | { sent: false; reason: "not_configured" | "send_failed" };
+const RESEND_EMAILS_URL = "https://api.resend.com/emails";
 
-let client: Resend | null | undefined;
+export type EmailResult =
+  | { sent: true }
+  | { sent: false; reason: "not_configured" | "misconfigured" | "timeout" | "provider_error" };
 
-function getClient(): Resend | null {
-  if (client !== undefined) return client;
-  const apiKey = process.env.EMAIL_PROVIDER_API_KEY;
-  client = apiKey ? new Resend(apiKey) : null;
-  return client;
-}
-
-/**
- * Sends a plain internal notification email via Resend. Never throws: a
- * failed or unconfigured send is reported back as a result the caller can
- * log, never something that should abort a request that already persisted
- * its data to the database.
- */
 export async function sendNotificationEmail(params: { subject: string; text: string }): Promise<EmailResult> {
-  const resend = getClient();
-  const from = process.env.EMAIL_FROM_ADDRESS;
-  if (!resend || !from) {
-    return { sent: false, reason: "not_configured" };
-  }
+  const apiKey = process.env.EMAIL_PROVIDER_API_KEY?.trim();
+  const from = process.env.EMAIL_FROM_ADDRESS?.trim();
+  if (!apiKey && !from) return { sent: false, reason: "not_configured" };
+  if (!apiKey || !from) return { sent: false, reason: "misconfigured" };
 
   try {
-    const { error } = await resend.emails.send({
-      from,
-      to: CONTACT_EMAIL,
-      subject: params.subject,
-      text: params.text,
+    const response = await fetchWithTimeout(RESEND_EMAILS_URL, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [CONTACT_EMAIL], subject: params.subject, text: params.text }),
     });
-    if (error) {
-      console.error("[email] Resend rejected the notification:", error);
-      return { sent: false, reason: "send_failed" };
+    if (!response.ok) {
+      console.error(`[email] Resend request failed with status ${response.status}.`);
+      return { sent: false, reason: "provider_error" };
+    }
+    const body = (await response.json()) as unknown;
+    if (typeof body !== "object" || body === null || !("id" in body) || typeof body.id !== "string" || !body.id) {
+      console.error("[email] Resend returned an invalid response.");
+      return { sent: false, reason: "provider_error" };
     }
     return { sent: true };
   } catch (error) {
-    console.error("[email] Failed to send notification:", error);
-    return { sent: false, reason: "send_failed" };
+    const reason = error instanceof ProviderTimeoutError ? "timeout" : "provider_error";
+    console.error(`[email] Resend request failed (${reason}).`);
+    return { sent: false, reason };
   }
 }

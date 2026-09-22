@@ -4,31 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/adminAuthorization";
 import { prisma } from "@/lib/prisma";
+import { isSafeRecordId, parseArticleForm } from "@/lib/serverValidation";
 
 export type ArticleFormState = { error?: string };
-
-const REQUIRED_FIELDS = ["slug", "title", "category", "color", "intro", "h2a", "bodyA", "h2b", "bodyB", "closing"] as const;
-
-function readFields(formData: FormData) {
-  const values: Record<string, string> = {};
-  for (const field of REQUIRED_FIELDS) {
-    values[field] = String(formData.get(field) ?? "").trim();
-  }
-  return values as Record<(typeof REQUIRED_FIELDS)[number], string>;
-}
-
-function validate(values: Record<string, string>): string | null {
-  for (const field of REQUIRED_FIELDS) {
-    if (!values[field]) return `Please fill in "${field}".`;
-  }
-  if (!/^[a-z0-9-]+$/.test(values.slug)) {
-    return "Slug must be lowercase letters, numbers, and hyphens only.";
-  }
-  if (!/^#[0-9a-fA-F]{6}$/.test(values.color)) {
-    return "Color must be a hex value like #3E7BFA.";
-  }
-  return null;
-}
 
 function revalidateArticleRoutes(slug?: string) {
   revalidatePath("/insights");
@@ -39,11 +17,9 @@ function revalidateArticleRoutes(slug?: string) {
 
 export async function createArticleAction(_prevState: ArticleFormState, formData: FormData): Promise<ArticleFormState> {
   await requireAdmin();
-  const values = readFields(formData);
-  const error = validate(values);
-  if (error) return { error };
-
-  const published = formData.get("published") === "on";
+  const parsed = parseArticleForm(formData);
+  if (!parsed.ok) return { error: parsed.error };
+  const { published, ...values } = parsed.data;
 
   try {
     await prisma.article.create({
@@ -53,7 +29,7 @@ export async function createArticleAction(_prevState: ArticleFormState, formData
     if (err && typeof err === "object" && "code" in err && err.code === "P2002") {
       return { error: "An article with that slug already exists." };
     }
-    console.error("[admin/articles] Failed to create article:", err);
+    console.error("[admin/articles] Failed to create article.");
     return { error: "Something went wrong saving the article. Please try again." };
   }
 
@@ -63,11 +39,10 @@ export async function createArticleAction(_prevState: ArticleFormState, formData
 
 export async function updateArticleAction(id: string, _prevState: ArticleFormState, formData: FormData): Promise<ArticleFormState> {
   await requireAdmin();
-  const values = readFields(formData);
-  const error = validate(values);
-  if (error) return { error };
-
-  const published = formData.get("published") === "on";
+  if (!isSafeRecordId(id)) return { error: "Invalid article request." };
+  const parsed = parseArticleForm(formData);
+  if (!parsed.ok) return { error: parsed.error };
+  const { published, ...values } = parsed.data;
 
   try {
     const existing = await prisma.article.findUnique({ where: { id } });
@@ -83,7 +58,7 @@ export async function updateArticleAction(id: string, _prevState: ArticleFormSta
     if (err && typeof err === "object" && "code" in err && err.code === "P2002") {
       return { error: "An article with that slug already exists." };
     }
-    console.error("[admin/articles] Failed to update article:", err);
+    console.error("[admin/articles] Failed to update article.");
     return { error: "Something went wrong saving the article. Please try again." };
   }
 
@@ -93,12 +68,14 @@ export async function updateArticleAction(id: string, _prevState: ArticleFormSta
 
 export async function deleteArticleAction(id: string) {
   await requireAdmin();
+  if (!isSafeRecordId(id)) throw new Error("Invalid article request.");
   const article = await prisma.article.delete({ where: { id } });
   revalidateArticleRoutes(article.slug);
 }
 
 export async function togglePublishAction(id: string) {
   await requireAdmin();
+  if (!isSafeRecordId(id)) throw new Error("Invalid article request.");
   const article = await prisma.article.findUniqueOrThrow({ where: { id } });
   const published = !article.published;
   await prisma.article.update({

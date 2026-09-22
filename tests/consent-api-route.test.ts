@@ -29,11 +29,20 @@ describe("POST /api/consent", () => {
     const request = new Request("http://localhost/api/consent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ categories: { analytics: true } }),
+      body: JSON.stringify({ categories: { necessary: true, functional: false, analytics: true, preferences: false, marketing: false } }),
     });
     const response = await POST(request);
     expect(response.status).toBe(503);
     const body = (await response.json()) as { error: string };
     expect(body.error).toBeTruthy();
+  });
+
+  it("rejects unexpected fields, malformed category types, and oversized bodies", async () => {
+    const unexpected = await POST(new Request("http://localhost/api/consent", { method: "POST", body: JSON.stringify({ categories: { necessary: true, functional: false, analytics: false, preferences: false, marketing: false }, admin: true }) }));
+    expect(unexpected.status).toBe(400);
+    const malformed = await POST(new Request("http://localhost/api/consent", { method: "POST", body: JSON.stringify({ categories: { necessary: true, functional: "yes", analytics: false, preferences: false, marketing: false } }) }));
+    expect(malformed.status).toBe(400);
+    const oversized = await POST(new Request("http://localhost/api/consent", { method: "POST", body: "x".repeat(16 * 1024 + 1) }));
+    expect(oversized.status).toBe(413);
   });
 });

@@ -2,8 +2,8 @@ import { TransitionLink } from "@/components/transition/TransitionLink";
 import { getPublishedArticles } from "@/lib/articles";
 
 export async function InsightsPreview() {
-  const articles = await getPublishedArticles().catch((error) => {
-    console.error("[InsightsPreview] Failed to load articles from the database:", error);
+  const articles = await getPublishedArticles().catch(() => {
+    console.error("[InsightsPreview] Failed to load articles from the database.");
     return [];
   });
 

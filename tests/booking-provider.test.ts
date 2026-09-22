@@ -30,4 +30,13 @@ describe("confirmed booking idempotency", () => {
     await expect(confirmPendingBooking({ ...input, inviteeEmail: "attacker@example.com" })).resolves.toBe("conflict");
     expect(mocks.updateMany).not.toHaveBeenCalled();
   });
+
+  it("keeps the confirmed transition when optional providers fail", async () => {
+    mocks.findUnique.mockResolvedValue(booking);
+    mocks.updateMany.mockResolvedValue({ count: 1 });
+    mocks.email.mockResolvedValue({ sent: false, reason: "timeout" });
+    mocks.crm.mockResolvedValue({ ok: false, reason: "provider_error" });
+    await expect(confirmPendingBooking(input)).resolves.toBe("confirmed");
+    expect(mocks.update).not.toHaveBeenCalled();
+  });
 });

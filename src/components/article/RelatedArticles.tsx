@@ -2,8 +2,8 @@ import { TransitionLink } from "@/components/transition/TransitionLink";
 import { getRelatedPublishedArticles } from "@/lib/articles";
 
 export async function RelatedArticles({ slug }: { slug: string }) {
-  const related = await getRelatedPublishedArticles(slug).catch((error) => {
-    console.error("[RelatedArticles] Failed to load related articles:", error);
+  const related = await getRelatedPublishedArticles(slug).catch(() => {
+    console.error("[RelatedArticles] Failed to load related articles.");
     return [];
   });
   if (related.length === 0) return null;

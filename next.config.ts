@@ -1,8 +1,13 @@
 import type { NextConfig } from "next";
 import path from "path";
 import { withSentryConfig } from "@sentry/nextjs/config";
+import { SECURITY_HEADERS } from "./src/lib/securityHeaders";
 
-const nextConfig: NextConfig = {
+export const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
   turbopack: {
     root: path.join(__dirname),
   },

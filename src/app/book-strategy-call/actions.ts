@@ -2,12 +2,12 @@
 
 import { createPendingBooking, getBookingStatus } from "@/lib/bookingProvider";
 import { getCalendlyWebhookConfig } from "@/lib/calendlyWebhook";
-import { validateStep1, validateStep2, validateStep3, validateStep5 } from "@/lib/bookingValidation";
 import { getClientIp } from "@/lib/security/getClientIp";
 import { isHoneypotValueTripped } from "@/lib/security/honeypot";
-import { checkRateLimit, warnIfRateLimitUnconfigured } from "@/lib/security/rateLimit";
+import { checkRateLimit, shouldFailClosedForAntiAbuse, warnIfRateLimitUnconfigured } from "@/lib/security/rateLimit";
 import { verifyTurnstile } from "@/lib/security/turnstile";
 import type { BookingData } from "@/types/booking";
+import { parseBookingData } from "@/lib/serverValidation";
 
 export type BookingGateResult =
   | { status: "ok"; correlationId: string }
@@ -21,20 +21,23 @@ export async function verifyBookingGateAction(
   if (isHoneypotValueTripped(honeypotValue)) return { status: "spam" };
   if (!process.env.NEXT_PUBLIC_CALENDLY_URL?.trim() || !getCalendlyWebhookConfig()) return { status: "unavailable" };
 
-  const errors = { ...validateStep1(data), ...validateStep2(data), ...validateStep3(data), ...validateStep5(data) };
-  if (Object.keys(errors).length > 0) return { status: "invalid" };
+  const parsed = parseBookingData(data);
+  if (!parsed.ok) return { status: "invalid" };
 
   const ipAddress = await getClientIp();
   warnIfRateLimitUnconfigured();
-  if ((await checkRateLimit(`booking:${ipAddress}`)).limited) return { status: "rate_limited" };
+  const rateLimit = await checkRateLimit(`booking:${ipAddress}`);
+  if (rateLimit.status === "limited") return { status: "rate_limited" };
+  if (rateLimit.status === "unavailable" && shouldFailClosedForAntiAbuse(rateLimit.reason)) return { status: "error" };
 
   const turnstile = await verifyTurnstile(turnstileToken, ipAddress);
   if (turnstile.status === "failed") {
     console.warn("[booking] Turnstile verification failed:", turnstile.reason);
     return { status: "error" };
   }
+  if (turnstile.status === "not_configured" && shouldFailClosedForAntiAbuse()) return { status: "error" };
 
-  const pending = await createPendingBooking({ ...data, ipAddress });
+  const pending = await createPendingBooking({ ...parsed.data, ipAddress });
   return pending.ok ? { status: "ok", correlationId: pending.correlationId } : { status: "unavailable" };
 }
 

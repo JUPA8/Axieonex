@@ -88,8 +88,8 @@ export async function writeConsent(categories: ConsentState): Promise<StoredCons
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ categories: record.categories }),
     });
-  } catch (error) {
-    console.error("[consent] Failed to persist consent to the server:", error);
+  } catch {
+    console.error("[consent] Failed to persist consent to the server.");
   }
 
   return record;
@@ -110,8 +110,8 @@ export async function syncConsentFromServer(): Promise<void> {
     if (!response.ok) return;
     const body = (await response.json()) as { record: StoredConsent | null };
     if (body.record) writeLocalCache(body.record);
-  } catch (error) {
-    console.error("[consent] Failed to sync consent from the server:", error);
+  } catch {
+    console.error("[consent] Failed to sync consent from the server.");
   }
 }
 

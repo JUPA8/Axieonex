@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = await getPublishedArticleBySlug(slug).catch((error) => {
-    console.error("[insights/slug] Failed to load article from the database:", error);
+  const article = await getPublishedArticleBySlug(slug).catch(() => {
+    console.error("[insights/slug] Failed to load article from the database.");
     return null;
   });
   if (!article) notFound();

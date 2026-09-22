@@ -41,8 +41,8 @@ export async function sendContactForm(payload: ContactFormPayload): Promise<Send
       },
     });
     submissionId = submission.id;
-  } catch (error) {
-    console.error("[contactProvider] Failed to persist contact submission:", error);
+  } catch {
+    console.error("[contactProvider] Failed to persist contact submission.");
     return { ok: false, reason: "not_configured" };
   }
 

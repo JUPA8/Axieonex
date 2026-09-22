@@ -3,21 +3,24 @@
 import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 import { getClientIp } from "@/lib/security/getClientIp";
-import { checkRateLimit } from "@/lib/security/rateLimit";
+import { checkRateLimit, shouldFailClosedForAntiAbuse } from "@/lib/security/rateLimit";
+import { parseLoginForm } from "@/lib/serverValidation";
 
 export type LoginState = { error?: string };
 
 export async function loginAction(_prevState: LoginState, formData: FormData): Promise<LoginState> {
+  const credentials = parseLoginForm(formData);
+  if (!credentials.ok) return { error: "Invalid email or password." };
   const ipAddress = await getClientIp();
   const rateLimit = await checkRateLimit(`admin-login:${ipAddress}`);
-  if (rateLimit.limited) {
+  if (rateLimit.status === "limited" || (rateLimit.status === "unavailable" && shouldFailClosedForAntiAbuse(rateLimit.reason))) {
     return { error: "Too many login attempts. Please wait a few minutes and try again." };
   }
 
   try {
     await signIn("credentials", {
-      email: formData.get("email"),
-      password: formData.get("password"),
+      email: credentials.email,
+      password: credentials.password,
       redirectTo: "/admin",
     });
     return {};

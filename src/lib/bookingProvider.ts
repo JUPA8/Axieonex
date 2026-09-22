@@ -27,8 +27,8 @@ export async function createPendingBooking(data: BookingData & { ipAddress: stri
       },
     });
     return { ok: true, correlationId };
-  } catch (error) {
-    console.error("[bookingProvider] Failed to persist pending booking:", error);
+  } catch {
+    console.error("[bookingProvider] Failed to persist pending booking.");
     return { ok: false, reason: "not_configured" };
   }
 }
