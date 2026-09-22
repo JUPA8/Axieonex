@@ -7,20 +7,28 @@
  * CRMs' API shapes.
  *
  * CRM_API_KEY maps to a HubSpot Private App access token (Settings >
- * Integrations > Private Apps, with the `crm.objects.contacts.write`
- * scope). CRM_WORKSPACE_ID is not required by HubSpot's API (the token
- * itself is already scoped to one account) and is only used here as an
- * informational custom property on the created contact, in case a
- * multi-account setup wants to distinguish where a lead originated. If a
- * different CRM is chosen later, replace this file; the call sites
- * (contactProvider.ts, bookingProvider.ts) only depend on `pushToCrm`'s
- * signature, not on HubSpot specifically.
+ * Integrations > Private Apps, needing both the `crm.objects.contacts.write`
+ * and `crm.schemas.contacts.write` scopes; the latter is only needed once,
+ * to create the custom properties below). CRM_WORKSPACE_ID is not required
+ * by HubSpot's API (the token itself is already scoped to one account) and
+ * is only used here as an informational custom property on the created
+ * contact, in case a multi-account setup wants to distinguish where a lead
+ * originated. If a different CRM is chosen later, replace this file; the
+ * call sites (contactProvider.ts, bookingProvider.ts) only depend on
+ * `pushToCrm`'s signature, not on HubSpot specifically.
  *
- * IMPORTANT: implemented against HubSpot's documented v3 request/response
- * shape, but has not been exercised against a live HubSpot account (none
- * was available to test with), no credentials were invented to work
- * around that. Verify against a real sandbox account before relying on
- * this in production.
+ * `axieonex_source` and `axieonex_message` are custom contact properties
+ * that must exist in the target HubSpot account before this will succeed
+ * (a fresh account doesn't have them); create them once via Settings >
+ * Properties > Contact properties, or via the Properties API. If
+ * CRM_WORKSPACE_ID is ever set, `axieonex_workspace_id` needs the same
+ * one-time setup.
+ *
+ * Verified end-to-end against a real, live AXIEONEX HubSpot account: a
+ * real site submission was pushed successfully and confirmed in HubSpot,
+ * then the throwaway test contact was deleted. This is not a theoretical
+ * "implemented against the docs" integration; the two custom properties
+ * above were created and this exact code path was exercised for real.
  */
 
 const HUBSPOT_API_BASE = "https://api.hubapi.com";
