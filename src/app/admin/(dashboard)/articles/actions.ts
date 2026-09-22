@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/adminAuthorization";
 import { prisma } from "@/lib/prisma";
 
 export type ArticleFormState = { error?: string };
@@ -37,6 +38,7 @@ function revalidateArticleRoutes(slug?: string) {
 }
 
 export async function createArticleAction(_prevState: ArticleFormState, formData: FormData): Promise<ArticleFormState> {
+  await requireAdmin();
   const values = readFields(formData);
   const error = validate(values);
   if (error) return { error };
@@ -60,6 +62,7 @@ export async function createArticleAction(_prevState: ArticleFormState, formData
 }
 
 export async function updateArticleAction(id: string, _prevState: ArticleFormState, formData: FormData): Promise<ArticleFormState> {
+  await requireAdmin();
   const values = readFields(formData);
   const error = validate(values);
   if (error) return { error };
@@ -89,11 +92,13 @@ export async function updateArticleAction(id: string, _prevState: ArticleFormSta
 }
 
 export async function deleteArticleAction(id: string) {
+  await requireAdmin();
   const article = await prisma.article.delete({ where: { id } });
   revalidateArticleRoutes(article.slug);
 }
 
 export async function togglePublishAction(id: string) {
+  await requireAdmin();
   const article = await prisma.article.findUniqueOrThrow({ where: { id } });
   const published = !article.published;
   await prisma.article.update({

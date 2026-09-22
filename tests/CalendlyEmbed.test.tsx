@@ -7,7 +7,7 @@ const NOOP = () => {};
 describe("CalendlyEmbed", () => {
   it("shows an honest not-connected notice instead of a broken embed when no URL is configured", () => {
     const { container, getByRole } = render(
-      <CalendlyEmbed url={undefined} name="Jane Doe" email="jane@example.com" onDateTimeSelected={NOOP} onScheduled={NOOP} />,
+      <CalendlyEmbed url={undefined} name="Jane Doe" email="jane@example.com" correlationId="axieonex_test" onDateTimeSelected={NOOP} onScheduled={NOOP} />,
     );
     expect(getByRole("alert")).toHaveTextContent("Scheduling isn't connected yet");
     expect(container.querySelector(".calendly-inline-widget")).toBeNull();
@@ -19,6 +19,7 @@ describe("CalendlyEmbed", () => {
         url="https://calendly.com/example/strategy-call"
         name="Jane Doe"
         email="jane@example.com"
+        correlationId="axieonex_test"
         onDateTimeSelected={NOOP}
         onScheduled={NOOP}
       />,
@@ -27,8 +28,9 @@ describe("CalendlyEmbed", () => {
     expect(widget).not.toBeNull();
     const dataUrl = widget?.getAttribute("data-url") ?? "";
     expect(dataUrl).toContain("https://calendly.com/example/strategy-call?");
-    expect(dataUrl).toContain("name=Jane%20Doe");
+    expect(dataUrl).toContain("name=Jane+Doe");
     expect(dataUrl).toContain("email=jane%40example.com");
+    expect(dataUrl).toContain("utm_content=axieonex_test");
   });
 
   it("ignores a postMessage from an origin other than Calendly", () => {
@@ -38,6 +40,7 @@ describe("CalendlyEmbed", () => {
         url="https://calendly.com/example/strategy-call"
         name="Jane Doe"
         email="jane@example.com"
+        correlationId="axieonex_test"
         onDateTimeSelected={NOOP}
         onScheduled={onScheduled}
       />,
@@ -59,6 +62,7 @@ describe("CalendlyEmbed", () => {
         url="https://calendly.com/example/strategy-call"
         name="Jane Doe"
         email="jane@example.com"
+        correlationId="axieonex_test"
         onDateTimeSelected={onDateTimeSelected}
         onScheduled={onScheduled}
       />,

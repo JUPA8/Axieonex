@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { prisma } from "@/lib/prisma";
+import { getAdminSubmissions } from "@/lib/adminData";
 
 export const metadata: Metadata = {
   title: "Admin | AXIEONEX",
@@ -11,10 +11,7 @@ function formatDate(date: Date) {
 }
 
 export default async function AdminDashboardPage() {
-  const [contacts, bookings] = await Promise.all([
-    prisma.contactSubmission.findMany({ orderBy: { createdAt: "desc" }, take: 100 }),
-    prisma.bookingRequest.findMany({ orderBy: { createdAt: "desc" }, take: 100 }),
-  ]);
+  const [contacts, bookings] = await getAdminSubmissions();
 
   return (
     <div className="flex flex-col gap-12">

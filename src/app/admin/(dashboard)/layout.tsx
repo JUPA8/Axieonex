@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireAdmin } from "@/lib/adminAuthorization";
 import { logoutAction } from "./actions";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-  if (!session) redirect("/admin/login");
+  let admin: Awaited<ReturnType<typeof requireAdmin>>;
+  try {
+    admin = await requireAdmin();
+  } catch {
+    redirect("/admin/login");
+  }
 
   return (
     <div className="min-h-screen bg-ax-ink-1 text-ax-text-primary">
@@ -13,7 +19,7 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
         <div className="flex items-center gap-8">
           <div>
             <div className="text-sm font-semibold">AXIEONEX Admin</div>
-            <div className="text-xs text-ax-text-muted">{session.user?.email}</div>
+            <div className="text-xs text-ax-text-muted">{admin.email}</div>
           </div>
           <nav aria-label="Admin" className="flex gap-5 text-sm">
             <Link href="/admin" className="text-ax-text-muted hover:text-ax-text-primary">

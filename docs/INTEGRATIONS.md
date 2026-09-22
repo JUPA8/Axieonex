@@ -21,6 +21,7 @@ given variable is unset.
 | `CAPTCHA_SITE_KEY` / `CAPTCHA_SECRET` | 1 | Cloudflare Turnstile spam protection. |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | 1 | Upstash rate limiting. |
 | `NEXT_PUBLIC_CALENDLY_URL` | 2 (revised) | Calendly inline embed URL for the final booking step. |
+| `CALENDLY_WEBHOOK_SIGNING_KEY` / `CALENDLY_WEBHOOK_USER_URI` | Security repair | Server-only signature key and expected Calendly account URI for booking confirmation. Both are required. |
 | `CRM_API_KEY` / `CRM_WORKSPACE_ID` | 2 | HubSpot Contacts API v3 push. |
 | `ANALYTICS_PROVIDER_ID` | 3 | Plausible Analytics domain, gated on consent. |
 | `ERROR_MONITORING_DSN` | 3 | Sentry DSN (server, edge, and client). |
@@ -36,14 +37,14 @@ See the script's own header comment.
 | Integration | Status | Notes |
 |---|---|---|
 | Contact form persistence | **Real** | `ContactSubmission` in Postgres via Prisma. Writes first; a failed/unconfigured email or CRM push never loses the submission. |
-| Booking request persistence | **Real** | `BookingRequest` in Postgres, written as `CONFIRMED` once Calendly itself has scheduled the meeting (see Calendar row below); `calendarBookingUid` is the real Calendly event URI. |
+| Booking request persistence | **Real** | A `PENDING` row is created before the Calendly embed is revealed. Only a verified Calendly webhook can change it to `CONFIRMED`; `calendarBookingUid` is the signed payload's event URI. |
 | Email notifications | **Real, optional** | Resend, gated on `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS`. Unset: submissions still persist, `emailSentAt` stays null. |
 | Honeypot spam protection | **Real** | Hidden field on both public forms; a filled value is silently treated as success. |
 | Turnstile spam protection | **Real, optional** | Gated on `CAPTCHA_SITE_KEY` (client) / `CAPTCHA_SECRET` (server). Unset: widget doesn't render, server verification is skipped, honeypot + rate limiting still apply. |
 | Rate limiting | **Real, optional** | Upstash sliding window (5 / 10 min) on both public forms and admin login, gated on `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`. Unset: skipped (logged once), not enforced. |
 | Admin authentication | **Real** | Auth.js v5, Credentials provider, bcrypt, JWT sessions, session-signed with `AUTH_SECRET`. `/admin` gated by a server-side session check in `src/app/admin/(dashboard)/layout.tsx`. |
 | Admin submissions list | **Real** | `/admin` lists `ContactSubmission` and `BookingRequest` rows directly from Postgres, including calendar confirmation UID. |
-| Calendar scheduling | **Real** | Calendly inline embed (`src/components/booking/CalendlyEmbed.tsx`), gated on `NEXT_PUBLIC_CALENDLY_URL`. Replaces the original Cal.com-API design (Phase 2): Calendly itself owns availability, conflict handling, and the actual confirmation email/invite, reported back to the wizard via postMessage (`calendly.date_and_time_selected`, `calendly.event_scheduled`). Unset: the final step shows an honest "not connected yet" notice and no booking can be completed, rather than a broken embed. |
+| Calendar scheduling | **Real** | Calendly inline embed (`src/components/booking/CalendlyEmbed.tsx`), gated on the public URL and both server-only webhook variables. Calendly owns availability and sends a signed `invitee.created` webhook. Browser `postMessage` events only trigger a status read and are never trusted as confirmation. |
 | CRM push | **Real, optional, verified end-to-end against the live AXIEONEX HubSpot account** | HubSpot Contacts API v3 (`src/lib/crm.ts`), gated on `CRM_API_KEY`. Confirmed by submitting a real request through the live site and observing `crmSyncedAt` get set. This required creating two custom contact properties in the HubSpot account itself (`axieonex_source`, `axieonex_message`) that the code writes to but that don't exist by default in a fresh HubSpot account; the Private App also needed the `crm.schemas.contacts.write` scope (in addition to `crm.objects.contacts.write`) to create them. `CRM_WORKSPACE_ID` is optional; if it's ever set, a third custom property (`axieonex_workspace_id`) will need to be created the same way, since it isn't yet. |
 | Article content | **Real** | `Article` model in Postgres, admin CRUD at `/admin/articles`. `/insights` and `/insights/[slug]` read published rows only (`src/lib/articles.ts`); `src/content/articles.ts` is now only the one-time seed source (`prisma/seed.ts`), not read by the live app. |
 | Cookie consent persistence | **Real** | `ConsentRecord` in Postgres (`src/app/api/consent/route.ts`), correlated to the visitor via an httpOnly cookie, not a third-party tracker. `localStorage` (`src/lib/consent.ts`) is a fast synchronous read cache in front of it, reconciled on load by `ConsentSync`; a failed server write is logged but never rolls back the visitor's in-browser choice. |
@@ -105,12 +106,12 @@ See the script's own header comment.
   the fact): revealing a live scheduling calendar is itself the sensitive
   action, since a bot that reaches it could spam real slots on the real
   calendar, not just waste a database row.
-- Because Calendly confirms bookings itself, `submitBookingAction` only runs
-  *after* `calendly.event_scheduled` fires and only records that outcome
-  for our own CRM/notification purposes. A failure in that write is logged
-  server-side but never shown to the visitor as "your call isn't booked":
-  it is, on Calendly's side, regardless of what happens in our own system
-  afterward.
+- Create a user-scoped Calendly webhook subscription for `invitee.created`,
+  supplying `CALENDLY_WEBHOOK_SIGNING_KEY` as the subscription signing key.
+  Set `CALENDLY_WEBHOOK_USER_URI` to the exact user URI Calendly returns as
+  `created_by`. The webhook endpoint is `/api/webhooks/calendly`. The server
+  correlates the signed payload through the opaque `utm_content` value added
+  to the embed and treats repeat or concurrent deliveries idempotently.
 - Consent is intentionally two-layer: `localStorage` stays the synchronous
   source every consent-gated script checks (so `AnalyticsScript` never
   blocks on a network round trip), while Postgres via `/api/consent` is the

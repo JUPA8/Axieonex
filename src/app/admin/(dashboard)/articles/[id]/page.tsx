@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { getAdminArticle } from "@/lib/adminData";
 import { ArticleForm } from "../ArticleForm";
 import { updateArticleAction } from "../actions";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const article = await prisma.article.findUnique({ where: { id } });
+  const article = await getAdminArticle(id);
   if (!article) notFound();
 
   return (

@@ -23,6 +23,7 @@ model Admin {
   email        String    @unique
   passwordHash String
   name         String?
+  active       Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   lastLoginAt  DateTime?
@@ -88,10 +89,19 @@ model BookingRequest {
   slotId    String
   slotLabel String
 
-  /// Set once a real calendar provider confirms the booking. Null for
-  /// mocked-availability requests and for any request made before a
-  /// provider was configured.
+  /// Set only by the verified Calendly webhook after Calendly confirms the
+  /// booking. Client-supplied embed events are never trusted as confirmation.
   calendarBookingUid String?
+
+  /// Opaque server-generated value passed through Calendly's utm_content and
+  /// used to correlate a signed webhook to this pending request.
+  calendarCorrelationId String? @unique
+
+  /// Calendly invitee URI. This is the provider delivery id and its unique
+  /// constraint makes duplicate and concurrent webhook delivery idempotent.
+  calendarInviteeUid String? @unique
+
+  confirmedAt DateTime?
 
   status    BookingStatus @default(PENDING)
   createdAt DateTime      @default(now())
@@ -108,20 +118,20 @@ model BookingRequest {
 /// content (src/content/articles.ts) as of Phase 2, the Insights hub and
 /// article routes now read published rows from here.
 model Article {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  title     String
-  category  String
+  id       String @id @default(cuid())
+  slug     String @unique
+  title    String
+  category String
   /// Hex color used for the article's accent border on cards and the
   /// article page itself, matching the approved design's per-category
   /// color coding.
-  color     String
-  intro     String
-  h2a       String
-  bodyA     String
-  h2b       String
-  bodyB     String
-  closing   String
+  color    String
+  intro    String
+  h2a      String
+  bodyA    String
+  h2b      String
+  bodyB    String
+  closing  String
 
   /// Drafts (published: false) are visible in /admin but never on the
   /// public site.

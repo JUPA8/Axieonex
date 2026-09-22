@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { getAdminArticles } from "@/lib/adminData";
 import { deleteArticleAction, togglePublishAction } from "./actions";
 
 export const metadata: Metadata = {
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminArticlesPage() {
-  const articles = await prisma.article.findMany({ orderBy: { createdAt: "desc" } });
+  const articles = await getAdminArticles();
 
   return (
     <div>
