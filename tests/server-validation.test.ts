@@ -32,6 +32,8 @@ describe("server validation", () => {
 
   it("validates authentication and CMS boundaries", () => {
     expect(parseAuthCredentials({ email: " ADMIN@example.com ", password: "long-enough" })).toEqual({ email: "admin@example.com", password: "long-enough" });
+    expect(parseAuthCredentials({ email: "ADMIN@example.com", password: "long-enough", callbackUrl: "http://localhost/admin" })).toEqual({ email: "admin@example.com", password: "long-enough" });
+    expect(parseAuthCredentials({ email: "ADMIN@example.com", password: "long-enough", unexpected: "value" } as never)).toBeNull();
     expect(parseAuthCredentials({ email: "bad", password: "long-enough" })).toBeNull();
     const article = form({ slug: "safe-slug", title: "Title", category: "News", color: "#123456", intro: "Intro", h2a: "A", bodyA: "Body", h2b: "B", bodyB: "Body", closing: "Close" });
     expect(parseArticleForm(article).ok).toBe(true);

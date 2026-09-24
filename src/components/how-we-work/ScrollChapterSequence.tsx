@@ -40,7 +40,8 @@ export function ScrollChapterSequence() {
             )}
           >
             <div
-              className={cn("mb-2 font-mono text-sm font-bold text-[#3A3E52] transition-colors duration-500", activeIndex === i && "text-ax-cyan-alt")}
+              aria-hidden="true"
+              className={cn("mb-2 font-mono text-sm font-bold text-ax-text-muted transition-colors duration-500", activeIndex === i && "text-ax-cyan-alt")}
             >
               {stage.n}
             </div>

@@ -26,7 +26,7 @@ export async function InsightsPreview() {
               className="block border-t-2 pt-4.5"
               style={{ borderColor: article.color }}
             >
-              <div className="text-[11px] font-semibold text-[#8A8E9E]">{article.category}</div>
+              <div className="text-[11px] font-semibold text-ax-text-muted-on-light">{article.category}</div>
               <div className="mt-2.5 text-lg font-semibold leading-snug">{article.title}</div>
             </TransitionLink>
           ))}

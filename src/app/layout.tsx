@@ -45,7 +45,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${workSans.variable} ${spaceMono.variable} ${sourceSerif.variable} h-full`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${bricolage.variable} ${workSans.variable} ${spaceMono.variable} ${sourceSerif.variable} h-full`}
+    >
       {/*
         suppressHydrationWarning here only covers this element's own
         attributes (React's documented, narrow scope for the prop); it does
@@ -62,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <RevealController />
           <ConsentSync />
           <SiteHeader />
-          <main id="main-content" className="flex-1 pt-[88px]">
+          <main id="main-content" tabIndex={-1} className="flex-1 pt-[88px]">
             {children}
           </main>
           <Footer />

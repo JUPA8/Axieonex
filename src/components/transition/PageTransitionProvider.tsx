@@ -32,6 +32,7 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
   const busyRef = useRef(false);
   const pendingRef = useRef(false);
   const previousPathname = useRef(pathname);
+  const focusPathnameRef = useRef(pathname);
   const mainFocusTargetRef = useRef<string | null>(null);
 
   const navigate = useCallback(
@@ -94,8 +95,16 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
   // back/forward and non-intercepted navigations too), move focus to the main
   // landmark unless the user already has focus somewhere meaningful.
   useEffect(() => {
+    // Do not move focus on the initial mount. Doing so starts keyboard users
+    // inside main and makes the preceding skip link and site navigation
+    // unreachable until they cycle through the whole document.
+    if (focusPathnameRef.current === pathname) return;
+    focusPathnameRef.current = pathname;
+
     const active = document.activeElement;
-    const shouldRefocus = !active || active === document.body;
+    const transitionDriven = mainFocusTargetRef.current === "pending";
+    mainFocusTargetRef.current = null;
+    const shouldRefocus = transitionDriven || !active || active === document.body;
     if (!shouldRefocus) return;
     const main = document.getElementById("main-content");
     if (main) {

@@ -18,7 +18,7 @@ export default function AboutPage() {
     <div data-theme="about" className="bg-ax-pearl-0 text-ax-text-primary-on-light">
       <section className="px-5 pb-20 pt-28 text-center sm:px-10 sm:pt-36">
         <div className="mx-auto max-w-[640px]">
-          <div className="mb-6 text-[13px] font-semibold text-[#6E5DD8]">{ABOUT_CONTENT.eyebrow}</div>
+          <div className="mb-6 text-[13px] font-semibold text-[#5949BF]">{ABOUT_CONTENT.eyebrow}</div>
           <h1 className="mb-7 text-[length:var(--ax-fs-h1-fluid)] font-bold leading-tight tracking-tight">
             {ABOUT_CONTENT.heroHeading}
           </h1>

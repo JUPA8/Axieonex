@@ -8,7 +8,7 @@ export function FAQ({ items, heading = "Frequently asked questions" }: { items: 
   return (
     <div>
       {heading ? <h2 className="mb-8 text-[length:var(--ax-fs-h2-fluid)] font-bold">{heading}</h2> : null}
-      <dl className="flex flex-col divide-y divide-ax-border-subtle border-y border-ax-border-subtle">
+      <div className="flex flex-col divide-y divide-ax-border-subtle border-y border-ax-border-subtle">
         {items.map((item) => (
           <details key={item.question} className="group py-5 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold text-ax-text-primary marker:content-none">
@@ -20,10 +20,10 @@ export function FAQ({ items, heading = "Frequently asked questions" }: { items: 
                 +
               </span>
             </summary>
-            <dd className="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-ax-text-body">{item.answer}</dd>
+            <p className="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-ax-text-body">{item.answer}</p>
           </details>
         ))}
-      </dl>
+      </div>
     </div>
   );
 }

@@ -77,8 +77,11 @@ export function parseLoginForm(formData: FormData): { ok: true; email: string; p
   return { ok: true, email, password };
 }
 
-export function parseAuthCredentials(value: Partial<Record<"email" | "password", unknown>> | undefined): { email: string; password: string } | null {
-  if (!value || !exactKeys(value, ["email", "password"])) return null;
+export function parseAuthCredentials(value: Partial<Record<"email" | "password" | "callbackUrl", unknown>> | undefined): { email: string; password: string } | null {
+  // Auth.js adds its already-validated callbackUrl to the credentials body
+  // before calling authorize(). It is framework metadata, not a credential;
+  // allow that one known key while continuing to reject arbitrary fields.
+  if (!value || !exactKeys(value, ["email", "password", "callbackUrl"])) return null;
   const email = text(value.email, 3, 254)?.toLowerCase();
   const password = typeof value.password === "string" ? value.password : "";
   return email && EMAIL_RE.test(email) && password.length >= 8 && password.length <= 200 ? { email, password } : null;
