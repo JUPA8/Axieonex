@@ -9,7 +9,7 @@ import { parseContactForm } from "@/lib/serverValidation";
 
 export type ContactFormState = {
   status: "idle" | "success" | "unavailable" | "error" | "rate_limited";
-  errors: Partial<Record<"purpose" | "name" | "email" | "message" | "consent", string>>;
+  errors: Partial<Record<"purpose" | "name" | "email" | "company" | "message" | "consent", string>>;
 };
 
 export async function submitContactAction(_prevState: ContactFormState, formData: FormData): Promise<ContactFormState> {

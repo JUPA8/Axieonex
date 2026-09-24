@@ -5,6 +5,7 @@ import { SERVICES, getService } from "@/content/services";
 import { SITE_URL } from "@/lib/site";
 import { buildServiceSchema } from "@/lib/structuredData";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPublicMetadata } from "@/lib/metadata";
 
 export function generateStaticParams() {
   return SERVICES.map((service) => ({ slug: service.slug }));
@@ -13,15 +14,14 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const service = getService(slug);
-  if (!service) return {};
+  if (!service) return { robots: { index: false, follow: false } };
   const canonical = `${SITE_URL}/services/${slug}`;
   const title = `${service.title} | AXIEONEX`;
-  return {
+  return buildPublicMetadata({
     title,
     description: service.purpose,
-    alternates: { canonical },
-    openGraph: { title, description: service.purpose, url: canonical },
-  };
+    canonical,
+  });
 }
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {

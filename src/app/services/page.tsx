@@ -1,16 +1,15 @@
-import type { Metadata } from "next";
 import { ServicesHubInteractive } from "@/components/services/ServicesHubInteractive";
 import { CtaSection } from "@/components/ui/CtaSection";
 import { SITE_URL } from "@/lib/site";
+import { buildPublicMetadata } from "@/lib/metadata";
 
 const CANONICAL = `${SITE_URL}/services`;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicMetadata({
   title: "AXIEONEX Services",
   description: "Seven connected revenue capabilities in one system.",
-  alternates: { canonical: CANONICAL },
-  openGraph: { title: "AXIEONEX Services", description: "Seven connected revenue capabilities in one system.", url: CANONICAL },
-};
+  canonical: CANONICAL,
+});
 
 export default function ServicesPage() {
   return (

@@ -4,7 +4,7 @@ import type { Article } from "@/types/content";
 
 /**
  * DB-backed Insights content (Phase 2). Replaces the old hardcoded
- * src/content/articles.ts placeholders, which are now only used by
+ * src/content/articles.ts seed records, which are now only used by
  * prisma/seed.ts to migrate their approved copy into the database once.
  *
  * Public-facing reads only ever return `published` rows. Admin CRUD

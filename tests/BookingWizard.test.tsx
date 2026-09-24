@@ -8,7 +8,7 @@ vi.mock("@/components/transition/TransitionLink", () => ({ TransitionLink: ({ hr
 
 import { BookingWizard } from "@/components/booking/BookingWizard";
 
-async function reachScheduling() {
+async function reachReview() {
   const user = userEvent.setup();
   render(<BookingWizard calendlyUrl="https://calendly.com/example/call" />);
   await user.click(screen.getByRole("button", { name: "Start" }));
@@ -27,6 +27,11 @@ async function reachScheduling() {
   await user.type(screen.getByLabelText("Target market"), "North America");
   await user.selectOptions(screen.getByLabelText("Monthly engagement range"), "3k-8k");
   await user.click(screen.getByRole("button", { name: "Next" }));
+  return user;
+}
+
+async function reachScheduling() {
+  const user = await reachReview();
   await user.click(screen.getByRole("checkbox"));
   await user.click(screen.getByRole("button", { name: "Continue to scheduling" }));
 }
@@ -48,8 +53,82 @@ describe("BookingWizard", () => {
     await user.click(screen.getByRole("button", { name: "Next" }));
 
     expect(screen.getByText("Please enter your full name.")).toBeInTheDocument();
+    for (const label of ["Full name", "Business email", "Phone number", "Role"]) {
+      const control = screen.getByLabelText(label);
+      const errorId = control.getAttribute("aria-describedby");
+      expect(control).toHaveAttribute("aria-invalid", "true");
+      expect(errorId).toBeTruthy();
+      expect(document.getElementById(errorId!)).toBeInTheDocument();
+    }
+    expect(screen.getByLabelText("Full name")).toHaveFocus();
     // Still on step 1: the heading has not changed.
     expect(screen.getByRole("heading", { name: "Personal details" })).toBeInTheDocument();
+  });
+
+  it("does not mark valid fields invalid and focuses the first remaining invalid field", async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard />);
+    await user.click(screen.getByRole("button", { name: "Start" }));
+    await user.type(screen.getByLabelText("Full name"), "Jane Doe");
+    await user.click(screen.getByRole("button", { name: "Next" }));
+
+    expect(screen.getByLabelText("Full name")).not.toHaveAttribute("aria-invalid");
+    expect(screen.getByLabelText("Business email")).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText("Business email")).toHaveFocus();
+  });
+
+  it("associates every company and revenue-step error with its control", async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard />);
+    await user.click(screen.getByRole("button", { name: "Start" }));
+    await user.type(screen.getByLabelText("Full name"), "Jane Doe");
+    await user.type(screen.getByLabelText("Business email"), "jane@example.com");
+    await user.type(screen.getByLabelText("Phone number"), "+1 555 0100");
+    await user.type(screen.getByLabelText("Role"), "CEO");
+    await user.click(screen.getByRole("button", { name: "Next" }));
+    await user.click(screen.getByRole("button", { name: "Next" }));
+
+    for (const label of ["Company name", "Company website", "Country", "Company size"]) {
+      const control = screen.getByLabelText(label);
+      expect(control).toHaveAttribute("aria-invalid", "true");
+      expect(document.getElementById(control.getAttribute("aria-describedby")!)).toBeInTheDocument();
+    }
+    expect(screen.getByLabelText("Company name")).toHaveFocus();
+
+    await user.type(screen.getByLabelText("Company name"), "Acme");
+    await user.type(screen.getByLabelText("Company website"), "acme.com");
+    await user.type(screen.getByLabelText("Country"), "US");
+    await user.selectOptions(screen.getByLabelText("Company size"), "1-10");
+    await user.click(screen.getByRole("button", { name: "Next" }));
+    await user.click(screen.getByRole("button", { name: "Next" }));
+
+    for (const label of ["Current outbound approach", "Desired outcome", "Target market", "Monthly engagement range"]) {
+      const control = screen.getByLabelText(label);
+      expect(control).toHaveAttribute("aria-invalid", "true");
+      expect(document.getElementById(control.getAttribute("aria-describedby")!)).toBeInTheDocument();
+    }
+    expect(screen.getByLabelText("Current outbound approach")).toHaveFocus();
+  });
+
+  it("supports keyboard navigation into the wizard without trapping focus", async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard />);
+    await user.tab();
+    expect(screen.getByRole("button", { name: "Start" })).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(screen.getByRole("heading", { name: "Personal details" })).toHaveFocus();
+    await user.tab();
+    expect(screen.getByLabelText("Full name")).toHaveFocus();
+  });
+
+  it("associates the consent error and focuses its checkbox", async () => {
+    const user = await reachReview();
+    await user.click(screen.getByRole("button", { name: "Continue to scheduling" }));
+    const checkbox = screen.getByRole("checkbox");
+    expect(checkbox).toHaveAttribute("aria-invalid", "true");
+    expect(checkbox).toHaveAttribute("aria-describedby", "booking-consent-error");
+    expect(screen.getByText("Please accept the privacy terms to continue.")).toHaveAttribute("id", "booking-consent-error");
+    expect(checkbox).toHaveFocus();
   });
 
   it("advances to step 2 once step 1 is valid, moving focus to the new step heading", async () => {
@@ -86,7 +165,14 @@ describe("BookingWizard", () => {
   it("honestly displays unavailable when server verification is not configured", async () => {
     actionMocks.gate.mockResolvedValue({ status: "unavailable" });
     await reachScheduling();
-    expect(await screen.findByRole("heading", { name: "Scheduling is temporarily unavailable." })).toBeInTheDocument();
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("Scheduling is temporarily unavailable.");
+  });
+
+  it("announces a server-side submission validation failure", async () => {
+    actionMocks.gate.mockResolvedValue({ status: "invalid" });
+    await reachScheduling();
+    expect(await screen.findByRole("alert")).toHaveTextContent("Something went wrong submitting your request.");
   });
 
   it("shows pending until the signed webhook has confirmed the booking", async () => {

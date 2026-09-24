@@ -1,16 +1,15 @@
-import type { Metadata } from "next";
 import { ConvergenceHero } from "@/components/contact/ConvergenceHero";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SITE_URL } from "@/lib/site";
+import { buildPublicMetadata } from "@/lib/metadata";
 
 const CANONICAL = `${SITE_URL}/contact`;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicMetadata({
   title: "Contact AXIEONEX",
   description: "Reach AXIEONEX for general, service, partnership, or media enquiries.",
-  alternates: { canonical: CANONICAL },
-  openGraph: { title: "Contact AXIEONEX", description: "Reach AXIEONEX for general, service, partnership, or media enquiries.", url: CANONICAL },
-};
+  canonical: CANONICAL,
+});
 
 export default function ContactPage() {
   return (

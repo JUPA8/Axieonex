@@ -26,7 +26,7 @@ function formHasOnly(formData: FormData, allowed: readonly string[]): boolean {
 
 export type ContactInput = { purpose: string; name: string; email: string; company: string; message: string; consent: true };
 
-type ContactErrors = Partial<Record<"purpose" | "name" | "email" | "message" | "consent", string>>;
+type ContactErrors = Partial<Record<"purpose" | "name" | "email" | "company" | "message" | "consent", string>>;
 
 export function parseContactForm(formData: FormData): { ok: true; data: ContactInput } | { ok: false; errors: ContactErrors } {
   const allowed = ["purpose", "name", "email", "company", "message", "consent", "cf-turnstile-response", "website_url_confirm"];
@@ -41,9 +41,10 @@ export function parseContactForm(formData: FormData): { ok: true; data: ContactI
   if (!purpose || !CONTACT_PURPOSES.includes(purpose as (typeof CONTACT_PURPOSES)[number])) errors.purpose = "Please select a topic.";
   if (!name) errors.name = "Please enter your name.";
   if (!email || !EMAIL_RE.test(email)) errors.email = "Please enter a valid email address.";
+  if (company === null) errors.company = "Please enter a valid company name.";
   if (!message) errors.message = "Please enter a message.";
   if (formData.get("consent") !== "on") errors.consent = "Please accept the privacy terms.";
-  if (company === null || Object.keys(errors).length > 0) return { ok: false, errors };
+  if (Object.keys(errors).length > 0) return { ok: false, errors };
   return { ok: true, data: { purpose: purpose!, name: name!, email: email!, company: company!, message: message!, consent: true } };
 }
 

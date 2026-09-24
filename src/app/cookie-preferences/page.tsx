@@ -31,8 +31,8 @@ export default function CookiePreferencesPage() {
         <div role="note" className="mb-10 rounded-md border border-ax-warning/40 bg-ax-warning/10 px-5 py-4 text-sm leading-relaxed text-ax-text-body">
           Your choice is recorded both in this browser and on our server (see the Privacy Policy), so it can be
           proven if ever audited and can be recovered here if your browser data is cleared. No marketing script is
-          integrated yet, so that category currently has no effect regardless of your selection. See
-          axieonex-integrations.json for full integration status.
+          integrated yet, so that category currently has no effect regardless of your selection. The Cookies Policy
+          identifies the production cookie inventory that still requires owner and legal confirmation.
         </div>
 
         <CookiePreferencesManager analyticsConfigured={analyticsConfigured} />

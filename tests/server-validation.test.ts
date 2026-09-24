@@ -24,6 +24,7 @@ describe("server validation", () => {
     expect(parseContactForm(form({ ...valid, message: "x".repeat(5_000) })).ok).toBe(true);
     expect(parseContactForm(form({ ...valid, purpose: "unsupported" })).ok).toBe(false);
     expect(parseContactForm(form({ ...valid, email: "bad" })).ok).toBe(false);
+    expect(parseContactForm(form({ ...valid, company: "x".repeat(201) }))).toEqual(expect.objectContaining({ ok: false, errors: expect.objectContaining({ company: expect.any(String) }) }));
     expect(parseContactForm(form({ purpose: "general", name: "Jane", company: "", message: "Hello", consent: "on" })).ok).toBe(false);
     expect(parseContactForm(form({ ...valid, message: "x".repeat(5_001) })).ok).toBe(false);
     expect(parseContactForm(form({ ...valid, privilege: "admin" })).ok).toBe(false);

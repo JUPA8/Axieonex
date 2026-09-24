@@ -1,112 +1,150 @@
 # AXIEONEX
 
-The production Next.js implementation of the approved AXIEONEX Claude Design
-handoff: the AI-orchestrated, human-executed revenue systems marketing site.
+Production Next.js implementation of the AXIEONEX marketing site and its
+supporting contact, booking, consent, article CMS, and administration flows.
 
 ## Stack
 
-- **Next.js 16** (App Router, Turbopack, Server Components by default)
-- **TypeScript** (strict mode)
-- **Tailwind CSS 4**, with the approved design tokens wired in via `@theme`
-- **Framer Motion** for the page-transition system and entrance animation
-- **Postgres + Prisma 7** (driver adapters, see `docs/INTEGRATIONS.md`) for
-  contact/booking persistence and the admin area
-- **Auth.js v5** (Credentials + bcrypt + JWT sessions) for `/admin`
-- **Vitest** + **React Testing Library** for tests
-- Package manager: **pnpm**
+- Next.js 16 App Router with Server Components by default
+- TypeScript in strict mode
+- Tailwind CSS 4 and Framer Motion
+- PostgreSQL with Prisma 7 and the PostgreSQL driver adapter
+- Auth.js Credentials authentication with bcrypt and JWT sessions
+- Vitest and React Testing Library
+- pnpm
 
-## Commands
+## Routes
+
+Public, indexable routes include `/`, `/about`, `/how-we-work`, `/services`,
+the seven `/services/[slug]` pages, `/pricing`, `/insights`, published
+`/insights/[slug]` pages, `/contact`, `/privacy`, `/cookies`, and `/terms`.
+
+`/book-strategy-call` and `/cookie-preferences` are public but intentionally
+`noindex,follow`. Unknown service/article slugs return a real HTTP 404, and the
+404 page is also noindex. `/admin`, `/admin/articles`, article editor routes,
+and `/admin/login` are private and `noindex,nofollow`.
+
+API routes provide Auth.js, consent persistence, and the signed Calendly
+webhook at `/api/auth/[...nextauth]`, `/api/consent`, and
+`/api/webhooks/calendly`.
+
+## Local development
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start the dev server (http://localhost:3000)
+pnpm exec prisma generate
 pnpm dev
+```
 
-# Production build
-pnpm build
+Copy `.env.example` to `.env.local` and provide local-only configuration.
+PostgreSQL and `AUTH_SECRET` are needed for database-backed pages and admin
+authentication. Completely absent Turnstile and Upstash pairs fail open only
+in development and tests; partial or failing provider configuration does not.
 
-# Run the production build locally
-pnpm start
+Useful commands:
 
-# Lint
+```bash
 pnpm lint
-
-# Type-check (no emit)
 pnpm typecheck
-
-# Run the test suite once
 pnpm test
-
-# Run tests in watch mode
 pnpm test:watch
-
-# Apply Prisma migrations to DATABASE_URL (local dev)
+pnpm build
+pnpm start
+pnpm db:generate
 pnpm db:migrate
-
-# Apply already-committed migrations (CI/production)
 pnpm db:deploy
-
-# Browse the database
+pnpm db:seed
 pnpm db:studio
-
-# Create (or reset the password for) an admin account
 pnpm admin:create
 ```
 
-## Backend setup (local)
+`pnpm db:migrate` creates development migrations. `pnpm db:deploy` applies
+already committed migrations and is the only migration command intended for a
+controlled production release. Neither command should be run against a
+production database from an unreviewed local branch.
 
-1. Provision a Postgres database (Neon, Vercel Postgres, or `docker run -p
-   5432:5432 -e POSTGRES_PASSWORD=... postgres:16-alpine` for local dev).
-2. Copy `.env.example` to `.env.local` and set `DATABASE_URL` and
-   `AUTH_SECRET` (`openssl rand -base64 32`) at minimum; everything else
-   degrades gracefully when unset (see `docs/INTEGRATIONS.md`).
-3. `pnpm db:migrate` to create the schema.
-4. `pnpm admin:create` to create your first admin login, then sign in at
-   `/admin/login`.
+The committed migration history covers the initial submission/admin schema,
+article CMS and booking confirmation identity, consent records, and the later
+admin/Calendly security constraints. Migrations are append-only release
+artifacts; schema changes require a new reviewed migration rather than editing
+an already-applied file.
+
+## Application behavior
+
+- Contact submissions are validated and persisted to PostgreSQL before the
+  optional HubSpot and Resend side effects run. Provider failure cannot remove
+  the stored submission, and sync timestamps remain null until success.
+- Booking requests are stored as `PENDING` before Calendly is shown. Only a
+  correctly signed, account-bound `invitee.created` webhook can set a booking
+  to `CONFIRMED`. Browser messages only trigger a server-side status read.
+- HubSpot uses an email-keyed contact upsert and stores the latest enquiry
+  context without treating conflicts as automatic success.
+- Resend sends internal notifications when its key/address pair is configured.
+- Turnstile and Upstash are required anti-abuse controls in production and fail
+  closed when absent, partial, timed out, or unavailable.
+- Admin authentication uses an explicit eight-hour JWT session. Each sensitive
+  read or mutation revalidates that the admin row still exists and is active.
+- The article CMS stores drafts and published articles in PostgreSQL. Public
+  routes only expose published records; drafts remain private and unindexed.
+- Consent is cached in local storage for immediate client gating and persisted
+  to PostgreSQL for the audit record. Plausible is inserted only after analytics
+  consent and only when configured.
+- Sentry initialization is conditional on its DSN. No monitoring client is
+  initialized when it is absent.
+- Global CSP, frame protection, nosniff, referrer, permissions, and conditional
+  production HTTPS HSTS headers are configured in `next.config.ts`.
+- Client IP rate-limit identity trusts no forwarding header by default. The
+  deployment owner must select a proxy-normalized, single-value header.
+
+No integration is represented by a silent success mock. An integration is
+either implemented, explicitly optional, or reports a defined unavailable
+state. See [docs/INTEGRATIONS.md](docs/INTEGRATIONS.md) for the complete
+environment and failure-policy matrix.
 
 ## Project structure
 
-```
-prisma/                    schema.prisma, migrations/
-scripts/                    create-admin.ts (CLI, never invents credentials)
-src/
-  app/                    routes, layouts, metadata, sitemap.ts, robots.ts, not-found.tsx
-    admin/                 /admin/login (public) and /admin (session-gated dashboard)
-    api/auth/[...nextauth]/ Auth.js route handler
-    services/[slug]/      the 7 service-detail routes
-    insights/[slug]/      the 6 article routes
-  components/
-    brand/                 BrandMark (the canonical X geometry)
-    transition/             PageTransitionProvider + TransitionLink (route transitions)
-    layout/                 SiteHeader, MobileNavigation, Footer
-    motion/                 RevealController (the shared [data-reveal] scroll system)
-    security/               TurnstileWidget
-    ui/                     Button, Container, FAQ, CtaSection
-    home/, about/, how-we-work/, services/, pricing/, insights/, article/,
-    contact/, booking/, legal/, cookie-preferences/, not-found/
-                             page-specific sections and interactive islands
-  content/                  typed content modules, the single source of truth for copy
-  lib/                      site constants, consent storage, validation, provider boundaries
-    prisma.ts               Prisma client singleton (driver-adapter based, see below)
-    email.ts                Resend wrapper
-    security/               honeypot, Turnstile verification, Upstash rate limiting
-  types/                    shared content/booking type definitions
-  auth.ts                   Auth.js v5 config
-tests/                      Vitest unit and component tests
-docs/INTEGRATIONS.md        real vs mocked status, updated per backend phase
+```text
+prisma/                       schema and committed migrations
+scripts/                      local administration utilities
+src/app/                      pages, API routes, metadata, robots and sitemap
+src/app/admin/                protected dashboard and article CMS
+src/components/               UI and interactive client components
+src/content/                  approved marketing/legal source content
+src/lib/                      persistence, providers, validation and security
+src/types/                    shared application types
+tests/                        unit, component, security and metadata tests
+docs/INTEGRATIONS.md          environment and integration source of truth
+docs/LEGAL-OWNER-CHECKLIST.md unresolved legal owner/counsel questions
 ```
 
-## What's mocked, and why
+The former handoff artifacts `README-CLAUDE-CODE.md`, `START-HERE.md`, and
+design-package manifests are intentionally not duplicated here. They are not
+used by the application or build. This README, `.env.example`, the current
+source, and the two documents above are canonical for this repository.
 
-Contact and booking submissions are **real**: they persist to Postgres
-(see Backend setup above). What's still mocked or unconfigured by default:
-calendar availability/confirmation, CRM push, article content (still
-titles-only placeholders), analytics, error monitoring, and cookie-consent
-persistence (currently `localStorage` only). Every integration point
-(`src/lib/contactProvider.ts`, `src/lib/bookingProvider.ts`,
-`src/lib/consent.ts`) is a typed, real server-side boundary that honestly
-reports "not configured" instead of faking a success response when its
-provider isn't set up. See `.env.example` for the full list of variables
-and `docs/INTEGRATIONS.md` for the current real-vs-mocked status.
+## Production prerequisites
+
+Before deployment, the owner must:
+
+1. Approve the target deployment platform and its trusted client-IP header.
+2. Configure PostgreSQL, Auth.js, Turnstile, Upstash, Calendly, and the required
+   webhook subscription as documented in `docs/INTEGRATIONS.md`.
+3. Apply reviewed Prisma migrations with `pnpm db:deploy` and create an active
+   administrator through the local administration script.
+4. Confirm optional HubSpot, Resend, Plausible, and Sentry configuration if
+   those capabilities are intended for the release.
+5. Complete and approve `docs/LEGAL-OWNER-CHECKLIST.md`. The current legal pages
+   remain structural drafts and are not legally complete.
+6. Run lint, typecheck, the full test suite, and a credential-free production
+   build from the exact release commit.
+
+## Rollback
+
+Application rollback means redeploying the previously approved commit and
+restoring its matching environment configuration. Database migrations are not
+automatically reversible: inspect each migration and prepare a reviewed
+forward-fix or explicit database rollback before deployment. Do not delete
+contact, booking, consent, admin, or article data as part of an application
+rollback. Provider-side changes such as Calendly webhook subscriptions,
+HubSpot properties, and credential rotation must be rolled back separately by
+their owners.

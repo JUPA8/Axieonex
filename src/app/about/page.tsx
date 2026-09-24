@@ -1,17 +1,16 @@
-import type { Metadata } from "next";
 import { SculpturalMarkReveal } from "@/components/about/SculpturalMarkReveal";
 import { CtaSection } from "@/components/ui/CtaSection";
 import { ABOUT_CONTENT } from "@/content/about";
 import { SITE_URL } from "@/lib/site";
+import { buildPublicMetadata } from "@/lib/metadata";
 
 const CANONICAL = `${SITE_URL}/about`;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicMetadata({
   title: "About AXIEONEX",
   description: "Why AXIEONEX exists and how AI and human expertise work together.",
-  alternates: { canonical: CANONICAL },
-  openGraph: { title: "About AXIEONEX", description: "Why AXIEONEX exists and how AI and human expertise work together.", url: CANONICAL },
-};
+  canonical: CANONICAL,
+});
 
 export default function AboutPage() {
   const { philosophy, principles } = ABOUT_CONTENT;

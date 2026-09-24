@@ -15,8 +15,9 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-12">
+      <h1 className="sr-only">Admin dashboard</h1>
       <section>
-        <h1 className="mb-1 text-xl font-bold">Contact submissions</h1>
+        <h2 className="mb-1 text-xl font-bold">Contact submissions</h2>
         <p className="mb-5 text-sm text-ax-text-muted">{contacts.length} total</p>
         <div className="overflow-x-auto rounded-lg border border-ax-border-subtle">
           <table className="w-full min-w-[720px] border-collapse text-left text-sm">
@@ -57,7 +58,7 @@ export default async function AdminDashboardPage() {
       </section>
 
       <section>
-        <h1 className="mb-1 text-xl font-bold">Strategy call requests</h1>
+        <h2 className="mb-1 text-xl font-bold">Strategy call requests</h2>
         <p className="mb-5 text-sm text-ax-text-muted">{bookings.length} total</p>
         <div className="overflow-x-auto rounded-lg border border-ax-border-subtle">
           <table className="w-full min-w-[900px] border-collapse text-left text-sm">
@@ -76,7 +77,7 @@ export default async function AdminDashboardPage() {
             <tbody>
               {bookings.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-4 py-6 text-center text-ax-text-muted">
+                  <td colSpan={8} className="px-4 py-6 text-center text-ax-text-muted">
                     No requests yet.
                   </td>
                 </tr>

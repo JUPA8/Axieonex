@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { HeroSignalReveal } from "@/components/home/HeroSignalReveal";
 import { EngineFlow } from "@/components/home/EngineFlow";
 import { EngineDiagram } from "@/components/home/EngineDiagram";
@@ -12,18 +11,13 @@ import { HOME_FAQ } from "@/content/homeFaq";
 import { SITE_URL } from "@/lib/site";
 import { buildOrganizationSchema } from "@/lib/structuredData";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { buildPublicMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = buildPublicMetadata({
   title: "AXIEONEX | AI-Orchestrated, Human-Executed Revenue Systems",
   description: "We build revenue pipelines, not just meetings. AI detects signals, humans qualify conversations.",
-  alternates: { canonical: SITE_URL },
-  openGraph: {
-    title: "AXIEONEX | AI-Orchestrated, Human-Executed Revenue Systems",
-    description: "We build revenue pipelines, not just meetings. AI detects signals, humans qualify conversations.",
-    url: SITE_URL,
-    type: "website",
-  },
-};
+  canonical: SITE_URL,
+});
 
 // The page is otherwise fully static; only the Insights preview section
 // reads from the database (Phase 2, admin-editable articles). Revalidating

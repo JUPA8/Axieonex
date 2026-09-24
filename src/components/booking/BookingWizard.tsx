@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { cloneElement, useEffect, useRef, useState, type ChangeEvent, type ReactElement } from "react";
 import { getBookingStatusAction, verifyBookingGateAction } from "@/app/book-strategy-call/actions";
 import { BookingIntro } from "@/components/booking/BookingIntro";
 import { CalendlyEmbed } from "@/components/booking/CalendlyEmbed";
@@ -54,16 +54,20 @@ function Field({
   id: string;
   label: string;
   error?: string;
-  children: React.ReactNode;
+  children: ReactElement<{ "aria-invalid"?: boolean; "aria-describedby"?: string }>;
 }) {
+  const errorId = `booking-${id}-error`;
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={id} className="text-[13px] text-ax-text-muted">
         {label}
       </label>
-      {children}
+      {cloneElement(children, {
+        "aria-invalid": error ? true : undefined,
+        "aria-describedby": error ? errorId : undefined,
+      })}
       {error && (
-        <p id={`${id}-error`} className="text-[12.5px] text-ax-error">
+        <p id={errorId} className="text-[12.5px] text-ax-error">
           {error}
         </p>
       )}
@@ -93,6 +97,11 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
     setData((prev) => ({ ...prev, [key]: value }));
   }
 
+  function focusFirstInvalidField(stepErrors: BookingFieldErrors) {
+    const firstInvalid = Object.keys(stepErrors)[0];
+    if (firstInvalid) document.getElementById(firstInvalid === "consent" ? "booking-consent" : firstInvalid)?.focus();
+  }
+
   function goNext() {
     let stepErrors: BookingFieldErrors = {};
     if (step === 1) stepErrors = validateStep1(data);
@@ -100,7 +109,10 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
     if (step === 3) stepErrors = validateStep3(data);
 
     setErrors(stepErrors);
-    if (Object.keys(stepErrors).length > 0) return;
+    if (Object.keys(stepErrors).length > 0) {
+      focusFirstInvalidField(stepErrors);
+      return;
+    }
     setStep((s) => Math.min(5, s + 1) as Step);
   }
 
@@ -118,7 +130,10 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
   async function handleContinueToScheduling() {
     const consentErrors = validateStep5(data);
     setErrors(consentErrors);
-    if (Object.keys(consentErrors).length > 0) return;
+    if (Object.keys(consentErrors).length > 0) {
+      focusFirstInvalidField(consentErrors);
+      return;
+    }
 
     setPhase("gate_checking");
     const result = await verifyBookingGateAction(data, honeypot, turnstileToken);
@@ -133,7 +148,7 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
       setPhase("success");
     } else if (result.status === "rate_limited") {
       setPhase("rate_limited");
-    } else if (result.status === "error") {
+    } else if (result.status === "error" || result.status === "invalid") {
       setPhase("error");
     } else if (result.status === "unavailable") {
       setPhase("unavailable");

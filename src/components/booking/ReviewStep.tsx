@@ -49,6 +49,7 @@ export function ReviewStep({
           checked={data.consent}
           onChange={(e) => onConsentChange(e.target.checked)}
           aria-labelledby="booking-consent-text"
+          aria-invalid={consentError ? true : undefined}
           aria-describedby={consentError ? "booking-consent-error" : undefined}
           className="mt-1 h-[18px] w-[18px]"
         />
