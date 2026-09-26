@@ -11,7 +11,7 @@ describe("repository documentation", () => {
       scripts: { build: string };
     };
     expect(packageJson.engines.node).toBe("22.x");
-    expect(packageJson.scripts.build).toBe("next build --webpack");
+    expect(packageJson.scripts.build).toBe("prisma generate && next build --webpack");
   });
 
   it("documents every operator-supplied application environment variable", () => {

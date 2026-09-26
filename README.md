@@ -106,8 +106,9 @@ an already-applied file.
 - Vercel Preview deployments receive a global `X-Robots-Tag: noindex,
   nofollow` header based on Vercel's platform-owned `VERCEL_ENV`. Production
   deployments are not assigned this preview-only header.
-- Production builds explicitly use Next.js's supported webpack build mode;
-  this is the deployment-tested path for the current `next/font` setup.
+- Production builds explicitly generate Prisma Client and use Next.js's
+  supported webpack build mode; this is the deployment-tested path for the
+  current database types and `next/font` setup.
 - Client IP rate-limit identity trusts no forwarding header by default. The
   deployment owner must select a proxy-normalized, single-value header.
 
