@@ -37,6 +37,52 @@ describe("confirmed booking idempotency", () => {
     mocks.email.mockResolvedValue({ sent: false, reason: "timeout" });
     mocks.crm.mockResolvedValue({ ok: false, reason: "provider_error" });
     await expect(confirmPendingBooking(input)).resolves.toBe("confirmed");
-    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.update).toHaveBeenCalledTimes(2);
+    expect(mocks.update).toHaveBeenNthCalledWith(1, {
+      where: { id: "booking-1" },
+      data: { emailState: "FAILED", emailStateUpdatedAt: expect.any(Date) },
+    });
+    expect(mocks.update).toHaveBeenNthCalledWith(2, {
+      where: { id: "booking-1" },
+      data: { crmState: "FAILED", crmStateUpdatedAt: expect.any(Date) },
+    });
+  });
+
+  it("records disabled providers without success timestamps", async () => {
+    mocks.findUnique.mockResolvedValue(booking);
+    mocks.updateMany.mockResolvedValue({ count: 1 });
+    mocks.email.mockResolvedValue({ sent: false, reason: "not_configured" });
+    mocks.crm.mockResolvedValue({ ok: false, reason: "not_configured" });
+    await expect(confirmPendingBooking(input)).resolves.toBe("confirmed");
+    expect(mocks.update).toHaveBeenNthCalledWith(1, {
+      where: { id: "booking-1" },
+      data: { emailState: "DISABLED", emailStateUpdatedAt: expect.any(Date) },
+    });
+    expect(mocks.update).toHaveBeenNthCalledWith(2, {
+      where: { id: "booking-1" },
+      data: { crmState: "DISABLED", crmStateUpdatedAt: expect.any(Date) },
+    });
+  });
+
+  it("records success only with matching durable timestamps", async () => {
+    mocks.findUnique.mockResolvedValue(booking);
+    mocks.updateMany.mockResolvedValue({ count: 1 });
+    await expect(confirmPendingBooking(input)).resolves.toBe("confirmed");
+    expect(mocks.update).toHaveBeenNthCalledWith(1, {
+      where: { id: "booking-1" },
+      data: {
+        emailState: "SUCCEEDED",
+        emailStateUpdatedAt: expect.any(Date),
+        emailSentAt: expect.any(Date),
+      },
+    });
+    expect(mocks.update).toHaveBeenNthCalledWith(2, {
+      where: { id: "booking-1" },
+      data: {
+        crmState: "SUCCEEDED",
+        crmStateUpdatedAt: expect.any(Date),
+        crmSyncedAt: expect.any(Date),
+      },
+    });
   });
 });

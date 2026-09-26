@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { pushToCrm } from "@/lib/crm";
 import { sendNotificationEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
+import { providerStateFromResult } from "@/lib/providerState";
 import type { BookingData } from "@/types/booking";
 
 export type PendingBookingResult =
@@ -97,9 +98,17 @@ export async function confirmPendingBooking(input: ConfirmBookingInput): Promise
       `Calendly event: ${input.eventUri}`,
     ].join("\n"),
   });
-  if (emailResult.sent) {
-    await prisma.bookingRequest.update({ where: { id: booking.id }, data: { emailSentAt: new Date() } }).catch(() => {});
-  }
+  const emailStateUpdatedAt = new Date();
+  await prisma.bookingRequest
+    .update({
+      where: { id: booking.id },
+      data: {
+        emailState: providerStateFromResult(emailResult.sent, emailResult.sent ? undefined : emailResult.reason),
+        emailStateUpdatedAt,
+        ...(emailResult.sent ? { emailSentAt: emailStateUpdatedAt } : {}),
+      },
+    })
+    .catch(() => {});
 
   const crmResult = await pushToCrm({
     name: booking.name,
@@ -109,8 +118,16 @@ export async function confirmPendingBooking(input: ConfirmBookingInput): Promise
     message: `Target market: ${booking.market}. Budget: ${booking.budget}. Confirmed slot: ${input.startTime ?? "See Calendly"}.`,
     source: "book_strategy_call",
   });
-  if (crmResult.ok) {
-    await prisma.bookingRequest.update({ where: { id: booking.id }, data: { crmSyncedAt: new Date() } }).catch(() => {});
-  }
+  const crmStateUpdatedAt = new Date();
+  await prisma.bookingRequest
+    .update({
+      where: { id: booking.id },
+      data: {
+        crmState: providerStateFromResult(crmResult.ok, crmResult.ok ? undefined : crmResult.reason),
+        crmStateUpdatedAt,
+        ...(crmResult.ok ? { crmSyncedAt: crmStateUpdatedAt } : {}),
+      },
+    })
+    .catch(() => {});
   return "confirmed";
 }

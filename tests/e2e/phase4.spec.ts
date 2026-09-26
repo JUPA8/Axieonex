@@ -446,3 +446,180 @@ test("booking browser lifecycle stays pending until a valid signed webhook and i
   await page.getByRole("button", { name: "Check confirmation" }).click();
   await expect(page.getByRole("heading", { name: "Call booked." })).toBeVisible();
 });
+
+test("admin data pages are protected, truthful, paginated, persistent, accessible, and responsive", async ({ page }) => {
+  test.skip(productionMode, "Production HTTP smoke cannot retain intentionally Secure auth cookies.");
+  test.setTimeout(60_000);
+  const failures = captureUnexpectedBrowserFailures(page);
+
+  const contact = await prisma.contactSubmission.create({
+    data: {
+      purpose: "admin operational verification",
+      name: "Hostile <script>window.__adminContactXss = true</script>",
+      email: "an-intentionally-long-contact-address-for-mobile-containment@example.test",
+      company: "Local synthetic QA company with a deliberately long name",
+      message: "First line\n</p><script>window.__adminContactXss = true</script>\nLast line with averylongunbrokentokenforresponsivecontainmenttesting",
+      ipAddress: "198.51.100.42-sensitive-sentinel",
+      emailState: "FAILED",
+      emailStateUpdatedAt: new Date("2026-09-25T10:01:00.000Z"),
+      crmState: "DISABLED",
+      crmStateUpdatedAt: new Date("2026-09-25T10:02:00.000Z"),
+    },
+  });
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  const updatedContact = await prisma.contactSubmission.update({
+    where: { id: contact.id },
+    data: { message: `${contact.message}\nUpdated safely.` },
+  });
+  expect(updatedContact.updatedAt.getTime()).toBeGreaterThan(contact.createdAt.getTime());
+
+  const booking = await prisma.bookingRequest.create({
+    data: {
+      name: "Hostile <img src=x onerror=window.__adminBookingXss=true>",
+      email: "an-intentionally-long-booking-address-for-mobile-containment@example.test",
+      phone: "+49 30 555 0199",
+      role: "Founder",
+      company: "Local synthetic QA booking company with a deliberately long name",
+      website: "https://local.test/<script>unsafe</script>",
+      country: "Germany",
+      size: "11-50",
+      approach: "Synthetic local testing only",
+      outcome: "Verify protected operational details",
+      market: "Europe",
+      budget: "3k-8k",
+      slotId: "2026-10-02T09:00:00Z",
+      slotLabel: "2 October 2026 at 09:00 UTC",
+      status: "CONFIRMED",
+      calendarCorrelationId: "axieonex_e2e-sensitive-correlation-sentinel",
+      calendarInviteeUid: "https://api.calendly.com/invitees/e2e-sensitive-invitee-sentinel",
+      calendarBookingUid: "https://api.calendly.com/events/e2e-operational-reference",
+      confirmedAt: new Date("2026-09-25T10:03:00.000Z"),
+      ipAddress: "198.51.100.43-sensitive-sentinel",
+      emailState: "SUCCEEDED",
+      emailStateUpdatedAt: new Date("2026-09-25T10:04:00.000Z"),
+      emailSentAt: new Date("2026-09-25T10:04:00.000Z"),
+      crmState: "LEGACY_UNKNOWN",
+    },
+  });
+  await new Promise((resolve) => setTimeout(resolve, 5));
+  const updatedBooking = await prisma.bookingRequest.update({
+    where: { id: booking.id },
+    data: { outcome: "Verify protected operational details after update" },
+  });
+  expect(updatedBooking.updatedAt.getTime()).toBeGreaterThan(booking.createdAt.getTime());
+
+  await prisma.contactSubmission.createMany({
+    data: Array.from({ length: 21 }, (_, index) => ({
+      purpose: "pagination",
+      name: `Contact page fixture ${String(index).padStart(2, "0")}`,
+      email: `contact-page-${index}@example.test`,
+      message: "Disposable pagination fixture",
+      ipAddress: "unknown",
+    })),
+  });
+  await prisma.bookingRequest.createMany({
+    data: Array.from({ length: 21 }, (_, index) => ({
+      name: `Booking page fixture ${String(index).padStart(2, "0")}`,
+      email: `booking-page-${index}@example.test`,
+      phone: "+49 30 555 0100",
+      role: "QA",
+      company: "Local QA",
+      website: "local.test",
+      country: "Germany",
+      size: "1-10",
+      approach: "Synthetic testing",
+      outcome: "Pagination verification",
+      market: "Europe",
+      budget: "3k-8k",
+      slotId: "pending-calendly-webhook",
+      slotLabel: "Pending Calendly confirmation",
+      status: "PENDING",
+      ipAddress: "unknown",
+    })),
+  });
+
+  for (const route of [
+    `/admin/contacts/${contact.id}`,
+    `/admin/bookings/${booking.id}`,
+    `/admin/articles/${publishedSlug}`,
+  ]) {
+    await page.goto(route);
+    await expect(page).toHaveURL(/\/admin\/login$/);
+  }
+
+  await login(page);
+  await expect(page).toHaveURL(/\/admin$/);
+  await expect(page.getByRole("navigation", { name: "Contact submissions pagination" })).toContainText(/Page 1 of 2/);
+  await expect(page.getByRole("navigation", { name: "Strategy call requests pagination" })).toContainText(/Page 1 of 2/);
+
+  const contactNext = page.getByRole("navigation", { name: "Contact submissions pagination" }).getByRole("link", { name: "Next" });
+  await contactNext.focus();
+  await expect(contactNext).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(page).toHaveURL(/contactsPage=2/);
+  await expect(page.getByRole("navigation", { name: "Contact submissions pagination" })).toContainText(/Page 2 of 2/);
+  await expect(page.getByRole("navigation", { name: "Strategy call requests pagination" })).toContainText(/Page 1 of 2/);
+
+  await page.goto(`/admin/contacts/${contact.id}?contactsPage=2&bookingsPage=1`);
+  await expect(page.getByRole("heading", { level: 1, name: "Contact submission" })).toBeVisible();
+  await expect(page.getByText("Failed", { exact: true })).toBeVisible();
+  await expect(page.getByText("Disabled / not configured", { exact: true })).toBeVisible();
+  await expect(page.getByText(/Updated safely/)).toBeVisible();
+  await expect(page.getByRole("link", { name: "Back to submissions" })).toHaveAttribute("href", "/admin?contactsPage=2");
+  expect(await page.evaluate(() => (window as typeof window & { __adminContactXss?: boolean }).__adminContactXss)).toBeUndefined();
+  expect(await page.locator("body").innerText()).not.toContain("198.51.100.42-sensitive-sentinel");
+  expect(await page.locator("body").innerText()).not.toContain("emailStateUpdatedAt");
+  await expect(page.locator("h1")).toHaveCount(1);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+
+  await page.goto("/admin?contactsPage=2&bookingsPage=2");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  const tableScrollers = page.locator("div.overflow-x-auto");
+  await expect(tableScrollers).toHaveCount(2);
+  for (const scroller of await tableScrollers.all()) {
+    expect(await scroller.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
+  }
+
+  await page.goto(`/admin/bookings/${booking.id}`);
+  await expect(page.getByRole("heading", { level: 1, name: "Strategy call request" })).toBeVisible();
+  await expect(page.getByText("CONFIRMED", { exact: true })).toBeVisible();
+  await expect(page.getByText("Confirmed", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Succeeded", { exact: true })).toBeVisible();
+  await expect(page.getByText("Legacy / unknown", { exact: true })).toBeVisible();
+  const bookingBody = await page.locator("body").innerText();
+  expect(bookingBody).not.toContain("e2e-sensitive-correlation-sentinel");
+  expect(bookingBody).not.toContain("e2e-sensitive-invitee-sentinel");
+  expect(bookingBody).not.toContain("198.51.100.43-sensitive-sentinel");
+  expect(await page.evaluate(() => (window as typeof window & { __adminBookingXss?: boolean }).__adminBookingXss)).toBeUndefined();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  const detailAxe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  expect(detailAxe.violations).toEqual([]);
+
+  const refreshedRecord = await prisma.contactSubmission.create({
+    data: {
+      purpose: "session refresh verification",
+      name: "Created after initial dashboard load",
+      email: "new-session-record@example.test",
+      message: "Visible after refresh and a new authenticated session.",
+      ipAddress: "unknown",
+    },
+  });
+  await page.goto("/admin");
+  await page.reload();
+  await expect(page.getByText(refreshedRecord.email)).toBeVisible();
+  await page.getByRole("button", { name: "Sign out" }).click();
+  await login(page);
+  await expect(page.getByText(refreshedRecord.email)).toBeVisible();
+
+  await prisma.admin.update({ where: { id: adminId }, data: { active: false } });
+  await page.goto(`/admin/contacts/${contact.id}`);
+  await expect(page).toHaveURL(/\/admin\/login$/);
+  await prisma.admin.update({ where: { id: adminId }, data: { active: true } });
+  await prisma.admin.delete({ where: { id: adminId } });
+  await page.goto(`/admin/bookings/${booking.id}`);
+  await expect(page).toHaveURL(/\/admin\/login$/);
+  expect(failures).toEqual([]);
+});

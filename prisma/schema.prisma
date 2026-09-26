@@ -1,9 +1,7 @@
 // AXIEONEX backend data model.
 //
-// Phase 1 (foundation): Admin, ContactSubmission, BookingRequest.
-// Phase 2 (this pass): Article (DB-backed Insights content), plus
-// BookingRequest.calendarBookingUid and the *SyncedAt columns going live.
-// No consent-platform/analytics wiring yet (Phase 3).
+// Admin, submission, booking, article, and consent persistence. The migration
+// history is the source of truth for when each capability was introduced.
 
 generator client {
   provider = "prisma-client-js"
@@ -40,18 +38,23 @@ model ContactSubmission {
   company   String?
   message   String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   /// IP address at submission time, used only for rate-limiting/abuse review.
   ipAddress String?
 
-  /// Set once a Resend notification email is actually sent. Null means no
-  /// provider was configured (EMAIL_PROVIDER_API_KEY unset) or the send
-  /// attempt failed, the submission itself is never lost either way.
-  emailSentAt DateTime?
+  /// Set once a Resend notification email is actually sent. Use emailState to
+  /// distinguish disabled, failed, not-attempted, and legacy outcomes when
+  /// this timestamp is null.
+  emailSentAt         DateTime?
+  emailState          ProviderOperationState @default(NOT_ATTEMPTED)
+  emailStateUpdatedAt DateTime?
 
-  /// Phase 2 seam: set once this record has been pushed to the CRM. Null
-  /// until CRM_API_KEY/CRM_WORKSPACE_ID are configured and wired up.
-  crmSyncedAt DateTime?
+  /// Set once this record has been pushed to the CRM. Use crmState to
+  /// distinguish all non-success outcomes when this timestamp is null.
+  crmSyncedAt       DateTime?
+  crmState          ProviderOperationState @default(NOT_ATTEMPTED)
+  crmStateUpdatedAt DateTime?
 
   @@map("contact_submissions")
 }
@@ -63,6 +66,17 @@ enum BookingStatus {
   CONFIRMED
   /// Phase 2: the requested slot could not be honored.
   CANCELLED
+}
+
+/// Durable, non-secret outcome of an optional provider operation. Historical
+/// rows without enough evidence are LEGACY_UNKNOWN rather than inferred as a
+/// failure. Provider credentials, responses, and error bodies are never stored.
+enum ProviderOperationState {
+  NOT_ATTEMPTED
+  DISABLED
+  SUCCEEDED
+  FAILED
+  LEGACY_UNKNOWN
 }
 
 /// One submission of the /book-strategy-call wizard.
@@ -105,11 +119,16 @@ model BookingRequest {
 
   status    BookingStatus @default(PENDING)
   createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   ipAddress String?
 
-  emailSentAt DateTime?
-  crmSyncedAt DateTime?
+  emailSentAt         DateTime?
+  emailState          ProviderOperationState @default(NOT_ATTEMPTED)
+  emailStateUpdatedAt DateTime?
+  crmSyncedAt         DateTime?
+  crmState            ProviderOperationState @default(NOT_ATTEMPTED)
+  crmStateUpdatedAt   DateTime?
 
   @@map("booking_requests")
 }

@@ -41,14 +41,14 @@ therefore intentionally absent from `.env.example`.
 |---|---|---|
 | Contact form persistence | **Real** | `ContactSubmission` in Postgres via Prisma. Writes first; a failed/unconfigured email or CRM push never loses the submission. |
 | Booking request persistence | **Real** | A `PENDING` row is created before the Calendly embed is revealed. Only a verified Calendly webhook can change it to `CONFIRMED`; `calendarBookingUid` is the signed payload's event URI. |
-| Email notifications | **Real, optional** | Resend, gated on `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS`. Unset: submissions still persist, `emailSentAt` stays null. |
+| Email notifications | **Real, optional** | Resend, gated on `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS`. Unset: submissions still persist, `emailSentAt` stays null, and the operation state is `DISABLED`. |
 | Honeypot spam protection | **Real** | Hidden field on both public forms; a filled value is silently treated as success. |
 | Turnstile spam protection | **Real** | Site key and secret are an atomic pair. Half-configuration always fails; production fails closed when both are absent. Local development and tests fail open only when both are absent. |
 | Rate limiting | **Real** | Upstash URL and token are an atomic pair. Production fails closed when absent or unavailable; local development and tests fail open only when both are absent. |
 | Admin authentication | **Real** | Auth.js Credentials, bcrypt, signed JWTs with an explicit 8-hour lifetime, active-row revalidation, and an HttpOnly SameSite=Lax session cookie that is Secure in production. |
-| Admin submissions list | **Real** | `/admin` lists `ContactSubmission` and `BookingRequest` rows directly from Postgres, including calendar confirmation UID. |
+| Admin data management | **Real** | `/admin` provides independent 20-record server-side pages for contacts and bookings. Authenticated detail routes expose safe operational fields, UTC creation/update times, and persisted provider states while excluding IP addresses and raw correlation identifiers. Articles show draft/published state plus creation/update times. |
 | Calendar scheduling | **Real** | Calendly inline embed (`src/components/booking/CalendlyEmbed.tsx`), gated on the public URL and both server-only webhook variables. Calendly owns availability and sends a signed `invitee.created` webhook. Browser `postMessage` events only trigger a status read and are never trusted as confirmation. |
-| CRM push | **Real, optional** | HubSpot Contacts API v3 email-keyed batch upsert updates or creates without duplicate contacts; only a validated successful response sets `crmSyncedAt`. |
+| CRM push | **Real, optional** | HubSpot Contacts API v3 email-keyed batch upsert updates or creates without duplicate contacts; only a validated successful response sets `crmSyncedAt` and `SUCCEEDED`. Missing configuration is recorded as `DISABLED`, while a configured unsuccessful operation is `FAILED`. |
 | Article content | **Real** | `Article` model in Postgres, admin CRUD at `/admin/articles`. `/insights` and `/insights/[slug]` read published rows only (`src/lib/articles.ts`); `src/content/articles.ts` is now only the one-time seed source (`prisma/seed.ts`), not read by the live app. |
 | Cookie consent persistence | **Real** | `ConsentRecord` in Postgres (`src/app/api/consent/route.ts`), correlated to the visitor via an httpOnly cookie, not a third-party tracker. `localStorage` (`src/lib/consent.ts`) is a fast synchronous read cache in front of it, reconciled on load by `ConsentSync`; a failed server write is logged but never rolls back the visitor's in-browser choice. |
 | Analytics | **Real, optional** | Plausible Analytics (`src/components/analytics/AnalyticsScript.tsx`), gated on `ANALYTICS_PROVIDER_ID` **and** live analytics consent (re-checked on every consent change, not just at page load). Unset, or consent not granted: the script never renders, not even a disabled/stubbed tag. |
@@ -59,10 +59,13 @@ therefore intentionally absent from `.env.example`.
 
 - **Provider failure policy**: HubSpot and Resend are secondary to the
   durable database write, so their absence, timeout, malformed response, or
-  non-2xx response never loses a stored submission. Sync timestamps remain
-  null for retry. Calls have a five-second deadline and logs exclude payloads,
-  credentials, and provider response bodies. Turnstile and Upstash fail closed
-  in production; development/tests fail open only when fully unconfigured.
+  non-2xx response never loses a stored submission. Success timestamps remain
+  null unless success is proven. A separate safe state records `NOT_ATTEMPTED`,
+  `DISABLED`, `SUCCEEDED`, `FAILED`, or `LEGACY_UNKNOWN`; it does not store
+  provider response bodies or failure details. Calls have a five-second
+  deadline and logs exclude payloads, credentials, and provider response
+  bodies. Turnstile and Upstash fail closed in production;
+  development/tests fail open only when fully unconfigured.
 - **Proxy identity boundary**: no forwarding header is trusted by default.
   `TRUSTED_PROXY_IP_HEADER` must name a single-value header that the selected
   proxy removes from inbound traffic and overwrites. Lists and malformed

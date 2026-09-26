@@ -36,6 +36,19 @@ describe("repository documentation", () => {
     expect(integrations).toMatch(/There are no silent-success\s+integration mocks/);
   });
 
+  it("documents admin pagination, timestamps, safe provider states, and the forward migration", () => {
+    const readme = readRepoFile("README.md");
+    const adminOperations = readRepoFile("docs/ADMIN-OPERATIONS.md");
+    expect(readme).toContain("docs/ADMIN-OPERATIONS.md");
+    expect(adminOperations).toContain("fixed page size of 20");
+    expect(adminOperations).toContain("explicitly formatted in UTC");
+    for (const state of ["NOT_ATTEMPTED", "DISABLED", "SUCCEEDED", "FAILED", "LEGACY_UNKNOWN"]) {
+      expect(adminOperations).toContain(`\`${state}\``);
+    }
+    expect(adminOperations).toContain("20260925120000_admin_operational_completeness");
+    expect(adminOperations).toContain("Provider credentials remained absent");
+  });
+
   it("keeps all 22 unresolved legal fields visible and owner-blocked", () => {
     const legalSource = ["src/content/privacy.tsx", "src/content/terms.tsx", "src/content/cookies.tsx"].map(readRepoFile).join("\n");
     const placeholders = legalSource.match(/\[[A-Z][A-Z\s-]*?(?:TO\s+BE\s+CONFIRMED|CONFIRMED AND PUBLISHED)[A-Z\s-]*?\]/g) ?? [];

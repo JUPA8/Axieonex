@@ -21,8 +21,9 @@ the seven `/services/[slug]` pages, `/pricing`, `/insights`, published
 
 `/book-strategy-call` and `/cookie-preferences` are public but intentionally
 `noindex,follow`. Unknown service/article slugs return a real HTTP 404, and the
-404 page is also noindex. `/admin`, `/admin/articles`, article editor routes,
-and `/admin/login` are private and `noindex,nofollow`.
+404 page is also noindex. `/admin`, `/admin/contacts/[id]`,
+`/admin/bookings/[id]`, `/admin/articles`, article editor routes, and
+`/admin/login` are private and `noindex,nofollow`.
 
 API routes provide Auth.js, consent persistence, and the signed Calendly
 webhook at `/api/auth/[...nextauth]`, `/api/consent`, and
@@ -64,8 +65,9 @@ controlled production release. Neither command should be run against a
 production database from an unreviewed local branch.
 
 The committed migration history covers the initial submission/admin schema,
-article CMS and booking confirmation identity, consent records, and the later
-admin/Calendly security constraints. Migrations are append-only release
+article CMS and booking confirmation identity, consent records, the later
+admin/Calendly security constraints, and the admin operational-completeness
+timestamp/provider-state backfill. Migrations are append-only release
 artifacts; schema changes require a new reviewed migration rather than editing
 an already-applied file.
 
@@ -73,7 +75,9 @@ an already-applied file.
 
 - Contact submissions are validated and persisted to PostgreSQL before the
   optional HubSpot and Resend side effects run. Provider failure cannot remove
-  the stored submission, and sync timestamps remain null until success.
+  the stored submission. Success timestamps remain null until success, while a
+  separate persisted state records not attempted, disabled, succeeded, failed,
+  or legacy/unknown outcomes.
 - Booking requests are stored as `PENDING` before Calendly is shown. Only a
   correctly signed, account-bound `invitee.created` webhook can set a booking
   to `CONFIRMED`. Browser messages only trigger a server-side status read.
@@ -84,6 +88,11 @@ an already-applied file.
   closed when absent, partial, timed out, or unavailable.
 - Admin authentication uses an explicit eight-hour JWT session. Each sensitive
   read or mutation revalidates that the admin row still exists and is active.
+- The admin dashboard uses independent, server-side 20-record pages for
+  contacts and bookings. Detail views expose operational record fields and UTC
+  creation/update times while withholding IP addresses and raw correlation
+  identifiers. Protected loading and generic retryable error states do not
+  expose record or infrastructure details.
 - The article CMS stores drafts and published articles in PostgreSQL. Public
   routes only expose published records; drafts remain private and unindexed.
 - Consent is cached in local storage for immediate client gating and persisted
@@ -114,13 +123,14 @@ src/lib/                      persistence, providers, validation and security
 src/types/                    shared application types
 tests/                        unit, component, security and metadata tests
 docs/INTEGRATIONS.md          environment and integration source of truth
+docs/ADMIN-OPERATIONS.md      protected admin data behavior and state meanings
 docs/LEGAL-OWNER-CHECKLIST.md unresolved legal owner/counsel questions
 ```
 
 The former handoff artifacts `README-CLAUDE-CODE.md`, `START-HERE.md`, and
 design-package manifests are intentionally not duplicated here. They are not
 used by the application or build. This README, `.env.example`, the current
-source, and the two documents above are canonical for this repository.
+source, and the documents above are canonical for this repository.
 
 ## Production prerequisites
 
