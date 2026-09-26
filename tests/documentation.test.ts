@@ -5,6 +5,15 @@ import { describe, expect, it } from "vitest";
 const readRepoFile = (relativePath: string) => readFileSync(resolve(process.cwd(), relativePath), "utf8");
 
 describe("repository documentation", () => {
+  it("pins the verified Vercel runtime and production bundler", () => {
+    const packageJson = JSON.parse(readRepoFile("package.json")) as {
+      engines: { node: string };
+      scripts: { build: string };
+    };
+    expect(packageJson.engines.node).toBe("22.x");
+    expect(packageJson.scripts.build).toBe("next build --webpack");
+  });
+
   it("documents every operator-supplied application environment variable", () => {
     const example = readRepoFile(".env.example");
     const integrations = readRepoFile("docs/INTEGRATIONS.md");
