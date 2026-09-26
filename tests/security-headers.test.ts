@@ -29,6 +29,14 @@ describe("security headers", () => {
     expect(buildSecurityHeaders("production", "http://localhost:3000").some(({ key }) => key === "Strict-Transport-Security")).toBe(false);
   });
 
+  it("prevents indexing on Vercel previews without changing production indexing", () => {
+    expect(buildSecurityHeaders("production", "https://preview.example.test", "preview")).toContainEqual({
+      key: "X-Robots-Tag",
+      value: "noindex, nofollow",
+    });
+    expect(buildSecurityHeaders("production", "https://www.axieonex.com", "production").some(({ key }) => key === "X-Robots-Tag")).toBe(false);
+  });
+
   it("allows React's evaluator only in development", () => {
     expect(buildContentSecurityPolicy("development")).toContain("'unsafe-eval'");
     expect(buildContentSecurityPolicy("production")).not.toContain("'unsafe-eval'");

@@ -31,9 +31,11 @@ interactive prompt work too), not app runtime config, and persisting an
 admin password in a file is exactly the anti-pattern this project avoids.
 See the script's own header comment.
 
-`NODE_ENV` and `NEXT_RUNTIME` are read by framework/runtime code but are
-platform-controlled, not owner-supplied application settings. They are
-therefore intentionally absent from `.env.example`.
+`NODE_ENV`, `NEXT_RUNTIME`, and `VERCEL_ENV` are read by framework/runtime code
+but are platform-controlled, not owner-supplied application settings. They are
+therefore intentionally absent from `.env.example`. `VERCEL_ENV=preview`
+causes every Preview response to include `X-Robots-Tag: noindex, nofollow`;
+production does not receive that preview-only header.
 
 ## Current implementation status
 

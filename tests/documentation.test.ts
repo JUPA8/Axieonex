@@ -20,7 +20,7 @@ describe("repository documentation", () => {
       expect(example).toMatch(new RegExp(`^${variable}=$`, "m"));
       expect(integrations).toContain(`\`${variable}\``);
     }
-    for (const special of ["ADMIN_EMAIL", "ADMIN_PASSWORD", "NODE_ENV", "NEXT_RUNTIME"]) {
+    for (const special of ["ADMIN_EMAIL", "ADMIN_PASSWORD", "NODE_ENV", "NEXT_RUNTIME", "VERCEL_ENV"]) {
       expect(integrations).toContain(`\`${special}\``);
     }
   });

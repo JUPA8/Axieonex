@@ -29,12 +29,19 @@ export function buildContentSecurityPolicy(environment = process.env.NODE_ENV) {
 
 export const CONTENT_SECURITY_POLICY = buildContentSecurityPolicy("production");
 
-export function buildSecurityHeaders(environment = process.env.NODE_ENV, siteUrl = process.env.NEXT_PUBLIC_SITE_URL) {
+export function buildSecurityHeaders(
+  environment = process.env.NODE_ENV,
+  siteUrl = process.env.NEXT_PUBLIC_SITE_URL,
+  deploymentEnvironment = process.env.VERCEL_ENV,
+) {
   return [
     { key: "Content-Security-Policy", value: buildContentSecurityPolicy(environment) },
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" },
+    ...(deploymentEnvironment === "preview"
+      ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]
+      : []),
     ...(environment === "production" && (siteUrl ?? "").startsWith("https://")
     ? [{ key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" }]
     : []),

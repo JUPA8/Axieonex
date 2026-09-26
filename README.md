@@ -6,6 +6,7 @@ supporting contact, booking, consent, article CMS, and administration flows.
 ## Stack
 
 - Next.js 16 App Router with Server Components by default
+- Node.js 22
 - TypeScript in strict mode
 - Tailwind CSS 4 and Framer Motion
 - PostgreSQL with Prisma 7 and the PostgreSQL driver adapter
@@ -102,6 +103,9 @@ an already-applied file.
   initialized when it is absent.
 - Global CSP, frame protection, nosniff, referrer, permissions, and conditional
   production HTTPS HSTS headers are configured in `next.config.ts`.
+- Vercel Preview deployments receive a global `X-Robots-Tag: noindex,
+  nofollow` header based on Vercel's platform-owned `VERCEL_ENV`. Production
+  deployments are not assigned this preview-only header.
 - Client IP rate-limit identity trusts no forwarding header by default. The
   deployment owner must select a proxy-normalized, single-value header.
 
