@@ -15,6 +15,7 @@ Every operator-supplied runtime variable below is declared without a value in
 | `DATABASE_URL` | Required | PostgreSQL connection for submissions, bookings, consent, admins, and articles. Database-backed operations are unavailable when absent. |
 | `AUTH_SECRET` | Required for admin | Auth.js session signing. Admin authentication is unavailable when absent. |
 | `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS` | Optional pair | Resend notifications. Both absent skips email; partial configuration is an error. Stored submissions remain intact. |
+| `EMAIL_NOTIFICATION_RECIPIENT` | Optional, server-only | Overrides the internal Resend notification recipient when it is a single valid email address. Unset or blank preserves the public contact address; an invalid value fails as misconfigured without calling Resend. |
 | `CAPTCHA_SITE_KEY` + `CAPTCHA_SECRET` | Required pair in production | Turnstile. Production fails closed if absent or invalid. Local/test fail open only when both are absent. |
 | `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` | Required pair in production | Rate limiting. Production fails closed if absent or unavailable. Local/test fail open only when both are absent. |
 | `TRUSTED_PROXY_IP_HEADER` | Owner decision | Exact single-value header overwritten by the approved proxy. Unset or invalid produces the safe `unknown` identity. |

@@ -4,6 +4,7 @@ import { CONTACT_EMAIL } from "@/lib/site";
 import { fetchWithTimeout, ProviderTimeoutError } from "@/lib/security/providerRequest";
 
 const RESEND_EMAILS_URL = "https://api.resend.com/emails";
+const EMAIL_ADDRESS_PATTERN = /^[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+$/;
 
 export type EmailResult =
   | { sent: true }
@@ -12,14 +13,18 @@ export type EmailResult =
 export async function sendNotificationEmail(params: { subject: string; text: string }): Promise<EmailResult> {
   const apiKey = process.env.EMAIL_PROVIDER_API_KEY?.trim();
   const from = process.env.EMAIL_FROM_ADDRESS?.trim();
+  const configuredRecipient = process.env.EMAIL_NOTIFICATION_RECIPIENT?.trim();
+  const recipient = configuredRecipient || CONTACT_EMAIL;
   if (!apiKey && !from) return { sent: false, reason: "not_configured" };
-  if (!apiKey || !from) return { sent: false, reason: "misconfigured" };
+  if (!apiKey || !from || !EMAIL_ADDRESS_PATTERN.test(recipient)) {
+    return { sent: false, reason: "misconfigured" };
+  }
 
   try {
     const response = await fetchWithTimeout(RESEND_EMAILS_URL, {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from, to: [CONTACT_EMAIL], subject: params.subject, text: params.text }),
+      body: JSON.stringify({ from, to: [recipient], subject: params.subject, text: params.text }),
     });
     if (!response.ok) {
       console.error(`[email] Resend request failed with status ${response.status}.`);
