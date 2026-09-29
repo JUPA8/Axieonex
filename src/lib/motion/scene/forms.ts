@@ -211,9 +211,11 @@ const core: FormFiller = (targets, { width, height, count }, seed) => {
   const cx = width * 0.5;
   const cy = portrait ? height * 0.3 : height * 0.48;
   for (let i = 0; i < count; i += 1) {
-    const t = Math.pow(rng(), 1.9);
+    // Cube-weighted radius packs most of the field into the nucleus, so the
+    // qualified opportunity reads as one bright body with a thin corona.
+    const t = Math.pow(rng(), 2.6);
     const a = rng() * Math.PI * 2;
-    const r = unit * (portrait ? 0.62 : 0.44) * t;
+    const r = unit * (portrait ? 0.7 : 0.58) * t;
     write(targets, i, cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.96);
   }
 };

@@ -65,12 +65,12 @@ export default function HomePage() {
       <InsightsPreview />
 
       <section data-scene="core" className="ax-section relative z-10">
-        <div className="ax-shell ax-veil grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div className="ax-shell grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div data-reveal>
             <p className="ax-label mb-6">Questions</p>
             <h2 className="ax-headline-sm m-0 text-ax-text-primary">Questions revenue leaders ask</h2>
           </div>
-          <div data-reveal>
+          <div data-reveal className="ax-veil">
             <FAQ items={HOME_FAQ} heading="" />
           </div>
         </div>

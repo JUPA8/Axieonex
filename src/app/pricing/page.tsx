@@ -48,11 +48,13 @@ export default function PricingPage() {
       </section>
 
       <section data-scene="core" className="relative z-10 ax-section">
-        <div className="ax-shell ax-veil grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+        <div className="ax-shell grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div>
             <p className="ax-label mb-6">Pricing questions</p>
           </div>
-          <FAQ items={PRICING_FAQ} heading="" />
+          <div className="ax-veil">
+            <FAQ items={PRICING_FAQ} heading="" />
+          </div>
         </div>
       </section>
 
