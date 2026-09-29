@@ -9,7 +9,7 @@ const STEPS = [
 
 export function EngineFlow() {
   return (
-    <section id="engine" data-reveal="scale" className="ax-section relative">
+    <section id="engine" data-reveal="scale" data-scene="cluster" className="ax-section relative z-10">
       <div className="ax-shell">
         <p className="ax-label mb-6">The revenue engine</p>
         <h2 className="ax-headline ax-measure-tight m-0 mb-20 text-ax-text-primary">

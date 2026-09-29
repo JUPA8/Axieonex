@@ -11,6 +11,7 @@ import { HOME_FAQ } from "@/content/homeFaq";
 import { SITE_URL } from "@/lib/site";
 import { buildOrganizationSchema } from "@/lib/structuredData";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { SceneBackdrop } from "@/components/motion/SceneBackdrop";
 import { buildPublicMetadata } from "@/lib/metadata";
 
 export const metadata = buildPublicMetadata({
@@ -30,12 +31,13 @@ export default function HomePage() {
   return (
     <div data-theme="home">
       <JsonLd data={buildOrganizationSchema()} />
+      <SceneBackdrop fallbackForm="field" />
       <HeroSignalReveal />
 
-      <section data-reveal="mask-left" className="ax-section relative">
+      <section data-scene="scan" className="relative z-10 flex min-h-screen items-center">
         <div className="ax-shell">
           <p className="ax-label mb-8">The problem</p>
-          <p className="ax-headline ax-measure m-0 text-ax-text-primary">
+          <p className="ax-headline max-w-[24ch] m-0 text-ax-text-primary">
             Most outbound fails from <em className="font-extralight not-italic text-ax-text-muted">disconnected tools</em>,
             unqualified lists run through generic automation, and the months of hiring and ramp before an internal SDR
             team produces anything.{" "}
@@ -47,9 +49,10 @@ export default function HomePage() {
       <EngineFlow />
       <EngineDiagram />
 
-      <section data-reveal="mask-right" className="ax-section relative">
-        <div className="ax-shell-narrow">
-          <p className="ax-headline-sm m-0 text-ax-text-primary">
+      <section data-scene="mark" className="relative z-10 flex min-h-screen items-center">
+        <div className="ax-shell">
+          <p className="ax-label mb-8">The outcome</p>
+          <p className="ax-headline max-w-[22ch] m-0 text-ax-text-primary">
             Predictable pipeline. No SDR hiring burden. Consistent, qualified conversations. Full operational control,
             without sacrificing brand quality.
           </p>
@@ -61,7 +64,7 @@ export default function HomePage() {
       <ResponsibilitySplit />
       <InsightsPreview />
 
-      <section className="ax-section relative">
+      <section data-scene="core" className="ax-section relative z-10">
         <div className="ax-shell grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
           <div data-reveal>
             <p className="ax-label mb-6">Questions</p>
@@ -74,6 +77,7 @@ export default function HomePage() {
       </section>
 
       <CtaSection
+        scene="release"
         heading="Let's build your revenue engine."
         body="Thirty minutes to map your market, your channels, and what a qualified conversation should look like for you."
       />

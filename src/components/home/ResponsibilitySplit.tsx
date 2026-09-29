@@ -18,7 +18,7 @@ const COLUMNS = [
 
 export function ResponsibilitySplit() {
   return (
-    <section data-reveal="scale" className="ax-section relative">
+    <section data-reveal="scale" data-scene="validate" className="ax-section relative z-10">
       <div className="ax-shell">
         <p className="ax-label mb-6">Division of labour</p>
         <h2 className="ax-headline ax-measure m-0 mb-20 text-ax-text-primary">

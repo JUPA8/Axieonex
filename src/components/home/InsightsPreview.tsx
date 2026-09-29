@@ -10,7 +10,7 @@ export async function InsightsPreview() {
   if (articles.length === 0) return null;
 
   return (
-    <section id="articles" className="ax-section relative">
+    <section id="articles" data-scene="field" className="ax-section relative z-10">
       <div className="ax-shell">
         <div data-reveal className="mb-16 flex flex-wrap items-end justify-between gap-6">
           <div>

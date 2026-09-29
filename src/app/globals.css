@@ -376,6 +376,68 @@ p {
   max-width: 46ch;
 }
 
+/* The hero headline sits over a live environment, so it runs a step smaller
+   than the raw display token to stay on three lines and leave the CTA in the
+   fold. */
+.ax-hero-display {
+  font-size: clamp(36px, 4.1vw, 58px);
+}
+
+/* Copy always wins over the environment: a one-sided scrim keeps contrast on
+   the text column while leaving the composition side fully visible. */
+.ax-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.78) 26%,
+    rgba(0, 0, 0, 0.3) 52%,
+    rgba(0, 0, 0, 0) 72%
+  );
+}
+
+/* Dense UI blocks (tables, cards, forms, long legal copy) push the
+   environment back locally with a soft radial veil, so the composition still
+   reads at full strength around them without costing legibility. The veil is
+   painted inside the section's own stacking context, above the fixed canvas
+   but below the content. */
+.ax-veil {
+  position: relative;
+}
+
+.ax-veil::before {
+  content: "";
+  position: absolute;
+  inset: -5vh -3vw;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.86) 48%,
+    rgba(0, 0, 0, 0) 80%
+  );
+}
+
+/* Portrait viewports stack instead of splitting left/right: the composition
+   takes the upper frame and the copy sits under it, so the scrim has to run
+   top-to-bottom or it would veil the visual event and leave the text bare. */
+@media (max-width: 820px) {
+  .ax-scrim {
+    background: linear-gradient(
+      184deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.16) 26%,
+      rgba(0, 0, 0, 0.72) 48%,
+      rgba(0, 0, 0, 0.9) 68%,
+      rgba(0, 0, 0, 0.94) 100%
+    );
+  }
+}
+
 /* Short laptop viewports (1366x768 and similar) have the width for a large
    display size but not the height, which pushes the hero CTA below the fold.
    Trim the display scale and hero rhythm there rather than everywhere. */

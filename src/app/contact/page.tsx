@@ -1,4 +1,5 @@
 import { ContactForm } from "@/components/contact/ContactForm";
+import { SceneBackdrop } from "@/components/motion/SceneBackdrop";
 import { SITE_URL } from "@/lib/site";
 import { buildPublicMetadata } from "@/lib/metadata";
 
@@ -13,7 +14,8 @@ export const metadata = buildPublicMetadata({
 export default function ContactPage() {
   return (
     <div data-theme="contact">
-      <section className="relative">
+      <SceneBackdrop fallbackForm="core" />
+      <section data-scene="core" className="relative z-10">
         <div className="ax-shell grid items-start gap-x-16 gap-y-14 pb-[clamp(72px,10vw,140px)] pt-[clamp(120px,16vh,200px)] lg:grid-cols-[0.95fr_1.05fr]">
           <div className="lg:sticky lg:top-32">
             <p className="ax-label mb-7">Contact</p>
@@ -22,7 +24,9 @@ export default function ContactPage() {
               General, service, partnership, media or existing-client enquiries all start here.
             </p>
           </div>
-          <ContactForm turnstileSiteKey={process.env.CAPTCHA_SITE_KEY} />
+          <div className="ax-veil">
+            <ContactForm turnstileSiteKey={process.env.CAPTCHA_SITE_KEY} />
+          </div>
         </div>
       </section>
     </div>

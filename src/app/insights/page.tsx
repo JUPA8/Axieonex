@@ -1,5 +1,6 @@
 import { InsightsInteractive } from "@/components/insights/InsightsInteractive";
 import { CtaSection } from "@/components/ui/CtaSection";
+import { SceneBackdrop } from "@/components/motion/SceneBackdrop";
 import { getPublishedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
 import { buildPublicMetadata } from "@/lib/metadata";
@@ -29,8 +30,10 @@ export default async function InsightsPage() {
 
   return (
     <div data-theme="insights">
-      <section className="relative">
-        <div className="ax-shell pb-[clamp(48px,7vw,96px)] pt-[clamp(120px,16vh,200px)]">
+      <SceneBackdrop fallbackForm="field" />
+
+      <section data-scene="field" className="relative z-10 flex min-h-screen items-center">
+        <div className="ax-shell w-full pt-[clamp(96px,12vh,160px)]">
           <p className="ax-label ax-label-violet mb-7">Insights</p>
           <h1 className="ax-headline ax-measure-tight m-0 text-ax-text-primary">How revenue systems actually work.</h1>
           <p className="ax-lede ax-measure mt-9">
@@ -40,8 +43,8 @@ export default async function InsightsPage() {
         </div>
       </section>
 
-      <section className="pb-[clamp(72px,10vw,140px)]">
-        <div className="ax-shell">
+      <section data-scene="scan" className="relative z-10 pb-[clamp(72px,10vw,140px)]">
+        <div className="ax-shell ax-veil">
           {unavailable ? (
             <div role="alert" className="border-t border-ax-border-subtle py-20">
               <h2 className="ax-headline-sm mb-4 text-ax-text-primary">Insights are temporarily unavailable.</h2>
@@ -53,7 +56,7 @@ export default async function InsightsPage() {
         </div>
       </section>
 
-      <CtaSection heading="See it applied to your pipeline." />
+      <CtaSection scene="core" heading="See it applied to your pipeline." />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { BrandMark } from "@/components/brand/BrandMark";
 import { Button } from "@/components/ui/Button";
 import type { BrandMarkMaterial } from "@/components/brand/BrandMark";
+import type { FormId } from "@/lib/motion/scene/forms";
 
 export function CtaSection({
   heading,
@@ -9,6 +10,7 @@ export function CtaSection({
   ctaHref = "/book-strategy-call",
   material = "spectral",
   className = "",
+  scene,
 }: {
   heading: string;
   body?: string;
@@ -16,9 +18,10 @@ export function CtaSection({
   ctaHref?: string;
   material?: BrandMarkMaterial;
   className?: string;
+  scene?: FormId;
 }) {
   return (
-    <section data-reveal="scale" className={`ax-section relative ${className}`}>
+    <section data-reveal="scale" data-scene={scene} className={`ax-section relative z-10 ${className}`}>
       <div className="ax-shell flex flex-col items-start">
         <div className="mb-10 opacity-80">
           <BrandMark material={material} size={44} />

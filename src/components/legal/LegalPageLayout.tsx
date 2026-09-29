@@ -1,4 +1,5 @@
 import { TransitionLink } from "@/components/transition/TransitionLink";
+import { SceneBackdrop } from "@/components/motion/SceneBackdrop";
 
 export type LegalSection = {
   id: string;
@@ -20,7 +21,10 @@ export function LegalPageLayout({
 }) {
   return (
     <div data-theme="legal">
-      <div className="ax-shell pb-[clamp(72px,10vw,140px)] pt-[clamp(120px,15vh,180px)]">
+      {/* Legal pages run the same environment at a lower intensity: present,
+          but never competing with dense reading. */}
+      <SceneBackdrop fallbackForm="field" intensity={0.42} />
+      <div data-scene="field" className="relative z-10 ax-shell pb-[clamp(72px,10vw,140px)] pt-[clamp(120px,15vh,180px)]">
         <div className="mb-14">
           <p className="ax-label mb-7">Legal</p>
           <h1 className="ax-headline m-0 mb-5 text-ax-text-primary">{title}</h1>
@@ -31,7 +35,7 @@ export function LegalPageLayout({
           {warning}
         </div>
 
-        <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[240px_1fr]">
+        <div className="ax-veil grid gap-x-16 gap-y-12 lg:grid-cols-[240px_1fr]">
           <nav aria-label={`${title} sections`} className="hidden lg:sticky lg:top-[110px] lg:block lg:h-fit">
             <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ax-text-muted">On this page</div>
             <ul className="flex list-none flex-col gap-1">

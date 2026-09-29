@@ -1,6 +1,7 @@
 import { EngineInteriorHero } from "@/components/how-we-work/EngineInteriorHero";
 import { ScrollChapterSequence } from "@/components/how-we-work/ScrollChapterSequence";
 import { CtaSection } from "@/components/ui/CtaSection";
+import { SceneBackdrop } from "@/components/motion/SceneBackdrop";
 import { HOW_WE_WORK_CONTENT } from "@/content/howWeWork";
 import { SITE_URL } from "@/lib/site";
 import { buildPublicMetadata } from "@/lib/metadata";
@@ -16,9 +17,10 @@ export const metadata = buildPublicMetadata({
 export default function HowWeWorkPage() {
   return (
     <div data-theme="how-we-work">
+      <SceneBackdrop fallbackForm="lanes" />
       <EngineInteriorHero />
       <ScrollChapterSequence />
-      <CtaSection heading={HOW_WE_WORK_CONTENT.ctaHeading} />
+      <CtaSection scene="release" heading={HOW_WE_WORK_CONTENT.ctaHeading} />
     </div>
   );
 }

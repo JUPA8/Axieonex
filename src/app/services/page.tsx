@@ -1,6 +1,6 @@
 import { ServicesHubInteractive } from "@/components/services/ServicesHubInteractive";
-import { AmbientField } from "@/components/motion/AmbientField";
 import { CtaSection } from "@/components/ui/CtaSection";
+import { SceneBackdrop } from "@/components/motion/SceneBackdrop";
 import { SITE_URL } from "@/lib/site";
 import { buildPublicMetadata } from "@/lib/metadata";
 
@@ -15,10 +15,11 @@ export const metadata = buildPublicMetadata({
 export default function ServicesPage() {
   return (
     <div data-theme="services">
+      <SceneBackdrop fallbackForm="cluster" />
+
       {/* Signal channels separating and recombining behind the statement. */}
-      <section className="relative overflow-hidden">
-        <AmbientField className="opacity-60" intensity={0.44} markScale={0.42} />
-        <div className="ax-shell relative z-10 pb-[clamp(48px,7vw,96px)] pt-[clamp(120px,16vh,200px)]">
+      <section data-scene="cluster" className="relative z-10 flex min-h-screen items-center">
+        <div className="ax-shell w-full pt-[clamp(96px,12vh,160px)]">
           <p className="ax-label mb-7">Connected capabilities</p>
           <h1 className="ax-headline ax-measure-tight m-0 text-ax-text-primary">
             Seven capabilities. One revenue engine.
@@ -30,8 +31,8 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="ax-section-tight">
-        <div className="ax-shell">
+      <section data-scene="lanes" className="relative z-10 ax-section-tight">
+        <div className="ax-shell ax-veil">
           <ServicesHubInteractive />
         </div>
       </section>
@@ -42,7 +43,7 @@ export default function ServicesPage() {
         homepage's approved closing line verbatim rather than inventing new
         marketing copy for this page.
       */}
-      <CtaSection heading="Let's build your revenue engine." />
+      <CtaSection scene="release" heading="Let's build your revenue engine." />
     </div>
   );
 }
