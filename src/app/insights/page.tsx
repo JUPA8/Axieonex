@@ -1,17 +1,16 @@
-import type { Metadata } from "next";
 import { InsightsInteractive } from "@/components/insights/InsightsInteractive";
 import { CtaSection } from "@/components/ui/CtaSection";
 import { getPublishedArticles } from "@/lib/articles";
 import { SITE_URL } from "@/lib/site";
+import { buildPublicMetadata } from "@/lib/metadata";
 
 const CANONICAL = `${SITE_URL}/insights`;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicMetadata({
   title: "Insights | AXIEONEX",
   description: "Research and perspective on AI-orchestrated revenue systems.",
-  alternates: { canonical: CANONICAL },
-  openGraph: { title: "Insights | AXIEONEX", description: "Research and perspective on AI-orchestrated revenue systems.", url: CANONICAL },
-};
+  canonical: CANONICAL,
+});
 
 // Content is admin-editable (Phase 2: DB-backed via /admin/articles), so this
 // route must not be frozen at build time the way purely static marketing
@@ -23,8 +22,8 @@ export default async function InsightsPage() {
   let unavailable = false;
   try {
     articles = await getPublishedArticles();
-  } catch (error) {
-    console.error("[insights] Failed to load articles from the database:", error);
+  } catch {
+    console.error("[insights] Failed to load articles from the database.");
     unavailable = true;
   }
 

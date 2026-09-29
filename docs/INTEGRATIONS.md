@@ -1,29 +1,30 @@
 # Integration status
 
-Tracks what's real vs mocked in this repo. This repo doesn't carry a copy of
-the design handoff's `axieonex-integrations.json` (that file lives in the
-separate handoff package), so this document is the source of truth for
-integration status going forward. Updated at the end of each backend phase.
+This is the repository source of truth for runtime integrations, configuration
+pairs, and behavior when credentials are absent. There are no silent-success
+integration mocks in the production application.
 
 ## Environment variables
 
-Every variable below is declared, empty, in `.env.example`. This table exists
-so no variable introduced across the three backend phases is undocumented in
-prose form too; see the integration table further down for behavior when a
-given variable is unset.
+Every operator-supplied runtime variable below is declared without a value in
+`.env.example`. Never commit real values.
 
-| Variable | Phase | Purpose |
+| Variable | Requirement | Purpose and absent behavior |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Frontend | Canonical/OG URLs, sitemap. Defaults to `https://www.axieonex.com` in code if unset. |
-| `DATABASE_URL` | 1 | Postgres connection string (Prisma). |
-| `AUTH_SECRET` | 1 | Auth.js v5 session-signing secret. |
-| `EMAIL_PROVIDER_API_KEY` / `EMAIL_FROM_ADDRESS` | 1 | Resend notification email on submission. |
-| `CAPTCHA_SITE_KEY` / `CAPTCHA_SECRET` | 1 | Cloudflare Turnstile spam protection. |
-| `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | 1 | Upstash rate limiting. |
-| `NEXT_PUBLIC_CALENDLY_URL` | 2 (revised) | Calendly inline embed URL for the final booking step. |
-| `CRM_API_KEY` / `CRM_WORKSPACE_ID` | 2 | HubSpot Contacts API v3 push. |
-| `ANALYTICS_PROVIDER_ID` | 3 | Plausible Analytics domain, gated on consent. |
-| `ERROR_MONITORING_DSN` | 3 | Sentry DSN (server, edge, and client). |
+| `NEXT_PUBLIC_SITE_URL` | Recommended | Canonical, Open Graph, and sitemap base URL. Code uses the existing canonical-site fallback when absent. |
+| `DATABASE_URL` | Required | PostgreSQL connection for submissions, bookings, consent, admins, and articles. Database-backed operations are unavailable when absent. |
+| `AUTH_SECRET` | Required for admin | Auth.js session signing. Admin authentication is unavailable when absent. |
+| `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS` | Optional pair | Resend notifications. Both absent skips email; partial configuration is an error. Stored submissions remain intact. |
+| `EMAIL_NOTIFICATION_RECIPIENT` | Optional, server-only | Overrides the internal Resend notification recipient when it is a single valid email address. Unset or blank preserves the public contact address; an invalid value fails as misconfigured without calling Resend. |
+| `CAPTCHA_SITE_KEY` + `CAPTCHA_SECRET` | Required pair in production | Turnstile. Production fails closed if absent or invalid. Local/test fail open only when both are absent. |
+| `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` | Required pair in production | Rate limiting. Production fails closed if absent or unavailable. Local/test fail open only when both are absent. |
+| `TRUSTED_PROXY_IP_HEADER` | Owner decision | Exact single-value header overwritten by the approved proxy. Unset or invalid produces the safe `unknown` identity. |
+| `NEXT_PUBLIC_CALENDLY_URL` | Required for booking | Calendly embed URL. Booking scheduling remains unavailable when absent. |
+| `CALENDLY_WEBHOOK_SIGNING_KEY` + `CALENDLY_WEBHOOK_USER_URI` | Required pair for booking | Signature key and exact account URI. Missing either keeps scheduling unavailable and confirmation impossible. |
+| `CRM_API_KEY` | Optional | HubSpot contact upsert. When absent, the database write remains successful and `crmSyncedAt` remains null. |
+| `CRM_WORKSPACE_ID` | Optional | Additional HubSpot workspace property, only sent when configured. |
+| `ANALYTICS_PROVIDER_ID` | Optional | Plausible domain. The script is absent unless configured and analytics consent is active. |
+| `ERROR_MONITORING_DSN` | Optional | Sentry DSN for server, edge, and client monitoring. Sentry does not initialize when absent. |
 
 `ADMIN_EMAIL` / `ADMIN_PASSWORD` are deliberately **not** in `.env.example`:
 they're optional one-off inputs to `scripts/create-admin.ts` (CLI args or an
@@ -31,27 +32,55 @@ interactive prompt work too), not app runtime config, and persisting an
 admin password in a file is exactly the anti-pattern this project avoids.
 See the script's own header comment.
 
-## Current status (after Backend Phase 3)
+`NODE_ENV`, `NEXT_RUNTIME`, and `VERCEL_ENV` are read by framework/runtime code
+but are platform-controlled, not owner-supplied application settings. They are
+therefore intentionally absent from `.env.example`. `VERCEL_ENV=preview`
+causes every Preview response to include `X-Robots-Tag: noindex, nofollow`;
+production does not receive that preview-only header.
+
+## Current implementation status
 
 | Integration | Status | Notes |
 |---|---|---|
 | Contact form persistence | **Real** | `ContactSubmission` in Postgres via Prisma. Writes first; a failed/unconfigured email or CRM push never loses the submission. |
-| Booking request persistence | **Real** | `BookingRequest` in Postgres, written as `CONFIRMED` once Calendly itself has scheduled the meeting (see Calendar row below); `calendarBookingUid` is the real Calendly event URI. |
-| Email notifications | **Real, optional** | Resend, gated on `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS`. Unset: submissions still persist, `emailSentAt` stays null. |
+| Booking request persistence | **Real** | A `PENDING` row is created before the Calendly embed is revealed. Only a verified Calendly webhook can change it to `CONFIRMED`; `calendarBookingUid` is the signed payload's event URI. |
+| Email notifications | **Real, optional** | Resend, gated on `EMAIL_PROVIDER_API_KEY` + `EMAIL_FROM_ADDRESS`. Unset: submissions still persist, `emailSentAt` stays null, and the operation state is `DISABLED`. |
 | Honeypot spam protection | **Real** | Hidden field on both public forms; a filled value is silently treated as success. |
-| Turnstile spam protection | **Real, optional** | Gated on `CAPTCHA_SITE_KEY` (client) / `CAPTCHA_SECRET` (server). Unset: widget doesn't render, server verification is skipped, honeypot + rate limiting still apply. |
-| Rate limiting | **Real, optional** | Upstash sliding window (5 / 10 min) on both public forms and admin login, gated on `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`. Unset: skipped (logged once), not enforced. |
-| Admin authentication | **Real** | Auth.js v5, Credentials provider, bcrypt, JWT sessions, session-signed with `AUTH_SECRET`. `/admin` gated by a server-side session check in `src/app/admin/(dashboard)/layout.tsx`. |
-| Admin submissions list | **Real** | `/admin` lists `ContactSubmission` and `BookingRequest` rows directly from Postgres, including calendar confirmation UID. |
-| Calendar scheduling | **Real** | Calendly inline embed (`src/components/booking/CalendlyEmbed.tsx`), gated on `NEXT_PUBLIC_CALENDLY_URL`. Replaces the original Cal.com-API design (Phase 2): Calendly itself owns availability, conflict handling, and the actual confirmation email/invite, reported back to the wizard via postMessage (`calendly.date_and_time_selected`, `calendly.event_scheduled`). Unset: the final step shows an honest "not connected yet" notice and no booking can be completed, rather than a broken embed. |
-| CRM push | **Real, optional, verified end-to-end against the live AXIEONEX HubSpot account** | HubSpot Contacts API v3 (`src/lib/crm.ts`), gated on `CRM_API_KEY`. Confirmed by submitting a real request through the live site and observing `crmSyncedAt` get set. This required creating two custom contact properties in the HubSpot account itself (`axieonex_source`, `axieonex_message`) that the code writes to but that don't exist by default in a fresh HubSpot account; the Private App also needed the `crm.schemas.contacts.write` scope (in addition to `crm.objects.contacts.write`) to create them. `CRM_WORKSPACE_ID` is optional; if it's ever set, a third custom property (`axieonex_workspace_id`) will need to be created the same way, since it isn't yet. |
+| Turnstile spam protection | **Real** | Site key and secret are an atomic pair. Half-configuration always fails; production fails closed when both are absent. Local development and tests fail open only when both are absent. |
+| Rate limiting | **Real** | Upstash URL and token are an atomic pair. Production fails closed when absent or unavailable; local development and tests fail open only when both are absent. |
+| Admin authentication | **Real** | Auth.js Credentials, bcrypt, signed JWTs with an explicit 8-hour lifetime, active-row revalidation, and an HttpOnly SameSite=Lax session cookie that is Secure in production. |
+| Admin data management | **Real** | `/admin` provides independent 20-record server-side pages for contacts and bookings. Authenticated detail routes expose safe operational fields, UTC creation/update times, and persisted provider states while excluding IP addresses and raw correlation identifiers. Articles show draft/published state plus creation/update times. |
+| Calendar scheduling | **Real** | Calendly inline embed (`src/components/booking/CalendlyEmbed.tsx`), gated on the public URL and both server-only webhook variables. Calendly owns availability and sends a signed `invitee.created` webhook. Browser `postMessage` events only trigger a status read and are never trusted as confirmation. |
+| CRM push | **Real, optional** | HubSpot Contacts API v3 email-keyed batch upsert updates or creates without duplicate contacts; only a validated successful response sets `crmSyncedAt` and `SUCCEEDED`. Missing configuration is recorded as `DISABLED`, while a configured unsuccessful operation is `FAILED`. |
 | Article content | **Real** | `Article` model in Postgres, admin CRUD at `/admin/articles`. `/insights` and `/insights/[slug]` read published rows only (`src/lib/articles.ts`); `src/content/articles.ts` is now only the one-time seed source (`prisma/seed.ts`), not read by the live app. |
-| Cookie consent persistence | **Real** | `ConsentRecord` in Postgres (`src/app/api/consent/route.ts`), correlated to the visitor via an httpOnly cookie, not a third-party tracker. `localStorage` (`src/lib/consent.ts`) is a fast synchronous read cache in front of it, reconciled on load by `ConsentSync`; a failed server write is logged but never rolls back the visitor's in-browser choice. |
+| Cookie consent persistence | **Real** | `ConsentRecord` in Postgres (`src/app/api/consent/route.ts`), correlated to the visitor via an httpOnly cookie, not a third-party tracker. `localStorage` (`src/lib/consent.ts`) is a fast synchronous read cache in front of it. Failed writes retain the browser choice with a non-sensitive pending flag; `ConsentSync` uses timestamps to make one bounded retry or adopt a newer server record. POST writes require same-origin JSON and a separate `axieonex:consent` rate-limit namespace. |
 | Analytics | **Real, optional** | Plausible Analytics (`src/components/analytics/AnalyticsScript.tsx`), gated on `ANALYTICS_PROVIDER_ID` **and** live analytics consent (re-checked on every consent change, not just at page load). Unset, or consent not granted: the script never renders, not even a disabled/stubbed tag. |
 | Error monitoring | **Real, optional** | Sentry (`@sentry/nextjs`), gated on `ERROR_MONITORING_DSN`. Covers server, edge, and client runtimes (`sentry.server.config.ts`, `sentry.edge.config.ts`, `src/instrumentation-client.ts`) plus root-layout render crashes (`src/app/global-error.tsx`). Unset: `Sentry.init()` is never called anywhere, verified by a full production build with the var absent. |
 | SEO structured data | **Real** | Organization schema on `/`, Service schema on all 7 `/services/[slug]` pages, Article schema on `/insights/[slug]` (`src/lib/structuredData.ts`). Article schema uses the byline already rendered on every article page ("Axieonex editorial team", `ArticleTemplate.tsx`) as an Organization-type `author`, and the real `Article.publishedAt` column (now exposed through `src/lib/articles.ts`) as `datePublished`; both are real, already-approved facts, not invented ones. |
 
 ## Architecture notes for future phases
+
+- **Provider failure policy**: HubSpot and Resend are secondary to the
+  durable database write, so their absence, timeout, malformed response, or
+  non-2xx response never loses a stored submission. Success timestamps remain
+  null unless success is proven. A separate safe state records `NOT_ATTEMPTED`,
+  `DISABLED`, `SUCCEEDED`, `FAILED`, or `LEGACY_UNKNOWN`; it does not store
+  provider response bodies or failure details. Calls have a five-second
+  deadline and logs exclude payloads, credentials, and provider response
+  bodies. Turnstile and Upstash fail closed in production;
+  development/tests fail open only when fully unconfigured.
+- **Proxy identity boundary**: no forwarding header is trusted by default.
+  `TRUSTED_PROXY_IP_HEADER` must name a single-value header that the selected
+  proxy removes from inbound traffic and overwrites. Lists and malformed
+  addresses resolve to `unknown`, grouping callers instead of bypassing limits.
+- **Security headers**: CSP, nosniff, strict referrer policy, restrictive
+  permissions policy, and `frame-ancestors 'none'` apply globally. HSTS is
+  emitted only for production HTTPS configuration. CSP origins are limited to
+  those required by Calendly, Turnstile, Plausible, and configured Sentry.
+- **Dependency audit residuals**: Prisma 7.10.0 is the latest stable release.
+  Its tooling graph includes vulnerable `deepmerge-ts` 7.1.5 and `mysql2`
+  3.15.3. This PostgreSQL app never imports the MySQL driver; deepmerge is in
+  Prisma configuration tooling, not request handling. No override masks them.
 
 - **Prisma 7 driver adapters**: this schema has no `datasource.url`. Prisma
   7 moved connection config to `prisma.config.ts` (CLI) and a
@@ -77,10 +106,9 @@ See the script's own header comment.
   the originally seeded content happened to use. `InsightsInteractive`
   derives its filter chips from whatever categories are actually present in
   the data, not a hardcoded list.
-- Both `src/lib/calendar/calcom.ts` and `src/lib/crm.ts` are isolated
-  single-file provider modules specifically so swapping providers later
-  (Google Calendar instead of Cal.com, a different CRM) means replacing one
-  file, not hunting through `contactProvider.ts`/`bookingProvider.ts`.
+- Calendly integration is isolated in `CalendlyEmbed`, `calendlyWebhook`, and
+  the webhook route. HubSpot remains isolated in `src/lib/crm.ts` so provider
+  changes do not spread through persistence modules.
 - `@sentry/nextjs` v10 deprecated `withSentryConfig` on its main entry point;
   it must be imported from `@sentry/nextjs/config` (`next.config.ts`). The
   client-side DSN is inlined via `next.config.ts`'s `env` map so
@@ -88,15 +116,6 @@ See the script's own header comment.
   var as the server/edge configs, instead of requiring a duplicate
   `NEXT_PUBLIC_`-prefixed copy; a Sentry DSN is a public identifier by
   design, so shipping it to the browser is the intended, documented usage.
-- **Cal.com → Calendly**: Phase 2 originally implemented a Cal.com API v2
-  integration (`src/lib/calendar/calcom.ts`) for calendar scheduling, but it
-  was never exercised against a real account. It's since been replaced
-  entirely (not kept alongside) with a real Calendly inline embed once a
-  real Calendly link was provided, since Calendly was the actual provider in
-  use. The old Cal.com module, its mocked-availability fallback
-  (`src/lib/availability.ts`), and `SlotSelector.tsx` were deleted rather
-  than left as unused dead code; revisit `git log` on this file before
-  Phase 2's tag if Cal.com is ever reconsidered.
 - The Book Strategy Call wizard gates the Calendly embed itself behind
   consent + honeypot + Turnstile + rate-limit checks
   (`verifyBookingGateAction` in `src/app/book-strategy-call/actions.ts`),
@@ -105,15 +124,17 @@ See the script's own header comment.
   the fact): revealing a live scheduling calendar is itself the sensitive
   action, since a bot that reaches it could spam real slots on the real
   calendar, not just waste a database row.
-- Because Calendly confirms bookings itself, `submitBookingAction` only runs
-  *after* `calendly.event_scheduled` fires and only records that outcome
-  for our own CRM/notification purposes. A failure in that write is logged
-  server-side but never shown to the visitor as "your call isn't booked":
-  it is, on Calendly's side, regardless of what happens in our own system
-  afterward.
+- Create a user-scoped Calendly webhook subscription for `invitee.created`,
+  supplying `CALENDLY_WEBHOOK_SIGNING_KEY` as the subscription signing key.
+  Set `CALENDLY_WEBHOOK_USER_URI` to the exact user URI Calendly returns as
+  `created_by`. The webhook endpoint is `/api/webhooks/calendly`. The server
+  correlates the signed payload through the opaque `utm_content` value added
+  to the embed and treats repeat or concurrent deliveries idempotently.
 - Consent is intentionally two-layer: `localStorage` stays the synchronous
   source every consent-gated script checks (so `AnalyticsScript` never
   blocks on a network round trip), while Postgres via `/api/consent` is the
   durable, auditable copy. `writeConsent()` updates the local cache before
-  attempting the server write for exactly this reason; don't reorder it to
-  await the network call first.
+  attempting the server write, marks unconfirmed writes pending, and only
+  clears that state after a validated success response. Mount reconciliation
+  performs one GET and at most one retry, preferring whichever valid record has
+  the newer timestamp.

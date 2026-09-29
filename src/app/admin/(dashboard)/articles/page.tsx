@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { getAdminArticles } from "@/lib/adminData";
+import { formatAdminDate } from "@/lib/adminPresentation";
 import { deleteArticleAction, togglePublishAction } from "./actions";
 
 export const metadata: Metadata = {
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminArticlesPage() {
-  const articles = await prisma.article.findMany({ orderBy: { createdAt: "desc" } });
+  const articles = await getAdminArticles();
 
   return (
     <div>
@@ -24,20 +25,22 @@ export default async function AdminArticlesPage() {
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-ax-border-subtle">
-        <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+        <table className="w-full min-w-[1000px] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-ax-border-subtle bg-white/[0.02]">
               <th className="px-4 py-3 font-semibold">Title</th>
               <th className="px-4 py-3 font-semibold">Slug</th>
               <th className="px-4 py-3 font-semibold">Category</th>
               <th className="px-4 py-3 font-semibold">Status</th>
+              <th className="px-4 py-3 font-semibold">Created</th>
+              <th className="px-4 py-3 font-semibold">Updated</th>
               <th className="px-4 py-3 font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>
             {articles.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-ax-text-muted">
+                <td colSpan={7} className="px-4 py-6 text-center text-ax-text-muted">
                   No articles yet.
                 </td>
               </tr>
@@ -48,6 +51,8 @@ export default async function AdminArticlesPage() {
                   <td className="px-4 py-3 text-ax-text-muted">{article.slug}</td>
                   <td className="px-4 py-3">{article.category}</td>
                   <td className="px-4 py-3">{article.published ? "Published" : "Draft"}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-ax-text-muted">{formatAdminDate(article.createdAt)}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-ax-text-muted">{formatAdminDate(article.updatedAt)}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-3">
                       <Link href={`/admin/articles/${article.id}`} className="text-ax-cyan-alt hover:underline">

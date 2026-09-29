@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { requireAdmin } from "@/lib/adminAuthorization";
 import { LoginForm } from "./LoginForm";
 
 export const metadata: Metadata = {
@@ -9,8 +9,17 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLoginPage() {
-  const session = await auth();
-  if (session) redirect("/admin");
+  let activeAdmin = false;
+  try {
+    await requireAdmin();
+    activeAdmin = true;
+  } catch {
+    // A missing, expired, deleted, or inactive identity must be allowed to
+    // sign in again. Redirecting based only on the JWT creates a loop with
+    // the protected dashboard, which correctly revalidates the database row.
+  }
+  // redirect() throws, so keep it outside the authorization try/catch.
+  if (activeAdmin) redirect("/admin");
 
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center bg-ax-ink-1 px-5 py-24 text-ax-text-primary">

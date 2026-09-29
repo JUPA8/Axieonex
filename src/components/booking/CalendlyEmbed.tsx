@@ -27,12 +27,14 @@ export function CalendlyEmbed({
   url,
   name,
   email,
+  correlationId,
   onDateTimeSelected,
   onScheduled,
 }: {
   url?: string;
   name: string;
   email: string;
+  correlationId: string;
   onDateTimeSelected: (iso: string) => void;
   onScheduled: (eventUri: string, inviteeUri: string) => void;
 }) {
@@ -70,12 +72,17 @@ export function CalendlyEmbed({
     );
   }
 
-  const embedUrl = `${url}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&hide_gdpr_banner=1`;
+  const embedUrl = new URL(url);
+  embedUrl.searchParams.set("name", name);
+  embedUrl.searchParams.set("email", email);
+  embedUrl.searchParams.set("hide_gdpr_banner", "1");
+  embedUrl.searchParams.set("utm_source", "axieonex");
+  embedUrl.searchParams.set("utm_content", correlationId);
 
   return (
     <>
       <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="afterInteractive" />
-      <div className="calendly-inline-widget" data-url={embedUrl} style={{ minWidth: "280px", height: "700px" }} />
+      <div className="calendly-inline-widget" data-url={embedUrl.toString()} style={{ minWidth: "280px", height: "700px" }} />
     </>
   );
 }

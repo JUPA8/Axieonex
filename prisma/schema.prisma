@@ -1,9 +1,7 @@
 // AXIEONEX backend data model.
 //
-// Phase 1 (foundation): Admin, ContactSubmission, BookingRequest.
-// Phase 2 (this pass): Article (DB-backed Insights content), plus
-// BookingRequest.calendarBookingUid and the *SyncedAt columns going live.
-// No consent-platform/analytics wiring yet (Phase 3).
+// Admin, submission, booking, article, and consent persistence. The migration
+// history is the source of truth for when each capability was introduced.
 
 generator client {
   provider = "prisma-client-js"
@@ -23,6 +21,7 @@ model Admin {
   email        String    @unique
   passwordHash String
   name         String?
+  active       Boolean   @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   lastLoginAt  DateTime?
@@ -39,18 +38,23 @@ model ContactSubmission {
   company   String?
   message   String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   /// IP address at submission time, used only for rate-limiting/abuse review.
   ipAddress String?
 
-  /// Set once a Resend notification email is actually sent. Null means no
-  /// provider was configured (EMAIL_PROVIDER_API_KEY unset) or the send
-  /// attempt failed, the submission itself is never lost either way.
-  emailSentAt DateTime?
+  /// Set once a Resend notification email is actually sent. Use emailState to
+  /// distinguish disabled, failed, not-attempted, and legacy outcomes when
+  /// this timestamp is null.
+  emailSentAt         DateTime?
+  emailState          ProviderOperationState @default(NOT_ATTEMPTED)
+  emailStateUpdatedAt DateTime?
 
-  /// Phase 2 seam: set once this record has been pushed to the CRM. Null
-  /// until CRM_API_KEY/CRM_WORKSPACE_ID are configured and wired up.
-  crmSyncedAt DateTime?
+  /// Set once this record has been pushed to the CRM. Use crmState to
+  /// distinguish all non-success outcomes when this timestamp is null.
+  crmSyncedAt       DateTime?
+  crmState          ProviderOperationState @default(NOT_ATTEMPTED)
+  crmStateUpdatedAt DateTime?
 
   @@map("contact_submissions")
 }
@@ -62,6 +66,17 @@ enum BookingStatus {
   CONFIRMED
   /// Phase 2: the requested slot could not be honored.
   CANCELLED
+}
+
+/// Durable, non-secret outcome of an optional provider operation. Historical
+/// rows without enough evidence are LEGACY_UNKNOWN rather than inferred as a
+/// failure. Provider credentials, responses, and error bodies are never stored.
+enum ProviderOperationState {
+  NOT_ATTEMPTED
+  DISABLED
+  SUCCEEDED
+  FAILED
+  LEGACY_UNKNOWN
 }
 
 /// One submission of the /book-strategy-call wizard.
@@ -88,18 +103,32 @@ model BookingRequest {
   slotId    String
   slotLabel String
 
-  /// Set once a real calendar provider confirms the booking. Null for
-  /// mocked-availability requests and for any request made before a
-  /// provider was configured.
+  /// Set only by the verified Calendly webhook after Calendly confirms the
+  /// booking. Client-supplied embed events are never trusted as confirmation.
   calendarBookingUid String?
+
+  /// Opaque server-generated value passed through Calendly's utm_content and
+  /// used to correlate a signed webhook to this pending request.
+  calendarCorrelationId String? @unique
+
+  /// Calendly invitee URI. This is the provider delivery id and its unique
+  /// constraint makes duplicate and concurrent webhook delivery idempotent.
+  calendarInviteeUid String? @unique
+
+  confirmedAt DateTime?
 
   status    BookingStatus @default(PENDING)
   createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   ipAddress String?
 
-  emailSentAt DateTime?
-  crmSyncedAt DateTime?
+  emailSentAt         DateTime?
+  emailState          ProviderOperationState @default(NOT_ATTEMPTED)
+  emailStateUpdatedAt DateTime?
+  crmSyncedAt         DateTime?
+  crmState            ProviderOperationState @default(NOT_ATTEMPTED)
+  crmStateUpdatedAt   DateTime?
 
   @@map("booking_requests")
 }
@@ -108,20 +137,20 @@ model BookingRequest {
 /// content (src/content/articles.ts) as of Phase 2, the Insights hub and
 /// article routes now read published rows from here.
 model Article {
-  id        String   @id @default(cuid())
-  slug      String   @unique
-  title     String
-  category  String
+  id       String @id @default(cuid())
+  slug     String @unique
+  title    String
+  category String
   /// Hex color used for the article's accent border on cards and the
   /// article page itself, matching the approved design's per-category
   /// color coding.
-  color     String
-  intro     String
-  h2a       String
-  bodyA     String
-  h2b       String
-  bodyB     String
-  closing   String
+  color    String
+  intro    String
+  h2a      String
+  bodyA    String
+  h2b      String
+  bodyB    String
+  closing  String
 
   /// Drafts (published: false) are visible in /admin but never on the
   /// public site.

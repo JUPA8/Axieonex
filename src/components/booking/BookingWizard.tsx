@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { submitBookingAction, verifyBookingGateAction } from "@/app/book-strategy-call/actions";
+import { cloneElement, useEffect, useRef, useState, type ChangeEvent, type ReactElement } from "react";
+import { getBookingStatusAction, verifyBookingGateAction } from "@/app/book-strategy-call/actions";
 import { BookingIntro } from "@/components/booking/BookingIntro";
 import { CalendlyEmbed } from "@/components/booking/CalendlyEmbed";
 import { ReviewStep } from "@/components/booking/ReviewStep";
@@ -13,7 +13,7 @@ import { CONTACT_EMAIL } from "@/lib/site";
 import { EMPTY_BOOKING_DATA, type BookingData, type BookingFieldErrors } from "@/types/booking";
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5;
-type SubmitPhase = "idle" | "gate_checking" | "scheduling" | "finalizing" | "success" | "error" | "rate_limited";
+type SubmitPhase = "idle" | "gate_checking" | "scheduling" | "finalizing" | "pending_confirmation" | "success" | "error" | "rate_limited" | "unavailable";
 
 function formatCalendlyTime(iso: string): string {
   try {
@@ -54,16 +54,20 @@ function Field({
   id: string;
   label: string;
   error?: string;
-  children: React.ReactNode;
+  children: ReactElement<{ "aria-invalid"?: boolean; "aria-describedby"?: string }>;
 }) {
+  const errorId = `booking-${id}-error`;
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={id} className="text-[13px] text-ax-text-muted">
         {label}
       </label>
-      {children}
+      {cloneElement(children, {
+        "aria-invalid": error ? true : undefined,
+        "aria-describedby": error ? errorId : undefined,
+      })}
       {error && (
-        <p id={`${id}-error`} className="text-[12.5px] text-ax-error">
+        <p id={errorId} className="text-[12.5px] text-ax-error">
           {error}
         </p>
       )}
@@ -79,6 +83,7 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
   const [data, setData] = useState<BookingData>(EMPTY_BOOKING_DATA);
   const [errors, setErrors] = useState<BookingFieldErrors>({});
   const [calendlySlotIso, setCalendlySlotIso] = useState<string | null>(null);
+  const [correlationId, setCorrelationId] = useState<string | null>(null);
   const [phase, setPhase] = useState<SubmitPhase>("idle");
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -92,6 +97,11 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
     setData((prev) => ({ ...prev, [key]: value }));
   }
 
+  function focusFirstInvalidField(stepErrors: BookingFieldErrors) {
+    const firstInvalid = Object.keys(stepErrors)[0];
+    if (firstInvalid) document.getElementById(firstInvalid === "consent" ? "booking-consent" : firstInvalid)?.focus();
+  }
+
   function goNext() {
     let stepErrors: BookingFieldErrors = {};
     if (step === 1) stepErrors = validateStep1(data);
@@ -99,7 +109,10 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
     if (step === 3) stepErrors = validateStep3(data);
 
     setErrors(stepErrors);
-    if (Object.keys(stepErrors).length > 0) return;
+    if (Object.keys(stepErrors).length > 0) {
+      focusFirstInvalidField(stepErrors);
+      return;
+    }
     setStep((s) => Math.min(5, s + 1) as Step);
   }
 
@@ -117,11 +130,15 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
   async function handleContinueToScheduling() {
     const consentErrors = validateStep5(data);
     setErrors(consentErrors);
-    if (Object.keys(consentErrors).length > 0) return;
+    if (Object.keys(consentErrors).length > 0) {
+      focusFirstInvalidField(consentErrors);
+      return;
+    }
 
     setPhase("gate_checking");
     const result = await verifyBookingGateAction(data, honeypot, turnstileToken);
     if (result.status === "ok") {
+      setCorrelationId(result.correlationId);
       setPhase("idle");
       setStep(5);
     } else if (result.status === "spam") {
@@ -131,8 +148,10 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
       setPhase("success");
     } else if (result.status === "rate_limited") {
       setPhase("rate_limited");
-    } else if (result.status === "error") {
+    } else if (result.status === "error" || result.status === "invalid") {
       setPhase("error");
+    } else if (result.status === "unavailable") {
+      setPhase("unavailable");
     } else {
       setPhase("idle");
     }
@@ -144,14 +163,13 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
    * own record-keeping write below succeeds, since a failure there doesn't
    * change the fact a real Calendly invite was just sent.
    */
-  async function handleCalendlyScheduled(eventUri: string) {
+  async function refreshBookingStatus() {
+    if (!correlationId) return;
     setPhase("finalizing");
-    const label = calendlySlotIso ? formatCalendlyTime(calendlySlotIso) : "your selected time";
-    const result = await submitBookingAction(data, calendlySlotIso ?? eventUri, label, eventUri);
-    if (result.status !== "success") {
-      console.error("[BookingWizard] Calendly confirmed the meeting, but our own record-keeping write failed:", result.status);
-    }
-    setPhase("success");
+    const result = await getBookingStatusAction(correlationId);
+    if (result.status === "confirmed") setPhase("success");
+    else if (result.status === "pending") setPhase("pending_confirmation");
+    else setPhase("unavailable");
   }
 
   function handleRetry() {
@@ -193,6 +211,32 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
         >
           Back
         </button>
+      </div>
+    );
+  }
+
+  if (phase === "pending_confirmation") {
+    return (
+      <div role="status" aria-live="polite" className="text-center">
+        <h1 className="mb-4 text-2xl font-bold">Calendly is confirming your call.</h1>
+        <p className="mx-auto mb-8 max-w-[52ch] text-[15px] leading-relaxed text-ax-text-muted">
+          Calendly accepted the booking. We are waiting for its signed confirmation before marking it confirmed here.
+        </p>
+        <button type="button" onClick={() => void refreshBookingStatus()} className="min-h-11 rounded-sm border border-white/15 px-7 py-3.5 text-sm font-semibold text-ax-text-primary">
+          Check confirmation
+        </button>
+      </div>
+    );
+  }
+
+  if (phase === "unavailable") {
+    return (
+      <div role="alert" className="text-center">
+        <h1 className="mb-4 text-2xl font-bold">Scheduling is temporarily unavailable.</h1>
+        <p className="mx-auto mb-8 max-w-[52ch] text-[15px] leading-relaxed text-ax-text-muted">
+          Please email us at <a href={`mailto:${CONTACT_EMAIL}`} className="underline">{CONTACT_EMAIL}</a> and we will arrange your call.
+        </p>
+        <button type="button" onClick={handleRetry} className="min-h-11 rounded-sm border border-white/15 px-7 py-3.5 text-sm font-semibold text-ax-text-primary">Back</button>
       </div>
     );
   }
@@ -333,15 +377,16 @@ export function BookingWizard({ turnstileSiteKey, calendlyUrl }: { turnstileSite
           {phase === "finalizing" ? (
             <p className="py-16 text-center text-sm text-ax-text-muted">Finalizing your booking...</p>
           ) : (
-            <CalendlyEmbed
+            correlationId ? <CalendlyEmbed
               url={calendlyUrl}
               name={data.name}
               email={data.email}
+              correlationId={correlationId}
               onDateTimeSelected={setCalendlySlotIso}
-              onScheduled={(eventUri) => {
-                void handleCalendlyScheduled(eventUri);
+              onScheduled={() => {
+                void refreshBookingStatus();
               }}
-            />
+            /> : null
           )}
         </div>
       )}

@@ -1,53 +1,90 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { PROVIDER_TIMEOUT_MS, ProviderTimeoutError, withTimeout } from "@/lib/security/providerRequest";
 
-export type RateLimitResult = { limited: false } | { limited: true; retryAfterSeconds: number };
+export type RateLimitResult =
+  | { status: "allowed" }
+  | { status: "limited"; retryAfterSeconds: number }
+  | { status: "unavailable"; reason: "not_configured" | "misconfigured" | "timeout" | "provider_error" };
 
-let limiter: Ratelimit | null | undefined;
+type RateLimitUnavailableReason = Extract<RateLimitResult, { status: "unavailable" }>["reason"];
 
-function getLimiter(): Ratelimit | null {
-  if (limiter !== undefined) return limiter;
+type RateLimitNamespace = "formsubmit" | "consent";
 
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+const limiterConfiguration: Record<RateLimitNamespace, { prefix: string; requests: number }> = {
+  formsubmit: { prefix: "axieonex:formsubmit", requests: 5 },
+  consent: { prefix: "axieonex:consent", requests: 10 },
+};
+
+const limiters: Partial<Record<RateLimitNamespace, Ratelimit | null>> = {};
+let configurationError: "not_configured" | "misconfigured" | null = null;
+
+function getLimiter(namespace: RateLimitNamespace): Ratelimit | null {
+  if (namespace in limiters) return limiters[namespace] ?? null;
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+  if (!url && !token) {
+    configurationError = "not_configured";
+    limiters[namespace] = null;
+    return null;
+  }
   if (!url || !token) {
-    limiter = null;
-    return limiter;
+    configurationError = "misconfigured";
+    limiters[namespace] = null;
+    return null;
   }
 
-  limiter = new Ratelimit({
-    redis: new Redis({ url, token }),
-    limiter: Ratelimit.slidingWindow(5, "10 m"),
-    prefix: "axieonex:formsubmit",
+  const config = limiterConfiguration[namespace];
+  const limiter = new Ratelimit({
+    redis: new Redis({ url, token, signal: () => AbortSignal.timeout(PROVIDER_TIMEOUT_MS) }),
+    limiter: Ratelimit.slidingWindow(config.requests, "10 m"),
+    prefix: config.prefix,
   });
+  limiters[namespace] = limiter;
   return limiter;
 }
 
-/**
- * Sliding-window rate limit (5 submissions per 10 minutes) keyed by a caller
- * identifier, typically the requester's IP. If Upstash isn't configured
- * (UPSTASH_REDIS_REST_URL/TOKEN unset), this logs once and always allows the
- * request through rather than blocking every submission for lack of a
- * provider.
- */
-export async function checkRateLimit(key: string): Promise<RateLimitResult> {
-  const client = getLimiter();
-  if (!client) {
-    return { limited: false };
+async function checkNamespacedRateLimit(namespace: RateLimitNamespace, key: string): Promise<RateLimitResult> {
+  const client = getLimiter(namespace);
+  if (!client) return { status: "unavailable", reason: configurationError ?? "not_configured" };
+  try {
+    const result = await withTimeout(client.limit(key));
+    if (typeof result.success !== "boolean" || typeof result.reset !== "number") {
+      console.error("[rateLimit] Upstash returned an invalid response.");
+      return { status: "unavailable", reason: "provider_error" };
+    }
+    const { success, reset } = result;
+    if (success) return { status: "allowed" };
+    return { status: "limited", retryAfterSeconds: Math.max(1, Math.ceil((reset - Date.now()) / 1000)) };
+  } catch (error) {
+    const reason = error instanceof ProviderTimeoutError || (error instanceof Error && error.name === "TimeoutError") ? "timeout" : "provider_error";
+    console.error(`[rateLimit] Upstash request failed (${reason}).`);
+    return { status: "unavailable", reason };
   }
+}
 
-  const { success, reset } = await client.limit(key);
-  if (success) return { limited: false };
-  return { limited: true, retryAfterSeconds: Math.max(1, Math.ceil((reset - Date.now()) / 1000)) };
+export async function checkRateLimit(key: string): Promise<RateLimitResult> {
+  return checkNamespacedRateLimit("formsubmit", key);
+}
+
+export async function checkConsentRateLimit(key: string): Promise<RateLimitResult> {
+  return checkNamespacedRateLimit("consent", key);
 }
 
 let warnedOnce = false;
 
-/** Logs a single one-time warning when rate limiting is running unconfigured. */
 export function warnIfRateLimitUnconfigured() {
   if (warnedOnce) return;
-  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+  if (!url || !token) {
     warnedOnce = true;
-    console.warn("[rateLimit] UPSTASH_REDIS_REST_URL/TOKEN not set, public forms are not rate-limited.");
+    console.warn("[rateLimit] Upstash rate limiting is unavailable; production requests fail closed.");
   }
+}
+
+export function shouldFailClosedForAntiAbuse(reason: RateLimitUnavailableReason = "not_configured"): boolean {
+  const vercelEnvironment = process.env.VERCEL_ENV;
+  const deployedOnVercel = vercelEnvironment === "preview" || vercelEnvironment === "production";
+  return reason !== "not_configured" || process.env.NODE_ENV === "production" || deployedOnVercel;
 }

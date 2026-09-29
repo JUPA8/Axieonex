@@ -9,6 +9,7 @@ describe("verifyTurnstile", () => {
 
   it("reports not_configured when CAPTCHA_SECRET is unset, without making a network call", async () => {
     vi.stubEnv("CAPTCHA_SECRET", "");
+    vi.stubEnv("CAPTCHA_SITE_KEY", "");
     const fetchSpy = vi.fn();
     vi.stubGlobal("fetch", fetchSpy);
 
@@ -19,12 +20,14 @@ describe("verifyTurnstile", () => {
 
   it("fails when configured but no token was provided", async () => {
     vi.stubEnv("CAPTCHA_SECRET", "test-secret");
+    vi.stubEnv("CAPTCHA_SITE_KEY", "test-site-key");
     const result = await verifyTurnstile(null);
     expect(result).toEqual({ status: "failed", reason: "missing_token" });
   });
 
   it("verifies a token against Cloudflare's siteverify endpoint", async () => {
     vi.stubEnv("CAPTCHA_SECRET", "test-secret");
+    vi.stubEnv("CAPTCHA_SITE_KEY", "test-site-key");
     const fetchSpy = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ success: true }),
@@ -41,6 +44,7 @@ describe("verifyTurnstile", () => {
 
   it("reports the rejection reason when Cloudflare rejects the token", async () => {
     vi.stubEnv("CAPTCHA_SECRET", "test-secret");
+    vi.stubEnv("CAPTCHA_SITE_KEY", "test-site-key");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -50,17 +54,32 @@ describe("verifyTurnstile", () => {
     );
 
     const result = await verifyTurnstile("bad-token");
-    expect(result).toEqual({ status: "failed", reason: "invalid-input-response" });
+    expect(result).toEqual({ status: "failed", reason: "rejected" });
   });
 
   it("fails closed if the verification request itself errors", async () => {
     vi.stubEnv("CAPTCHA_SECRET", "test-secret");
+    vi.stubEnv("CAPTCHA_SITE_KEY", "test-site-key");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockRejectedValue(new Error("network down")),
     );
 
     const result = await verifyTurnstile("some-token");
-    expect(result).toEqual({ status: "failed", reason: "network down" });
+    expect(result).toEqual({ status: "failed", reason: "provider_error" });
+  });
+
+  it("rejects a half-configured site key/secret pair", async () => {
+    vi.stubEnv("CAPTCHA_SECRET", "test-secret");
+    vi.stubEnv("CAPTCHA_SITE_KEY", "");
+    await expect(verifyTurnstile("token")).resolves.toEqual({ status: "failed", reason: "misconfigured" });
+  });
+
+  it("rejects malformed and non-2xx provider responses", async () => {
+    vi.stubEnv("CAPTCHA_SECRET", "test-secret");
+    vi.stubEnv("CAPTCHA_SITE_KEY", "test-site-key");
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce({ ok: true, json: async () => ({ nope: true }) }).mockResolvedValueOnce({ ok: false, status: 500 }));
+    await expect(verifyTurnstile("token")).resolves.toEqual({ status: "failed", reason: "provider_error" });
+    await expect(verifyTurnstile("token")).resolves.toEqual({ status: "failed", reason: "provider_error" });
   });
 });

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { AssemblyHero } from "@/components/pricing/AssemblyHero";
 import { EngagementConfigurator } from "@/components/pricing/EngagementConfigurator";
 import { ComparisonTable } from "@/components/pricing/ComparisonTable";
@@ -6,15 +5,15 @@ import { FAQ } from "@/components/ui/FAQ";
 import { CtaSection } from "@/components/ui/CtaSection";
 import { PRICING_FAQ } from "@/content/pricing";
 import { SITE_URL } from "@/lib/site";
+import { buildPublicMetadata } from "@/lib/metadata";
 
 const CANONICAL = `${SITE_URL}/pricing`;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicMetadata({
   title: "AXIEONEX Pricing and Engagement Models",
   description: "Engagement structured to your market, no fixed price list.",
-  alternates: { canonical: CANONICAL },
-  openGraph: { title: "AXIEONEX Pricing and Engagement Models", description: "Engagement structured to your market, no fixed price list.", url: CANONICAL },
-};
+  canonical: CANONICAL,
+});
 
 export default function PricingPage() {
   return (

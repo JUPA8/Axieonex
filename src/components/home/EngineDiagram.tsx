@@ -181,7 +181,7 @@ export function EngineDiagram() {
                   active === i && "border-ax-violet",
                 )}
               >
-                <div className={cn("mb-2.5 font-display text-4xl font-extrabold text-[#3A3E52] transition-colors duration-400", active === i && "text-ax-violet")}>
+                <div aria-hidden="true" className={cn("mb-2.5 font-display text-4xl font-extrabold text-ax-text-muted transition-colors duration-400", active === i && "text-ax-violet")}>
                   {stage.n}
                 </div>
                 <h3 className="mb-2.5 text-2xl font-bold">{stage.title}</h3>

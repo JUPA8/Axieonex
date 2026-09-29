@@ -46,13 +46,13 @@ function buildCategories(analyticsConfigured: boolean): { key: ConsentCategory; 
 export function CookiePreferencesManager({ analyticsConfigured = false }: { analyticsConfigured?: boolean }) {
   const CATEGORIES = buildCategories(analyticsConfigured);
   const [prefs, setPrefs] = useState<ConsentState>(() => readConsent()?.categories ?? DEFAULT_CONSENT);
-  const [savedMessage, setSavedMessage] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<"saved" | "pending" | null>(null);
 
-  function persist(next: ConsentState) {
+  async function persist(next: ConsentState) {
     setPrefs(next);
-    writeConsent(next);
-    setSavedMessage(true);
-    window.setTimeout(() => setSavedMessage(false), 4000);
+    const record = await writeConsent(next);
+    setSaveMessage(record.pendingSync ? "pending" : "saved");
+    window.setTimeout(() => setSaveMessage(null), 4000);
   }
 
   function toggle(key: ConsentCategory, value: boolean) {
@@ -88,7 +88,11 @@ export function CookiePreferencesManager({ analyticsConfigured = false }: { anal
       </div>
 
       <div aria-live="polite" className="mt-6 min-h-6 text-sm text-ax-cyan-alt">
-        {savedMessage ? "Your preferences have been saved." : null}
+        {saveMessage === "saved"
+          ? "Your preferences have been saved."
+          : saveMessage === "pending"
+            ? "Your preferences are applied in this browser and will be saved when the service is available."
+            : null}
       </div>
 
       <div className="mt-4 flex flex-wrap gap-3">

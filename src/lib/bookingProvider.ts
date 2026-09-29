@@ -1,92 +1,133 @@
-import { prisma } from "@/lib/prisma";
+import "server-only";
+
+import { randomUUID } from "node:crypto";
 import { pushToCrm } from "@/lib/crm";
 import { sendNotificationEmail } from "@/lib/email";
+import { prisma } from "@/lib/prisma";
+import { providerStateFromResult } from "@/lib/providerState";
 import type { BookingData } from "@/types/booking";
 
-export type BookingSubmission = BookingData & {
-  slotId: string;
-  slotLabel: string;
-  calendarBookingUid: string;
-  ipAddress: string;
-};
+export type PendingBookingResult =
+  | { ok: true; correlationId: string }
+  | { ok: false; reason: "not_configured" };
 
-export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | "send_failed" };
-
-/**
- * Server-side persistence boundary for the Book Strategy Call wizard.
- *
- * By the time this runs, the visitor has already scheduled a real time slot
- * directly in the embedded Calendly widget
- * (src/components/booking/CalendlyEmbed.tsx), which is the actual source of
- * truth for the booking: calendarBookingUid is the real Calendly event URI
- * it reported back via postMessage. This function only durably records that
- * outcome for our own CRM/notification purposes; it never attempts or
- * reverses the booking itself, so a failure here must never be presented to
- * the visitor as "your call isn't booked" (it is, on Calendly's side
- * regardless of what happens here).
- */
-export async function submitBooking(payload: BookingSubmission): Promise<SendResult> {
-  let requestId: string;
+export async function createPendingBooking(data: BookingData & { ipAddress: string }): Promise<PendingBookingResult> {
+  const correlationId = `axieonex_${randomUUID()}`;
+  const { consent: _consent, ipAddress, ...bookingData } = data;
+  void _consent;
   try {
-    const request = await prisma.bookingRequest.create({
+    await prisma.bookingRequest.create({
       data: {
-        name: payload.name,
-        email: payload.email,
-        phone: payload.phone,
-        role: payload.role,
-        company: payload.company,
-        website: payload.website,
-        country: payload.country,
-        size: payload.size,
-        approach: payload.approach,
-        outcome: payload.outcome,
-        market: payload.market,
-        budget: payload.budget,
-        slotId: payload.slotId,
-        slotLabel: payload.slotLabel,
-        calendarBookingUid: payload.calendarBookingUid,
-        status: "CONFIRMED",
-        ipAddress: payload.ipAddress,
+        ...bookingData,
+        email: data.email.trim().toLowerCase(),
+        slotId: "pending-calendly-webhook",
+        slotLabel: "Pending Calendly confirmation",
+        calendarCorrelationId: correlationId,
+        status: "PENDING",
+        ipAddress,
       },
     });
-    requestId = request.id;
-  } catch (error) {
-    console.error("[bookingProvider] Failed to persist a Calendly-confirmed booking (the meeting is still real):", error);
+    return { ok: true, correlationId };
+  } catch {
+    console.error("[bookingProvider] Failed to persist pending booking.");
     return { ok: false, reason: "not_configured" };
+  }
+}
+
+export async function getBookingStatus(correlationId: string): Promise<"pending" | "confirmed" | "not_found"> {
+  const booking = await prisma.bookingRequest.findUnique({
+    where: { calendarCorrelationId: correlationId },
+    select: { status: true },
+  });
+  if (!booking) return "not_found";
+  return booking.status === "CONFIRMED" ? "confirmed" : "pending";
+}
+
+export type ConfirmBookingInput = {
+  correlationId: string;
+  eventUri: string;
+  inviteeUri: string;
+  inviteeEmail: string;
+  startTime?: string;
+};
+
+export type ConfirmBookingResult = "confirmed" | "duplicate" | "not_found" | "conflict";
+
+export async function confirmPendingBooking(input: ConfirmBookingInput): Promise<ConfirmBookingResult> {
+  const booking = await prisma.bookingRequest.findUnique({ where: { calendarCorrelationId: input.correlationId } });
+  if (!booking) return "not_found";
+  if (booking.calendarInviteeUid === input.inviteeUri && booking.status === "CONFIRMED") return "duplicate";
+  if (booking.email.trim().toLowerCase() !== input.inviteeEmail.trim().toLowerCase()) return "conflict";
+
+  let updated;
+  try {
+    updated = await prisma.bookingRequest.updateMany({
+      where: { id: booking.id, status: "PENDING", calendarInviteeUid: null },
+      data: {
+        status: "CONFIRMED",
+        calendarBookingUid: input.eventUri,
+        calendarInviteeUid: input.inviteeUri,
+        confirmedAt: new Date(),
+        ...(input.startTime
+          ? { slotId: input.startTime, slotLabel: input.startTime }
+          : {}),
+      },
+    });
+  } catch (error) {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "P2002") return "duplicate";
+    throw error;
+  }
+
+  if (updated.count === 0) {
+    const current = await prisma.bookingRequest.findUnique({ where: { id: booking.id } });
+    return current?.calendarInviteeUid === input.inviteeUri && current.status === "CONFIRMED" ? "duplicate" : "conflict";
   }
 
   const emailResult = await sendNotificationEmail({
-    subject: `New strategy call request: ${payload.company}`,
+    subject: `New strategy call request: ${booking.company}`,
     text: [
-      `Name: ${payload.name} (${payload.role})`,
-      `Email: ${payload.email}`,
-      `Phone: ${payload.phone}`,
-      `Company: ${payload.company}, ${payload.website}, ${payload.size} employees, ${payload.country}`,
-      `Target market: ${payload.market}`,
-      `Current approach: ${payload.approach}`,
-      `Desired outcome: ${payload.outcome}`,
-      `Engagement range: ${payload.budget}`,
-      `Confirmed slot: ${payload.slotLabel}`,
-      `Calendly event: ${payload.calendarBookingUid}`,
+      `Name: ${booking.name} (${booking.role})`,
+      `Email: ${booking.email}`,
+      `Phone: ${booking.phone}`,
+      `Company: ${booking.company}, ${booking.website}, ${booking.size} employees, ${booking.country}`,
+      `Target market: ${booking.market}`,
+      `Current approach: ${booking.approach}`,
+      `Desired outcome: ${booking.outcome}`,
+      `Engagement range: ${booking.budget}`,
+      `Confirmed slot: ${input.startTime ?? "See Calendly"}`,
+      `Calendly event: ${input.eventUri}`,
     ].join("\n"),
   });
-
-  if (emailResult.sent) {
-    await prisma.bookingRequest.update({ where: { id: requestId }, data: { emailSentAt: new Date() } }).catch(() => {});
-  }
+  const emailStateUpdatedAt = new Date();
+  await prisma.bookingRequest
+    .update({
+      where: { id: booking.id },
+      data: {
+        emailState: providerStateFromResult(emailResult.sent, emailResult.sent ? undefined : emailResult.reason),
+        emailStateUpdatedAt,
+        ...(emailResult.sent ? { emailSentAt: emailStateUpdatedAt } : {}),
+      },
+    })
+    .catch(() => {});
 
   const crmResult = await pushToCrm({
-    name: payload.name,
-    email: payload.email,
-    company: payload.company,
-    phone: payload.phone,
-    message: `Target market: ${payload.market}. Budget: ${payload.budget}. Confirmed slot: ${payload.slotLabel}.`,
+    name: booking.name,
+    email: booking.email,
+    company: booking.company,
+    phone: booking.phone,
+    message: `Target market: ${booking.market}. Budget: ${booking.budget}. Confirmed slot: ${input.startTime ?? "See Calendly"}.`,
     source: "book_strategy_call",
   });
-
-  if (crmResult.ok) {
-    await prisma.bookingRequest.update({ where: { id: requestId }, data: { crmSyncedAt: new Date() } }).catch(() => {});
-  }
-
-  return { ok: true };
+  const crmStateUpdatedAt = new Date();
+  await prisma.bookingRequest
+    .update({
+      where: { id: booking.id },
+      data: {
+        crmState: providerStateFromResult(crmResult.ok, crmResult.ok ? undefined : crmResult.reason),
+        crmStateUpdatedAt,
+        ...(crmResult.ok ? { crmSyncedAt: crmStateUpdatedAt } : {}),
+      },
+    })
+    .catch(() => {});
+  return "confirmed";
 }

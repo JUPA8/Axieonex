@@ -24,6 +24,7 @@ export function EngagementSteps() {
                 className={`grid grid-cols-[56px_1fr] gap-5 border-t border-white/8 py-4.5 ${last ? "border-b" : ""}`}
               >
                 <span
+                  aria-hidden="true"
                   className="font-display text-lg font-bold"
                   style={
                     last
@@ -33,7 +34,7 @@ export function EngagementSteps() {
                           backgroundClip: "text",
                           color: "transparent",
                         }
-                      : { color: "#4A4F66" }
+                      : { color: "var(--ax-text-muted)" }
                   }
                 >
                   {String(i + 1).padStart(2, "0")}

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { pushToCrm } from "@/lib/crm";
 import { sendNotificationEmail } from "@/lib/email";
+import { providerStateFromResult } from "@/lib/providerState";
 
 export type ContactFormPayload = {
   purpose: string;
@@ -41,8 +42,8 @@ export async function sendContactForm(payload: ContactFormPayload): Promise<Send
       },
     });
     submissionId = submission.id;
-  } catch (error) {
-    console.error("[contactProvider] Failed to persist contact submission:", error);
+  } catch {
+    console.error("[contactProvider] Failed to persist contact submission.");
     return { ok: false, reason: "not_configured" };
   }
 
@@ -58,10 +59,17 @@ export async function sendContactForm(payload: ContactFormPayload): Promise<Send
     ].join("\n"),
   });
 
-  if (emailResult.sent) {
-    // Best-effort: failure to record this timestamp is not worth failing the request over.
-    await prisma.contactSubmission.update({ where: { id: submissionId }, data: { emailSentAt: new Date() } }).catch(() => {});
-  }
+  const emailStateUpdatedAt = new Date();
+  await prisma.contactSubmission
+    .update({
+      where: { id: submissionId },
+      data: {
+        emailState: providerStateFromResult(emailResult.sent, emailResult.sent ? undefined : emailResult.reason),
+        emailStateUpdatedAt,
+        ...(emailResult.sent ? { emailSentAt: emailStateUpdatedAt } : {}),
+      },
+    })
+    .catch(() => {});
 
   const crmResult = await pushToCrm({
     name: payload.name,
@@ -71,9 +79,17 @@ export async function sendContactForm(payload: ContactFormPayload): Promise<Send
     source: "contact_form",
   });
 
-  if (crmResult.ok) {
-    await prisma.contactSubmission.update({ where: { id: submissionId }, data: { crmSyncedAt: new Date() } }).catch(() => {});
-  }
+  const crmStateUpdatedAt = new Date();
+  await prisma.contactSubmission
+    .update({
+      where: { id: submissionId },
+      data: {
+        crmState: providerStateFromResult(crmResult.ok, crmResult.ok ? undefined : crmResult.reason),
+        crmStateUpdatedAt,
+        ...(crmResult.ok ? { crmSyncedAt: crmStateUpdatedAt } : {}),
+      },
+    })
+    .catch(() => {});
 
   return { ok: true };
 }

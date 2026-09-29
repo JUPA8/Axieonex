@@ -29,7 +29,7 @@ export function EngagementConfigurator() {
               <span
                 className={cn(
                   "inline-flex min-h-11 items-center justify-center rounded-sm px-4 text-sm font-semibold",
-                  isSelected ? "bg-ax-violet text-white" : "border border-white/15 text-ax-text-primary",
+                  isSelected ? "bg-ax-violet text-ax-ink-0" : "border border-white/15 text-ax-text-primary",
                 )}
               >
                 View details

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { submitContactAction, type ContactFormState } from "@/app/contact/actions";
 import { TransitionLink } from "@/components/transition/TransitionLink";
@@ -34,6 +34,13 @@ function SubmitButton() {
 
 export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string }) {
   const [state, formAction] = useActionState(submitContactAction, INITIAL_STATE);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    const firstInvalid = ["purpose", "name", "email", "company", "message", "consent"].find((field) => state.errors[field as keyof typeof state.errors]);
+    const control = firstInvalid ? formRef.current?.elements.namedItem(firstInvalid) : null;
+    if (control instanceof HTMLElement) control.focus();
+  }, [state]);
 
   if (state.status === "success") {
     return (
@@ -81,7 +88,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
   }
 
   return (
-    <form action={formAction} noValidate className="flex flex-col gap-5">
+    <form ref={formRef} action={formAction} noValidate className="flex flex-col gap-5">
       {state.status === "error" && (
         <p role="alert" className="rounded-sm border border-ax-error/40 bg-ax-error/10 px-4 py-3 text-sm text-ax-error">
           Something went wrong sending your message. Please try again.
@@ -103,7 +110,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
           id="purpose"
           name="purpose"
           aria-invalid={Boolean(state.errors.purpose)}
-          aria-describedby={state.errors.purpose ? "purpose-error" : undefined}
+          aria-describedby={state.errors.purpose ? "contact-purpose-error" : undefined}
           className="min-h-11 rounded-md border border-ax-border-default bg-ax-surface-raised px-3.5 py-3 text-[14.5px] text-ax-text-primary"
         >
           {PURPOSE_OPTIONS.map((opt) => (
@@ -113,7 +120,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
           ))}
         </select>
         {state.errors.purpose && (
-          <p id="purpose-error" className="text-[12.5px] text-ax-error">
+          <p id="contact-purpose-error" className="text-[12.5px] text-ax-error">
             {state.errors.purpose}
           </p>
         )}
@@ -128,11 +135,11 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
           name="name"
           type="text"
           aria-invalid={Boolean(state.errors.name)}
-          aria-describedby={state.errors.name ? "name-error" : undefined}
+          aria-describedby={state.errors.name ? "contact-name-error" : undefined}
           className="min-h-11 rounded-md border border-ax-border-default bg-ax-surface-raised px-3.5 py-3 text-[14.5px] text-ax-text-primary"
         />
         {state.errors.name && (
-          <p id="name-error" className="text-[12.5px] text-ax-error">
+          <p id="contact-name-error" className="text-[12.5px] text-ax-error">
             {state.errors.name}
           </p>
         )}
@@ -147,11 +154,11 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
           name="email"
           type="email"
           aria-invalid={Boolean(state.errors.email)}
-          aria-describedby={state.errors.email ? "email-error" : undefined}
+          aria-describedby={state.errors.email ? "contact-email-error" : undefined}
           className="min-h-11 rounded-md border border-ax-border-default bg-ax-surface-raised px-3.5 py-3 text-[14.5px] text-ax-text-primary"
         />
         {state.errors.email && (
-          <p id="email-error" className="text-[12.5px] text-ax-error">
+          <p id="contact-email-error" className="text-[12.5px] text-ax-error">
             {state.errors.email}
           </p>
         )}
@@ -165,8 +172,15 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
           id="company"
           name="company"
           type="text"
+          aria-invalid={Boolean(state.errors.company)}
+          aria-describedby={state.errors.company ? "contact-company-error" : undefined}
           className="min-h-11 rounded-md border border-ax-border-default bg-ax-surface-raised px-3.5 py-3 text-[14.5px] text-ax-text-primary"
         />
+        {state.errors.company && (
+          <p id="contact-company-error" className="text-[12.5px] text-ax-error">
+            {state.errors.company}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -178,11 +192,11 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
           name="message"
           rows={5}
           aria-invalid={Boolean(state.errors.message)}
-          aria-describedby={state.errors.message ? "message-error" : undefined}
+          aria-describedby={state.errors.message ? "contact-message-error" : undefined}
           className="rounded-md border border-ax-border-default bg-ax-surface-raised px-3.5 py-3 text-[14.5px] text-ax-text-primary"
         />
         {state.errors.message && (
-          <p id="message-error" className="text-[12.5px] text-ax-error">
+          <p id="contact-message-error" className="text-[12.5px] text-ax-error">
             {state.errors.message}
           </p>
         )}
@@ -200,7 +214,8 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
           type="checkbox"
           name="consent"
           aria-labelledby="consent-text"
-          aria-describedby={state.errors.consent ? "consent-error" : undefined}
+          aria-invalid={state.errors.consent ? true : undefined}
+          aria-describedby={state.errors.consent ? "contact-consent-error" : undefined}
           className="mt-1 h-[18px] w-[18px]"
         />
         <span id="consent-text">
@@ -212,7 +227,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
         </span>
       </label>
       {state.errors.consent && (
-        <p id="consent-error" className="-mt-3 text-[12.5px] text-ax-error">
+        <p id="contact-consent-error" className="-mt-3 text-[12.5px] text-ax-error">
           {state.errors.consent}
         </p>
       )}
