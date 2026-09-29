@@ -10,17 +10,17 @@ export const ABOUT_CONTENT = {
   philosophy: [
     {
       label: "What AI owns",
-      color: "#5949BF",
+      color: "#3E7BFA",
       body: "Continuous signal detection, list building, sequencing, cadence and reporting: the volume and consistency no human team can sustain alone.",
     },
     {
       label: "What experienced humans own",
-      color: "#6848B5",
+      color: "#8B5CF6",
       body: "Lead validation, message tone and timing, every reply, every objection, and the judgment calls that decide whether interest is real.",
     },
     {
       label: "What clients retain",
-      color: "#963A80",
+      color: "#E94FA8",
       body: "Brand voice, ICP boundaries, the definition of a qualified conversation, and the final sales conversation itself.",
     },
   ],

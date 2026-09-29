@@ -60,7 +60,7 @@ export function CalendlyEmbed({
 
   if (!url) {
     return (
-      <div role="alert" className="rounded-lg border border-ax-warning/40 bg-ax-warning/10 p-8 text-center">
+      <div role="alert" className="border-l-2 border-ax-warning py-3 pl-7">
         <p className="mx-auto max-w-[52ch] text-[15px] leading-relaxed text-ax-text-muted">
           Scheduling isn&apos;t connected yet. Please email us directly at{" "}
           <a href={`mailto:${CONTACT_EMAIL}`} className="underline">

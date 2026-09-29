@@ -32,13 +32,14 @@ export default function HomePage() {
       <JsonLd data={buildOrganizationSchema()} />
       <HeroSignalReveal />
 
-      <section data-reveal="mask-left" className="relative bg-ax-pearl-1 px-5 py-24 text-ax-text-primary-on-light sm:px-10 sm:py-32">
-        <div className="mx-auto max-w-[1000px]">
-          <div className="mb-5.5 text-[13px] font-semibold text-[#6E5DD8]">The problem</div>
-          <p className="m-0 font-display text-[clamp(28px,3.6vw,42px)] font-semibold leading-[1.35] tracking-tight">
-            Most outbound fails from <em className="font-normal">disconnected tools</em>, unqualified lists run through
-            generic automation, and the months of hiring and ramp before an internal SDR team produces anything.{" "}
-            <em className="font-normal">Activity without accountable pipeline.</em>
+      <section data-reveal="mask-left" className="ax-section relative">
+        <div className="ax-shell">
+          <p className="ax-label mb-8">The problem</p>
+          <p className="ax-headline ax-measure m-0 text-ax-text-primary">
+            Most outbound fails from <em className="font-extralight not-italic text-ax-text-muted">disconnected tools</em>,
+            unqualified lists run through generic automation, and the months of hiring and ramp before an internal SDR
+            team produces anything.{" "}
+            <em className="font-extralight not-italic text-ax-text-muted">Activity without accountable pipeline.</em>
           </p>
         </div>
       </section>
@@ -46,9 +47,9 @@ export default function HomePage() {
       <EngineFlow />
       <EngineDiagram />
 
-      <section data-reveal="mask-right" className="relative bg-ax-pearl-1 px-5 py-24 text-center text-ax-text-primary-on-light sm:px-10">
-        <div className="mx-auto max-w-[900px]">
-          <p className="m-0 font-display text-[clamp(26px,3.4vw,38px)] font-semibold leading-[1.4] tracking-tight">
+      <section data-reveal="mask-right" className="ax-section relative">
+        <div className="ax-shell-narrow">
+          <p className="ax-headline-sm m-0 text-ax-text-primary">
             Predictable pipeline. No SDR hiring burden. Consistent, qualified conversations. Full operational control,
             without sacrificing brand quality.
           </p>
@@ -60,11 +61,12 @@ export default function HomePage() {
       <ResponsibilitySplit />
       <InsightsPreview />
 
-      <section className="relative bg-ax-ink-0 px-5 py-28 sm:px-10 sm:py-32">
-        <div className="mx-auto max-w-[760px]">
-          <h2 data-reveal className="mb-11 text-[clamp(26px,3.2vw,36px)] font-bold tracking-tight">
-            Questions revenue leaders ask
-          </h2>
+      <section className="ax-section relative">
+        <div className="ax-shell grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div data-reveal>
+            <p className="ax-label mb-6">Questions</p>
+            <h2 className="ax-headline-sm m-0 text-ax-text-primary">Questions revenue leaders ask</h2>
+          </div>
           <div data-reveal>
             <FAQ items={HOME_FAQ} heading="" />
           </div>
@@ -74,7 +76,6 @@ export default function HomePage() {
       <CtaSection
         heading="Let's build your revenue engine."
         body="Thirty minutes to map your market, your channels, and what a qualified conversation should look like for you."
-        className="bg-ax-ink-1"
       />
     </div>
   );

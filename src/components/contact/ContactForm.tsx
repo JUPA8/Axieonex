@@ -25,7 +25,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="min-h-11 rounded-sm bg-[image:var(--ax-gradient-spectral)] px-7 py-3.5 text-sm font-semibold text-white disabled:opacity-60"
+      className="inline-flex min-h-11 items-center justify-center rounded-full bg-ax-violet-action px-7 py-3.5 text-[13px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-ax-violet disabled:cursor-not-allowed disabled:opacity-50"
     >
       {pending ? "Sending..." : "Send message"}
     </button>
@@ -44,7 +44,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
 
   if (state.status === "success") {
     return (
-      <div role="status" aria-live="polite" className="rounded-lg border border-white/10 bg-white/[0.02] p-10 text-center">
+      <div role="status" aria-live="polite" className="border-l-2 border-ax-violet py-3 pl-7">
         <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-ax-cyan-alt/15 text-2xl text-ax-cyan-alt">
           ✓
         </div>
@@ -58,7 +58,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
 
   if (state.status === "unavailable") {
     return (
-      <div role="alert" className="rounded-lg border border-ax-warning/40 bg-ax-warning/10 p-10 text-center">
+      <div role="alert" className="border-l-2 border-ax-warning py-3 pl-7">
         <h2 className="mb-3 text-xl font-bold">Message delivery isn&apos;t connected yet.</h2>
         <p className="text-sm leading-relaxed text-ax-text-muted">
           This form is validated and ready, but no email or CRM delivery provider has been configured for this
@@ -74,7 +74,7 @@ export function ContactForm({ turnstileSiteKey }: { turnstileSiteKey?: string })
 
   if (state.status === "rate_limited") {
     return (
-      <div role="alert" className="rounded-lg border border-ax-warning/40 bg-ax-warning/10 p-10 text-center">
+      <div role="alert" className="border-l-2 border-ax-warning py-3 pl-7">
         <h2 className="mb-3 text-xl font-bold">Too many messages sent recently.</h2>
         <p className="text-sm leading-relaxed text-ax-text-muted">
           Please wait a few minutes and try again, or write to us directly at{" "}

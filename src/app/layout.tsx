@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Work_Sans, Space_Mono, Source_Serif_4 } from "next/font/google";
+import { Inter, Space_Mono, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { PageTransitionProvider } from "@/components/transition/PageTransitionProvider";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -10,16 +10,15 @@ import { AnalyticsScript } from "@/components/analytics/AnalyticsScript";
 import { RevealController } from "@/components/motion/RevealController";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+/**
+ * One geometric grotesque across the whole interface. Hierarchy comes from
+ * scale and tracking rather than weight, which is why 200 and 300 are loaded
+ * for body copy and 400 carries the display sizes.
+ */
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const workSans = Work_Sans({
-  variable: "--font-work-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["200", "300", "400", "500", "600"],
 });
 
 const spaceMono = Space_Mono({
@@ -48,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${bricolage.variable} ${workSans.variable} ${spaceMono.variable} ${sourceSerif.variable} h-full`}
+      className={`${inter.variable} ${spaceMono.variable} ${sourceSerif.variable} h-full`}
     >
       {/*
         suppressHydrationWarning here only covers this element's own

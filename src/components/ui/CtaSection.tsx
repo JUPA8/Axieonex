@@ -18,16 +18,18 @@ export function CtaSection({
   className?: string;
 }) {
   return (
-    <section data-reveal="scale" className={`relative px-5 py-24 text-center sm:px-10 sm:py-36 ${className}`}>
-      <div className="mx-auto flex max-w-[720px] flex-col items-center">
-        <div className="mb-7 h-16 w-16">
-          <BrandMark material={material} size={64} />
+    <section data-reveal="scale" className={`ax-section relative ${className}`}>
+      <div className="ax-shell flex flex-col items-start">
+        <div className="mb-10 opacity-80">
+          <BrandMark material={material} size={44} />
         </div>
-        <h2 className="mb-4 text-[length:var(--ax-fs-h1-fluid)] font-bold tracking-tight">{heading}</h2>
-        {body ? <p className="mb-9 max-w-[52ch] text-[16.5px] leading-relaxed text-ax-text-muted">{body}</p> : null}
-        <Button href={ctaHref} variant="primary" size="large" magnetic>
-          {ctaLabel}
-        </Button>
+        <h2 className="ax-headline ax-measure-tight m-0 text-ax-text-primary">{heading}</h2>
+        {body ? <p className="ax-lede ax-measure mt-8">{body}</p> : null}
+        <div className="mt-12">
+          <Button href={ctaHref} variant="primary" size="large" magnetic>
+            {ctaLabel}
+          </Button>
+        </div>
       </div>
     </section>
   );

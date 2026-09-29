@@ -15,10 +15,10 @@ export const metadata = buildPublicMetadata({
 
 export default function HowWeWorkPage() {
   return (
-    <div data-theme="how-we-work" className="bg-ax-ink-7 text-ax-text-primary">
+    <div data-theme="how-we-work">
       <EngineInteriorHero />
       <ScrollChapterSequence />
-      <CtaSection heading={HOW_WE_WORK_CONTENT.ctaHeading} material="cobalt" className="bg-ax-ink-6" />
+      <CtaSection heading={HOW_WE_WORK_CONTENT.ctaHeading} />
     </div>
   );
 }

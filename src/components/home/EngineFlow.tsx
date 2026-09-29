@@ -9,10 +9,10 @@ const STEPS = [
 
 export function EngineFlow() {
   return (
-    <section id="engine" data-reveal="scale" className="relative bg-ax-ink-1 px-5 py-28 sm:px-10 sm:py-36">
-      <div className="mx-auto max-w-[1160px]">
-        <div className="mb-3.5 text-center text-[13px] font-semibold text-ax-cyan">The revenue engine</div>
-        <h2 className="mb-16 text-center text-[clamp(28px,3.6vw,40px)] font-bold tracking-tight">
+    <section id="engine" data-reveal="scale" className="ax-section relative">
+      <div className="ax-shell">
+        <p className="ax-label mb-6">The revenue engine</p>
+        <h2 className="ax-headline ax-measure-tight m-0 mb-20 text-ax-text-primary">
           Signal in. Revenue conversation out.
         </h2>
         <svg viewBox="0 0 1100 160" className="block w-full overflow-visible" style={{ height: "auto" }} aria-hidden="true">
@@ -30,13 +30,13 @@ export function EngineFlow() {
             strokeWidth={2}
           />
         </svg>
-        <div className="mt-6 flex flex-wrap justify-between gap-3.5">
+        <div className="mt-10 grid gap-x-8 gap-y-9 sm:grid-cols-3 lg:grid-cols-6">
           {STEPS.map((step) => (
-            <div key={step.n} className="min-w-[140px] flex-1 text-center">
-              <div className="mb-2 text-[11px] font-semibold" style={{ color: step.color }}>
+            <div key={step.n} className="border-t border-ax-border-subtle pt-5">
+              <div className="mb-3 font-mono text-[11px] tracking-[0.1em]" style={{ color: step.color }}>
                 {step.n}
               </div>
-              <div className="text-sm font-semibold">{step.label}</div>
+              <div className="text-[14px] font-light leading-relaxed text-ax-text-body">{step.label}</div>
             </div>
           ))}
         </div>

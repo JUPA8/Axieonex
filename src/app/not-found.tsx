@@ -10,26 +10,26 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div data-theme="not-found" className="flex min-h-[70vh] items-center justify-center bg-ax-ink-2 px-5 py-24 text-center text-ax-text-primary sm:px-10">
-      <div className="mx-auto max-w-[540px]">
-        <div className="mb-6 font-mono text-xs tracking-[0.1em] text-ax-magenta">SIGNAL NOT RESOLVED · 404</div>
+    <div data-theme="not-found" className="flex min-h-[78vh] items-center">
+      <div className="ax-shell max-w-[720px] py-[clamp(72px,10vw,140px)]">
+        <div className="mb-10 font-mono text-[11px] tracking-[0.14em] text-ax-warning">SIGNAL NOT RESOLVED · 404</div>
         <NotFoundSignal />
-        <h1 className="mb-4 mt-8 text-[length:var(--ax-fs-h1-fluid)] font-bold tracking-tight">This page could not be found.</h1>
-        <p className="mx-auto mb-10 max-w-[52ch] text-base leading-relaxed text-ax-text-muted">
+        <h1 className="ax-headline m-0 mb-8 mt-12 text-ax-text-primary">This page could not be found.</h1>
+        <p className="ax-lede ax-measure mb-14">
           The route you followed does not match anything in our system. It may have moved, been renamed, or never
           existed. Here is how to get back on track.
         </p>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
           <Button href="/" variant="primary">
             Return home
           </Button>
-          <Button href="/services" variant="secondary">
+          <Button href="/services" variant="ghost">
             Explore services
           </Button>
-          <Button href="/contact" variant="secondary">
+          <Button href="/contact" variant="ghost">
             Contact us
           </Button>
-          <Button href="/book-strategy-call" variant="secondary">
+          <Button href="/book-strategy-call" variant="ghost">
             Book a strategy call
           </Button>
         </div>

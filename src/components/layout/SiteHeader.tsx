@@ -26,22 +26,29 @@ export function SiteHeader() {
 
   return (
     <>
+      {/* Transparent over the void until the page scrolls, at which point a
+          near-opaque black plate keeps the links readable over content. */}
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-(--ax-z-nav) grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-ax-border-subtle bg-[rgba(11,13,18,0.9)] backdrop-blur-md transition-[padding] duration-300",
-          compact ? "py-3 px-6" : "py-[18px] px-7",
+          "fixed inset-x-0 top-0 z-(--ax-z-nav) grid grid-cols-[1fr_auto_1fr] items-center gap-3 transition-[padding,background-color,border-color] duration-300",
+          compact
+            ? "border-b border-ax-border-subtle bg-black/85 py-3 backdrop-blur-md"
+            : "border-b border-transparent bg-transparent py-6",
+          "px-[clamp(20px,5vw,60px)]",
         )}
         style={{ zIndex: "var(--ax-z-nav)" }}
       >
         <div className="flex items-center justify-self-start">
           <TransitionLink href="/" className="flex items-center gap-2.5" aria-label="AXIEONEX home">
-            <BrandMark material="spectral" size={compact ? 22 : 24} />
-            <span className="text-[15px] font-display font-bold tracking-tight text-ax-text-primary">AXIEONEX</span>
+            <BrandMark material="spectral" size={compact ? 20 : 22} />
+            <span className="text-[15px] font-display font-medium tracking-[-0.02em] text-ax-text-primary">
+              AXIEONEX
+            </span>
           </TransitionLink>
         </div>
 
         <nav aria-label="Primary" className="hidden justify-self-center lg:block">
-          <ul className="flex list-none items-center gap-[18px] whitespace-nowrap">
+          <ul className="flex list-none items-center gap-8 whitespace-nowrap">
             {links.map((link) => {
               const active = pathname === link.href;
               return (
@@ -49,14 +56,11 @@ export function SiteHeader() {
                   <TransitionLink
                     href={link.href}
                     aria-current={active ? "page" : undefined}
-                    className="relative py-1 text-[14.5px] text-ax-text-muted transition-colors hover:text-ax-text-primary aria-[current=page]:text-ax-text-primary"
+                    className="relative block py-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-ax-text-muted transition-colors hover:text-ax-text-primary aria-[current=page]:text-ax-text-primary"
                   >
                     {link.label}
                     {active ? (
-                      <span
-                        aria-hidden="true"
-                        className="absolute -bottom-1 left-0 right-0 h-px bg-[image:var(--ax-gradient-signal)]"
-                      />
+                      <span aria-hidden="true" className="absolute -bottom-0.5 left-0 right-0 h-px bg-ax-violet" />
                     ) : null}
                   </TransitionLink>
                 </li>

@@ -1,4 +1,5 @@
 import { ServicesHubInteractive } from "@/components/services/ServicesHubInteractive";
+import { AmbientField } from "@/components/motion/AmbientField";
 import { CtaSection } from "@/components/ui/CtaSection";
 import { SITE_URL } from "@/lib/site";
 import { buildPublicMetadata } from "@/lib/metadata";
@@ -13,22 +14,24 @@ export const metadata = buildPublicMetadata({
 
 export default function ServicesPage() {
   return (
-    <div data-theme="services" className="bg-ax-ink-0 text-ax-text-primary">
-      <section className="px-5 pb-16 pt-28 text-center sm:px-10 sm:pt-36">
-        <div className="mx-auto max-w-[680px]">
-          <div className="mb-6 text-[13px] font-semibold text-ax-blue">Connected capabilities</div>
-          <h1 className="mb-6 text-[length:var(--ax-fs-h1-fluid)] font-bold leading-tight tracking-tight">
+    <div data-theme="services">
+      {/* Signal channels separating and recombining behind the statement. */}
+      <section className="relative overflow-hidden">
+        <AmbientField className="opacity-60" intensity={0.44} markScale={0.42} />
+        <div className="ax-shell relative z-10 pb-[clamp(48px,7vw,96px)] pt-[clamp(120px,16vh,200px)]">
+          <p className="ax-label mb-7">Connected capabilities</p>
+          <h1 className="ax-headline ax-measure-tight m-0 text-ax-text-primary">
             Seven capabilities. One revenue engine.
           </h1>
-          <p className="mx-auto max-w-[54ch] text-base leading-relaxed text-ax-text-muted">
+          <p className="ax-lede ax-measure mt-9">
             Every service below is a module inside the same coordinated system, not a menu of separate purchases.
             Select one to see how it connects to the rest.
           </p>
         </div>
       </section>
 
-      <section className="px-5 pb-24 sm:px-10">
-        <div className="mx-auto max-w-[1160px]">
+      <section className="ax-section-tight">
+        <div className="ax-shell">
           <ServicesHubInteractive />
         </div>
       </section>
@@ -39,7 +42,7 @@ export default function ServicesPage() {
         homepage's approved closing line verbatim rather than inventing new
         marketing copy for this page.
       */}
-      <CtaSection heading="Let's build your revenue engine." material="cobalt" className="bg-ax-ink-1" />
+      <CtaSection heading="Let's build your revenue engine." />
     </div>
   );
 }

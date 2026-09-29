@@ -28,7 +28,7 @@ export default function CookiePreferencesPage() {
           <TransitionLink href="/terms" className="underline">Terms of Service</TransitionLink> for full detail.
         </p>
 
-        <div role="note" className="mb-10 rounded-md border border-ax-warning/40 bg-ax-warning/10 px-5 py-4 text-sm leading-relaxed text-ax-text-body">
+        <div role="note" className="mb-14 border-l-2 border-ax-warning/60 py-2 pl-6 text-sm font-light leading-relaxed text-ax-text-body">
           Your choice is recorded both in this browser and on our server (see the Privacy Policy), so it can be
           proven if ever audited and can be recovered here if your browser data is cleared. No marketing script is
           integrated yet, so that category currently has no effect regardless of your selection. The Cookies Policy

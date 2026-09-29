@@ -4,32 +4,37 @@ import { CONTACT_EMAIL, COPYRIGHT_LINE, FOOTER_NAV_GROUPS, OPERATING_STATEMENT }
 
 export function Footer() {
   return (
-    <footer className="border-t border-ax-border-subtle bg-[#050609]">
-      <div className="mx-auto grid w-full max-w-[1180px] gap-12 px-5 py-16 sm:px-10 lg:grid-cols-[1.3fr_repeat(3,1fr)]">
-        <div className="flex flex-col gap-4">
+    <footer className="border-t border-ax-border-subtle">
+      <div className="ax-shell grid gap-x-12 gap-y-16 py-[clamp(64px,8vw,120px)] lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div className="flex flex-col gap-6">
           <div className="flex items-center gap-2.5">
             <BrandMark material="spectral" size={20} />
-            <span className="text-[15px] font-display font-bold text-ax-text-primary">AXIEONEX</span>
+            <span className="font-display text-[15px] font-medium tracking-[-0.02em] text-ax-text-primary">
+              AXIEONEX
+            </span>
           </div>
-          <p className="max-w-[36ch] text-sm leading-relaxed text-ax-text-muted">{OPERATING_STATEMENT}</p>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="text-sm text-ax-text-body hover:text-ax-cyan-alt">
+          <p className="max-w-[34ch] text-sm font-light leading-relaxed text-ax-text-muted">{OPERATING_STATEMENT}</p>
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="-my-1.5 inline-block py-1.5 text-sm text-ax-text-body transition-colors hover:text-ax-violet"
+          >
             {CONTACT_EMAIL}
           </a>
         </div>
 
         {FOOTER_NAV_GROUPS.map((group) => (
           <nav key={group.title} aria-label={group.title}>
-            <h2 className="mb-4 text-xs font-semibold uppercase tracking-[0.06em] text-ax-text-muted">{group.title}</h2>
-            <ul className="flex list-none flex-col gap-3">
+            <h2 className="mb-6 text-[11px] font-semibold uppercase tracking-[0.12em] text-ax-text-muted">
+              {group.title}
+            </h2>
+            <ul className="flex list-none flex-col gap-3.5 p-0">
               {group.links.map((link) => (
                 <li key={link.href}>
-                  {/* py-1.5/-my-1.5 grow the tap target into the gap-3 whitespace
-                      without shifting visual position: 6px is the largest
-                      offset that can't overlap the next link's own 6px offset
-                      into that same 12px gap. */}
+                  {/* py-1.5/-my-1.5 grow the tap target into the gap whitespace
+                      without shifting visual position. */}
                   <TransitionLink
                     href={link.href}
-                    className="inline-block -my-1.5 py-1.5 text-sm text-ax-text-body hover:text-ax-text-primary"
+                    className="-my-1.5 inline-block py-1.5 text-sm font-light text-ax-text-body transition-colors hover:text-ax-text-primary"
                   >
                     {link.label}
                   </TransitionLink>
@@ -39,9 +44,7 @@ export function Footer() {
           </nav>
         ))}
       </div>
-      <div className="border-t border-ax-border-subtle px-5 py-6 text-center text-xs text-ax-text-muted sm:px-10">
-        {COPYRIGHT_LINE}
-      </div>
+      <div className="ax-shell pb-12 text-[12px] text-ax-text-muted">{COPYRIGHT_LINE}</div>
     </footer>
   );
 }

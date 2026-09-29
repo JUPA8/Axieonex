@@ -15,40 +15,47 @@
   --ax-cyan: #35d3e0;
   --ax-cyan-alt: #5cc8e8;
   --ax-violet: #8b5cf6;
+  /* Darker violet reserved for filled actions: white text needs 4.5:1,
+     which --ax-violet itself does not reach. */
+  --ax-violet-action: #7c3aed;
   --ax-magenta: #e94fa8;
   --ax-magenta-alt: #ea4fa0;
 
-  /* ---- Raw neutrals / materials ---- */
-  --ax-ink-0: #050a16;
-  --ax-ink-1: #06070d;
-  --ax-ink-2: #08090f;
-  --ax-ink-3: #0b0c0f;
-  --ax-ink-4: #0b0d12;
-  --ax-ink-5: #0c0d12;
-  --ax-ink-6: #0f1424;
-  --ax-ink-7: #080b18;
+  /* ---- Raw neutrals / materials ----
+     The void is the design: every ink level resolves to pure black so the
+     whole canvas is one continuous surface and chromatic accents float on
+     it. The separate levels are kept as names so existing markup keeps
+     compiling, but they deliberately no longer differ. */
+  --ax-ink-0: #000000;
+  --ax-ink-1: #000000;
+  --ax-ink-2: #000000;
+  --ax-ink-3: #000000;
+  --ax-ink-4: #000000;
+  --ax-ink-5: #000000;
+  --ax-ink-6: #000000;
+  --ax-ink-7: #000000;
   --ax-pearl-0: #efeeea;
   --ax-pearl-1: #f5f6fa;
   --ax-graphite: #2a2d36;
   --ax-platinum: #b7b7c4;
 
   /* ---- Semantic: text ---- */
-  --ax-text-primary: #eaeef6;
+  --ax-text-primary: #ffffff;
   --ax-text-primary-on-light: #1b1b1e;
-  --ax-text-muted: #8e92a0;
+  --ax-text-muted: #9a9a9a;
   --ax-text-muted-on-light: #626673;
-  --ax-text-body: #c4c8d4;
+  --ax-text-body: #bdbdbd;
 
   /* ---- Semantic: surfaces ---- */
-  --ax-surface-base: var(--ax-ink-1);
-  --ax-surface-raised: #12141c;
-  --ax-surface-legal: var(--ax-ink-4);
+  --ax-surface-base: #000000;
+  --ax-surface-raised: #000000;
+  --ax-surface-legal: #000000;
   --ax-surface-light: var(--ax-pearl-1);
 
   /* ---- Semantic: borders / focus ---- */
-  --ax-border-subtle: rgba(255, 255, 255, 0.08);
-  --ax-border-default: rgba(255, 255, 255, 0.14);
-  --ax-focus-ring: #5cc8e8;
+  --ax-border-subtle: rgba(255, 255, 255, 0.07);
+  --ax-border-default: rgba(255, 255, 255, 0.12);
+  --ax-focus-ring: #8b5cf6;
 
   /* ---- Semantic: status ---- */
   --ax-success: #35d3e0;
@@ -76,24 +83,34 @@
   --ax-theme-404: var(--ax-magenta);
 
   /* ---- Typography ---- */
-  --ax-font-display: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
-  --ax-font-body: var(--font-work-sans), "Work Sans", Helvetica, Arial, sans-serif;
+  --ax-font-display: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ax-font-body: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --ax-font-mono: var(--font-space-mono), "Space Mono", monospace;
   --ax-font-editorial: var(--font-source-serif), "Source Serif 4", Georgia, serif;
+  --ax-weight-extralight: 200;
+  --ax-weight-light: 300;
   --ax-weight-regular: 400;
   --ax-weight-medium: 500;
   --ax-weight-semibold: 600;
   --ax-weight-bold: 700;
   --ax-weight-black: 800;
-  --ax-fs-display-fluid: clamp(28px, 4.4vw, 50px);
-  --ax-fs-h1-fluid: clamp(30px, 4vw, 46px);
-  --ax-fs-h2-fluid: clamp(24px, 3.4vw, 38px);
+
+  /* Hierarchy comes from scale and negative tracking, never from weight.
+     Floors stay generous so mobile never drops to thin, tiny type. */
+  --ax-fs-display: clamp(40px, 5.6vw, 80px);
+  --ax-fs-display-fluid: clamp(32px, 4.2vw, 60px);
+  --ax-fs-h1-fluid: clamp(30px, 3.6vw, 50px);
+  --ax-fs-h2-fluid: clamp(25px, 2.9vw, 38px);
+  --ax-fs-h3-fluid: clamp(22px, 2.2vw, 30px);
   --ax-fs-body: 16px;
-  --ax-fs-body-lg: 18px;
+  --ax-fs-body-lg: clamp(16px, 1.1vw, 18px);
   --ax-fs-small: 13px;
-  --ax-lh-tight: 1.15;
-  --ax-lh-body: 1.65;
-  --ax-ls-label: 0.06em;
+  --ax-lh-display: 1.02;
+  --ax-lh-tight: 1.1;
+  --ax-lh-body: 1.6;
+  --ax-ls-display: -0.04em;
+  --ax-ls-heading: -0.03em;
+  --ax-ls-label: 0.1em;
 
   /* ---- Spacing scale ---- */
   --ax-space-1: 4px;
@@ -189,6 +206,7 @@
   --color-ax-cyan: var(--ax-cyan);
   --color-ax-cyan-alt: var(--ax-cyan-alt);
   --color-ax-violet: var(--ax-violet);
+  --color-ax-violet-action: var(--ax-violet-action);
   --color-ax-magenta: var(--ax-magenta);
   --color-ax-magenta-alt: var(--ax-magenta-alt);
   --color-ax-pearl-0: var(--ax-pearl-0);
@@ -271,11 +289,113 @@ h2,
 h3,
 h4 {
   font-family: var(--ax-font-display);
+  font-weight: var(--ax-weight-regular);
+  letter-spacing: var(--ax-ls-heading);
   margin: 0;
 }
 
 p {
   margin: 0;
+}
+
+/* ==========================================================================
+   Editorial composition primitives
+   The public site is built from these rather than from cards and panels:
+   content floats directly on the void, separated by scale and space alone.
+   ========================================================================== */
+.ax-shell {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 60px);
+}
+
+.ax-shell-narrow {
+  width: 100%;
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 60px);
+}
+
+.ax-section {
+  padding-block: clamp(80px, 12vw, 180px);
+}
+
+.ax-section-tight {
+  padding-block: clamp(56px, 7vw, 108px);
+}
+
+.ax-display {
+  font-size: var(--ax-fs-display);
+  line-height: var(--ax-lh-display);
+  letter-spacing: var(--ax-ls-display);
+  font-weight: var(--ax-weight-regular);
+}
+
+.ax-headline {
+  font-size: var(--ax-fs-display-fluid);
+  line-height: 1.06;
+  letter-spacing: var(--ax-ls-display);
+  font-weight: var(--ax-weight-regular);
+}
+
+.ax-headline-sm {
+  font-size: var(--ax-fs-h2-fluid);
+  line-height: 1.12;
+  letter-spacing: var(--ax-ls-heading);
+  font-weight: var(--ax-weight-regular);
+}
+
+/* Small uppercase context label that opens a section. */
+.ax-label {
+  font-size: 12px;
+  font-weight: var(--ax-weight-semibold);
+  letter-spacing: var(--ax-ls-label);
+  text-transform: uppercase;
+  color: var(--ax-warning);
+}
+
+.ax-label-violet {
+  color: var(--ax-violet);
+}
+
+/* Ultra-light supporting copy. 300 rather than 200 so it stays legible on
+   low-density displays and at mobile sizes. */
+.ax-lede {
+  font-size: var(--ax-fs-body-lg);
+  line-height: var(--ax-lh-body);
+  font-weight: var(--ax-weight-light);
+  color: var(--ax-text-body);
+}
+
+.ax-measure {
+  max-width: 56ch;
+}
+
+.ax-measure-tight {
+  max-width: 46ch;
+}
+
+/* Short laptop viewports (1366x768 and similar) have the width for a large
+   display size but not the height, which pushes the hero CTA below the fold.
+   Trim the display scale and hero rhythm there rather than everywhere. */
+@media (min-width: 1024px) and (max-height: 840px) {
+  :root {
+    --ax-fs-display: clamp(38px, 4.2vw, 58px);
+    --ax-fs-display-fluid: clamp(30px, 3.4vw, 46px);
+  }
+
+  .ax-hero-pad {
+    padding-top: clamp(96px, 13vh, 132px);
+  }
+
+  .ax-hero-lede {
+    margin-top: 1.75rem;
+  }
+
+  .ax-hero-actions {
+    margin-top: 2rem;
+  }
 }
 
 :focus-visible {
@@ -394,20 +514,6 @@ p {
   }
   50% {
     transform: scaleY(0.92);
-  }
-}
-
-@keyframes ax-converge {
-  0% {
-    opacity: 0;
-    transform: translate(var(--fx), var(--fy));
-  }
-  15% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 1;
-    transform: translate(0, 0);
   }
 }
 

@@ -6,99 +6,89 @@ import { Button } from "@/components/ui/Button";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 const SIGNAL_LABELS = [
-  { text: "Funding signal", style: { left: "2%", top: "10%", color: "#8FA3E0" } },
-  { text: "Hiring signal", style: { left: "0%", top: "82%", color: "#7FDEE6" } },
-  { text: "Tech-stack signal", style: { right: "1%", top: "7%", color: "#B79CEF", textAlign: "right" as const } },
-  { text: "Intent signal", style: { right: "0%", top: "87%", color: "#EBA0C9", textAlign: "right" as const } },
+  { text: "Funding signal", className: "left-0 top-[8%]" },
+  { text: "Hiring signal", className: "left-0 bottom-[12%]" },
+  { text: "Tech-stack signal", className: "right-0 top-[6%] text-right" },
+  { text: "Intent signal", className: "right-0 bottom-[8%] text-right" },
 ];
 
 export function HeroSignalReveal() {
   const reduced = useReducedMotion();
-  const lineTransition = (delay: number) => ({
-    duration: reduced ? 0 : 0.9,
-    delay: reduced ? 0 : delay,
-    ease: [0.2, 0.7, 0.2, 1] as const,
+  // Transform only, never opacity: the hero copy and CTAs must be legible
+  // even if JavaScript is slow, blocked, or fails outright, so nothing here
+  // may ship an `opacity: 0` inline style from the server.
+  const rise = (delay: number) => ({
+    initial: { y: reduced ? 0 : 26 },
+    animate: { y: 0 },
+    transition: { duration: reduced ? 0 : 0.85, delay: reduced ? 0 : delay, ease: [0.2, 0.7, 0.2, 1] as const },
   });
 
   return (
-    <section id="home" className="relative mx-auto max-w-[1360px] px-5 pb-24 pt-36 sm:px-10 sm:pb-32 sm:pt-44">
-      <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-        <div>
-          <motion.div
-            initial={{ y: reduced ? 0 : 34 }}
-            animate={{ y: 0 }}
-            transition={lineTransition(0.05)}
-            className="mb-6 text-[13px] font-semibold tracking-wide text-ax-violet"
-          >
-            We do not automate sales. We orchestrate revenue.
-          </motion.div>
-          <h1 className="m-0 font-display text-[clamp(44px,6.2vw,80px)] font-extrabold leading-[0.98] tracking-tight">
-            <motion.span
-              initial={{ y: reduced ? 0 : 34 }}
-              animate={{ y: 0 }}
-              transition={lineTransition(0.15)}
-              className="block"
-            >
-              We build revenue pipelines.
+    <section id="home" className="relative overflow-hidden">
+      <div className="ax-shell ax-hero-pad grid items-center gap-x-16 gap-y-12 pb-[clamp(64px,10vw,140px)] pt-[clamp(92px,16vh,200px)] lg:grid-cols-[1.02fr_0.98fr]">
+        <div className="relative z-10">
+          <motion.p {...rise(0.05)} className="ax-label mb-7">
+            AI orchestrated. Human executed.
+          </motion.p>
+
+          <h1 className="ax-display m-0">
+            <motion.span {...rise(0.14)} className="block text-ax-text-primary">
+              We build revenue
             </motion.span>
-            <motion.span
-              initial={{ y: reduced ? 0 : 34 }}
-              animate={{ y: 0 }}
-              transition={lineTransition(0.35)}
-              className="block font-normal italic"
-            >
+            <motion.span {...rise(0.24)} className="block text-ax-text-primary">
+              pipelines.
+            </motion.span>
+            <motion.span {...rise(0.34)} className="block font-extralight text-ax-text-muted">
               Not just meetings.
             </motion.span>
           </h1>
-          <motion.p
-            initial={{ y: reduced ? 0 : 34 }}
-            animate={{ y: 0 }}
-            transition={lineTransition(0.55)}
-            className="mt-8 max-w-[46ch] text-lg leading-relaxed text-ax-text-muted"
-          >
+
+          <motion.p {...rise(0.48)} className="ax-lede ax-measure ax-hero-lede mt-10">
             An AI-orchestrated, human-executed revenue engine that replaces the cost and complexity of building an
             internal SDR team with one accountable system.
           </motion.p>
-          <motion.div
-            initial={{ y: reduced ? 0 : 34 }}
-            animate={{ y: 0 }}
-            transition={lineTransition(0.7)}
-            className="mt-9 flex flex-wrap gap-3.5"
-          >
+
+          <motion.div {...rise(0.6)} className="ax-hero-actions mt-12 flex flex-wrap items-center gap-x-9 gap-y-4">
+            <Button href="/book-strategy-call" variant="primary" size="large" magnetic>
+              Discuss your market
+            </Button>
             <a
               href="#engine"
-              className="inline-flex min-h-11 items-center rounded-sm bg-ax-text-primary px-7 py-4 text-[15px] font-semibold text-[#05060b]"
+              className="inline-flex min-h-11 items-center text-[13px] font-semibold uppercase tracking-[0.08em] text-ax-text-muted transition-colors hover:text-ax-text-primary"
             >
               See how it works
             </a>
-            <Button href="/book-strategy-call" variant="secondary" magnetic>
-              Discuss your market
-            </Button>
           </motion.div>
         </div>
 
-        <div className="relative order-first h-80 sm:h-[520px] lg:order-none" aria-hidden="true">
+        {/* No container, no border: the field floats directly on the void. */}
+        <div
+          className="relative order-first h-[clamp(290px,62vw,400px)] lg:order-none lg:h-[clamp(480px,44vw,660px)]"
+          aria-hidden="true"
+        >
           <ConstellationCanvas
             mode="hero"
             className="absolute inset-0 h-full w-full"
             introSeconds={8}
-            markScale={0.74}
+            markScale={0.72}
           />
           {SIGNAL_LABELS.map((label) => (
-            <div key={label.text} className="absolute text-[11.5px]" style={label.style}>
+            <span
+              key={label.text}
+              className={`pointer-events-none absolute hidden text-[11px] uppercase tracking-[0.12em] text-ax-text-muted sm:block ${label.className}`}
+            >
               {label.text}
-            </div>
+            </span>
           ))}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 2.2 }}
-            className="absolute bottom-1 left-1/2 w-56 -translate-x-1/2 text-center text-[12.5px] leading-relaxed text-ax-text-muted"
-          >
-            Orchestrated into one qualified conversation.
-          </motion.div>
         </div>
       </div>
+
+      <motion.p
+        {...rise(0.9)}
+        className="ax-shell pb-[clamp(40px,6vw,72px)] text-[12px] uppercase tracking-[0.12em] text-ax-text-muted"
+      >
+        Orchestrated into one qualified conversation.
+      </motion.p>
     </section>
   );
 }

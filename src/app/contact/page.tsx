@@ -1,4 +1,3 @@
-import { ConvergenceHero } from "@/components/contact/ConvergenceHero";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { SITE_URL } from "@/lib/site";
 import { buildPublicMetadata } from "@/lib/metadata";
@@ -13,24 +12,16 @@ export const metadata = buildPublicMetadata({
 
 export default function ContactPage() {
   return (
-    <div data-theme="contact" className="bg-ax-ink-0 text-ax-text-primary">
-      <section className="px-5 pb-12 pt-28 text-center sm:px-10 sm:pt-36">
-        <div className="mx-auto max-w-[620px]">
-          <div className="mb-6 text-[13px] font-semibold text-ax-cyan-alt">Contact</div>
-          <h1 className="mb-6 text-[length:var(--ax-fs-h1-fluid)] font-bold leading-tight tracking-tight">
-            One channel, routed to the right people.
-          </h1>
-          <p className="mx-auto max-w-[48ch] text-base leading-relaxed text-ax-text-muted">
-            General, service, partnership, media or existing-client enquiries all start here.
-          </p>
-          <div className="mt-10">
-            <ConvergenceHero />
+    <div data-theme="contact">
+      <section className="relative">
+        <div className="ax-shell grid items-start gap-x-16 gap-y-14 pb-[clamp(72px,10vw,140px)] pt-[clamp(120px,16vh,200px)] lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="lg:sticky lg:top-32">
+            <p className="ax-label mb-7">Contact</p>
+            <h1 className="ax-headline m-0 text-ax-text-primary">One channel, routed to the right people.</h1>
+            <p className="ax-lede ax-measure mt-9">
+              General, service, partnership, media or existing-client enquiries all start here.
+            </p>
           </div>
-        </div>
-      </section>
-
-      <section className="px-5 pb-28 sm:px-10">
-        <div className="mx-auto max-w-[560px]">
           <ContactForm turnstileSiteKey={process.env.CAPTCHA_SITE_KEY} />
         </div>
       </section>

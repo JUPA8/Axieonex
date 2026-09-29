@@ -25,8 +25,8 @@ export function ScrollChapterSequence() {
   }, []);
 
   return (
-    <section className="px-5 py-20 sm:px-10">
-      <ol className="mx-auto flex max-w-[720px] list-none flex-col gap-14">
+    <section className="ax-section">
+      <ol className="ax-shell m-0 flex list-none flex-col gap-[clamp(48px,7vw,96px)] p-0">
         {HOW_WE_WORK_CONTENT.stages.map((stage, i) => (
           <li
             key={stage.n}
@@ -34,19 +34,26 @@ export function ScrollChapterSequence() {
               refs.current[i] = el;
             }}
             data-stage={i}
-            className={cn(
-              "border-l-2 border-white/10 pl-7 transition-colors duration-500",
-              activeIndex === i && "border-ax-cyan-alt bg-ax-cyan-alt/[0.04]",
-            )}
+            className="grid gap-x-12 gap-y-4 lg:grid-cols-[240px_1fr]"
           >
             <div
               aria-hidden="true"
-              className={cn("mb-2 font-mono text-sm font-bold text-ax-text-muted transition-colors duration-500", activeIndex === i && "text-ax-cyan-alt")}
+              className={cn(
+                "font-mono text-[12px] tracking-[0.1em] transition-colors duration-500",
+                activeIndex === i ? "text-ax-violet" : "text-ax-text-muted",
+              )}
             >
               {stage.n}
             </div>
-            <h2 className="mb-2 text-xl font-bold">{stage.title}</h2>
-            <p className="max-w-[56ch] text-[15px] leading-relaxed text-ax-text-muted">{stage.body}</p>
+            <div
+              className={cn(
+                "border-l pl-8 transition-colors duration-500",
+                activeIndex === i ? "border-ax-violet" : "border-ax-border-subtle",
+              )}
+            >
+              <h2 className="ax-headline-sm m-0 mb-4 text-ax-text-primary">{stage.title}</h2>
+              <p className="ax-lede max-w-[56ch]">{stage.body}</p>
+            </div>
           </li>
         ))}
       </ol>

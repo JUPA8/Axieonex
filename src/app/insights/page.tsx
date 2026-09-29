@@ -28,26 +28,24 @@ export default async function InsightsPage() {
   }
 
   return (
-    <div data-theme="insights" className="bg-ax-ink-5 text-ax-text-primary">
-      <section className="px-5 pb-16 pt-28 text-center sm:px-10 sm:pt-36">
-        <div className="mx-auto max-w-[680px]">
-          <div className="mb-6 text-[13px] font-semibold text-ax-violet">Insights</div>
-          <h1 className="mb-6 text-[length:var(--ax-fs-h1-fluid)] font-bold leading-tight tracking-tight">
-            How revenue systems actually work.
-          </h1>
-          <p className="mx-auto max-w-[54ch] text-base leading-relaxed text-ax-text-muted">
+    <div data-theme="insights">
+      <section className="relative">
+        <div className="ax-shell pb-[clamp(48px,7vw,96px)] pt-[clamp(120px,16vh,200px)]">
+          <p className="ax-label ax-label-violet mb-7">Insights</p>
+          <h1 className="ax-headline ax-measure-tight m-0 text-ax-text-primary">How revenue systems actually work.</h1>
+          <p className="ax-lede ax-measure mt-9">
             Research and operating notes on AI orchestration, human execution and predictable pipeline, written for
             revenue leaders.
           </p>
         </div>
       </section>
 
-      <section className="px-5 pb-24 sm:px-10">
-        <div className="mx-auto max-w-[1160px]">
+      <section className="pb-[clamp(72px,10vw,140px)]">
+        <div className="ax-shell">
           {unavailable ? (
-            <div role="alert" className="border-t border-ax-border-subtle py-16 text-center">
-              <h2 className="mb-2 text-lg font-bold">Insights are temporarily unavailable.</h2>
-              <p className="text-sm text-ax-text-muted">Please check back shortly.</p>
+            <div role="alert" className="border-t border-ax-border-subtle py-20">
+              <h2 className="ax-headline-sm mb-4 text-ax-text-primary">Insights are temporarily unavailable.</h2>
+              <p className="ax-lede">Please check back shortly.</p>
             </div>
           ) : (
             <InsightsInteractive articles={articles} />
@@ -55,7 +53,7 @@ export default async function InsightsPage() {
         </div>
       </section>
 
-      <CtaSection heading="See it applied to your pipeline." material="spectral" className="bg-ax-ink-6" />
+      <CtaSection heading="See it applied to your pipeline." />
     </div>
   );
 }

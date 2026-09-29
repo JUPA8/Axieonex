@@ -17,41 +17,44 @@ export const metadata = buildPublicMetadata({
 
 export default function PricingPage() {
   return (
-    <div data-theme="pricing" className="bg-ax-ink-3 text-ax-text-primary">
+    <div data-theme="pricing">
       <AssemblyHero />
 
-      <section data-reveal className="px-5 pb-20 sm:px-10">
-        <div className="mx-auto max-w-[1100px]">
+      <section data-reveal className="ax-section-tight">
+        <div className="ax-shell">
           <EngagementConfigurator />
         </div>
       </section>
 
-      <section className="border-t border-white/8 px-5 py-20 sm:px-10">
-        <div className="mx-auto max-w-[1000px]">
+      <section className="ax-section-tight">
+        <div className="ax-shell">
           <ComparisonTable />
         </div>
       </section>
 
-      <section data-reveal="mask-left" className="border-t border-white/8 bg-black/20 px-5 py-20 text-center sm:px-10">
-        <div className="mx-auto max-w-[820px]">
-          <h2 className="mb-6 text-[clamp(24px,3vw,32px)] font-bold leading-snug tracking-tight">
+      <section data-reveal="mask-left" className="ax-section">
+        <div className="ax-shell grid gap-x-16 gap-y-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <h2 className="ax-headline-sm m-0 text-ax-text-primary">
             Building this internally means hiring, training and managing an SDR team, plus the tooling to run them.
             An engagement with Axieonex replaces that with one accountable system and no ramp time.
           </h2>
-          <p className="mx-auto max-w-[60ch] text-base leading-relaxed text-ax-text-muted">
+          <p className="ax-lede">
             We do not publish comparative cost figures here. Bring your current numbers to a strategy call and we
             will show you where a coordinated system changes the equation.
           </p>
         </div>
       </section>
 
-      <section className="border-t border-white/8 px-5 py-20 sm:px-10">
-        <div className="mx-auto max-w-[760px]">
-          <FAQ items={PRICING_FAQ} heading="Pricing questions" />
+      <section className="ax-section">
+        <div className="ax-shell grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+          <div>
+            <p className="ax-label mb-6">Pricing questions</p>
+          </div>
+          <FAQ items={PRICING_FAQ} heading="" />
         </div>
       </section>
 
-      <CtaSection heading="Let's scope your engagement." material="platinum" className="border-t border-white/8" />
+      <CtaSection heading="Let's scope your engagement." />
     </div>
   );
 }

@@ -19,8 +19,8 @@ export function EngagementConfigurator() {
               aria-pressed={isSelected}
               onClick={() => setSelected(i)}
               className={cn(
-                "flex min-h-11 flex-col rounded-lg border p-6 text-left transition-colors duration-300",
-                isSelected ? "border-ax-violet bg-white/[0.04]" : "border-white/10 bg-white/[0.02] hover:border-white/20",
+                "flex min-h-11 flex-col border-t-2 pt-6 text-left transition-colors duration-300",
+                isSelected ? "border-ax-violet" : "border-ax-border-subtle hover:border-white/30",
               )}
             >
               <div className="mb-4 text-[11px] font-semibold uppercase tracking-wide text-ax-text-muted">{tier.name}</div>

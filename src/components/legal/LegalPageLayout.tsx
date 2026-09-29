@@ -19,25 +19,25 @@ export function LegalPageLayout({
   sections: LegalSection[];
 }) {
   return (
-    <div data-theme="legal" className="bg-ax-surface-legal text-ax-text-primary">
-      <div className="mx-auto max-w-[1180px] px-5 pb-24 pt-28 sm:px-10 sm:pt-36">
-        <div className="mb-10">
-          <div className="mb-4 text-[13px] font-semibold text-ax-cyan-alt">Legal</div>
-          <h1 className="mb-3 text-[length:var(--ax-fs-h1-fluid)] font-bold tracking-tight">{title}</h1>
-          <p className="text-sm text-ax-text-muted">Last updated: {lastUpdated}</p>
+    <div data-theme="legal">
+      <div className="ax-shell pb-[clamp(72px,10vw,140px)] pt-[clamp(120px,15vh,180px)]">
+        <div className="mb-14">
+          <p className="ax-label mb-7">Legal</p>
+          <h1 className="ax-headline m-0 mb-5 text-ax-text-primary">{title}</h1>
+          <p className="text-sm font-light text-ax-text-muted">Last updated: {lastUpdated}</p>
         </div>
 
-        <div role="note" className="mb-12 rounded-md border border-ax-error/30 bg-ax-error/10 px-5 py-4 text-sm leading-relaxed text-ax-text-body">
+        <div role="note" className="mb-16 border-l-2 border-ax-warning/60 py-2 pl-6 text-sm font-light leading-relaxed text-ax-text-body">
           {warning}
         </div>
 
-        <div className="grid gap-16 lg:grid-cols-[220px_1fr]">
+        <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[240px_1fr]">
           <nav aria-label={`${title} sections`} className="hidden lg:sticky lg:top-[110px] lg:block lg:h-fit">
-            <div className="mb-3 text-[11px] font-semibold uppercase tracking-wide text-ax-text-muted">On this page</div>
+            <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ax-text-muted">On this page</div>
             <ul className="flex list-none flex-col gap-1">
               {sections.map((section) => (
                 <li key={section.id}>
-                  <a href={`#${section.id}`} className="block py-1 text-[12.5px] text-ax-text-muted hover:text-ax-text-primary">
+                  <a href={`#${section.id}`} className="block py-1.5 text-[13px] font-light text-ax-text-muted transition-colors hover:text-ax-text-primary">
                     {section.tocLabel}
                   </a>
                 </li>
@@ -47,15 +47,15 @@ export function LegalPageLayout({
 
           <div className="min-w-0">
             {sections.map((section) => (
-              <section key={section.id} id={section.id} className="scroll-mt-[110px] border-t border-ax-border-subtle py-8 first:border-t-0 first:pt-0">
-                <h2 className="mb-3 font-display text-lg font-bold">{section.heading}</h2>
-                <div className="flex flex-col gap-3 text-[15px] leading-relaxed text-ax-text-body">{section.body}</div>
+              <section key={section.id} id={section.id} className="scroll-mt-[110px] border-t border-ax-border-subtle py-10 first:border-t-0 first:pt-0">
+                <h2 className="mb-5 font-display text-[21px] font-normal tracking-[-0.02em] text-ax-text-primary">{section.heading}</h2>
+                <div className="flex flex-col gap-4 text-[15px] font-light leading-relaxed text-ax-text-body">{section.body}</div>
               </section>
             ))}
           </div>
         </div>
 
-        <TransitionLink href="/" className="mt-16 inline-block text-sm text-ax-text-muted hover:text-ax-text-primary">
+        <TransitionLink href="/" className="mt-20 inline-block text-[12px] font-semibold uppercase tracking-[0.1em] text-ax-text-muted transition-colors hover:text-ax-text-primary">
           ← Back to the main website
         </TransitionLink>
       </div>

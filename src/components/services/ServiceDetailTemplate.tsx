@@ -5,101 +5,101 @@ import type { Service } from "@/types/content";
 
 export function ServiceDetailTemplate({ service }: { service: Service }) {
   return (
-    <div data-theme={`service-${service.slug}`} className="bg-ax-ink-0 text-ax-text-primary">
-      <section className="px-5 pb-12 pt-28 sm:px-10 sm:pt-36">
-        <div className="mx-auto grid max-w-[1000px] items-center gap-10 sm:grid-cols-[1.2fr_0.8fr]">
+    <div data-theme={`service-${service.slug}`}>
+      <section className="pb-[clamp(48px,7vw,96px)] pt-[clamp(120px,15vh,180px)]">
+        <div className="ax-shell grid items-center gap-x-16 gap-y-12 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
-            <div className="mb-4 text-[13px] font-semibold" style={{ color: service.accent }}>
+            <div className="mb-7 text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: service.accent }}>
               {service.role}
             </div>
-            <h1 className="mb-5 text-[length:var(--ax-fs-h1-fluid)] font-bold leading-tight tracking-tight">{service.title}</h1>
-            <p className="max-w-[56ch] text-base leading-relaxed text-ax-text-muted">{service.purpose}</p>
+            <h1 className="ax-headline m-0 mb-8 text-ax-text-primary">{service.title}</h1>
+            <p className="ax-lede ax-measure">{service.purpose}</p>
           </div>
           <ServiceHeroVisual visual={service.visual} accent={service.accent} />
         </div>
       </section>
 
-      <section data-reveal className="border-t border-white/8 px-5 py-14 sm:px-10">
-        <div className="mx-auto max-w-[720px]">
-          <div className="mb-4 text-[11px] font-semibold uppercase tracking-wide text-ax-text-muted">The problem it solves</div>
-          <p className="text-base leading-relaxed text-ax-text-body">{service.problem}</p>
+      <section data-reveal className="ax-section-tight">
+        <div className="ax-shell max-w-[860px]">
+          <div className="ax-label mb-6">The problem it solves</div>
+          <p className="ax-lede">{service.problem}</p>
         </div>
       </section>
 
-      <section className="border-t border-white/8 px-5 py-14 sm:px-10">
-        <div className="mx-auto grid max-w-[1000px] gap-8" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+      <section className="ax-section-tight">
+        <div className="ax-shell grid gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide" style={{ color: service.accent }}>
+            <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.12em]" style={{ color: service.accent }}>
               AI performs
             </div>
-            <p className="text-sm leading-relaxed text-ax-text-body">{service.ai}</p>
+            <p className="ax-lede text-[15px]">{service.ai}</p>
           </div>
           <div>
-            <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-ax-violet">Humans perform</div>
-            <p className="text-sm leading-relaxed text-ax-text-body">{service.human}</p>
+            <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ax-violet">Humans perform</div>
+            <p className="ax-lede text-[15px]">{service.human}</p>
           </div>
           <div>
-            <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-ax-cyan-alt">You control</div>
-            <p className="text-sm leading-relaxed text-ax-text-body">{service.control}</p>
+            <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ax-cyan-alt">You control</div>
+            <p className="ax-lede text-[15px]">{service.control}</p>
           </div>
           <div>
-            <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-wide text-ax-text-primary">You receive</div>
-            <p className="text-sm leading-relaxed text-ax-text-body">{service.receive}</p>
+            <div className="mb-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ax-text-primary">You receive</div>
+            <p className="ax-lede text-[15px]">{service.receive}</p>
           </div>
         </div>
       </section>
 
-      <section className="border-t border-white/8 px-5 py-14 sm:px-10">
-        <div className="mx-auto grid max-w-[1000px] gap-10 sm:grid-cols-2">
+      <section className="ax-section-tight">
+        <div className="ax-shell grid gap-x-16 gap-y-12 sm:grid-cols-2">
           <div>
-            <h2 className="mb-3 text-lg font-bold">Channels and capabilities</h2>
-            <p className="text-sm leading-relaxed text-ax-text-body">{service.channels}</p>
+            <h2 className="ax-headline-sm mb-5 text-ax-text-primary">Channels and capabilities</h2>
+            <p className="ax-lede text-[15px]">{service.channels}</p>
           </div>
           <div>
-            <h2 className="mb-3 text-lg font-bold">Quality controls</h2>
-            <p className="text-sm leading-relaxed text-ax-text-body">{service.quality}</p>
+            <h2 className="ax-headline-sm mb-5 text-ax-text-primary">Quality controls</h2>
+            <p className="ax-lede text-[15px]">{service.quality}</p>
           </div>
         </div>
       </section>
 
-      <section data-reveal="scale" className="border-t border-white/8 px-5 py-14 sm:px-10">
-        <div className="mx-auto max-w-[720px]">
-          <h2 className="mb-8 text-[11px] font-semibold uppercase tracking-wide text-ax-text-muted">How it operates</h2>
+      <section data-reveal="scale" className="ax-section-tight">
+        <div className="ax-shell max-w-[860px]">
+          <h2 className="ax-label mb-10">How it operates</h2>
           <ol className="flex list-none flex-col gap-6">
             {service.steps.map((step) => (
-              <li key={step.n} className="grid grid-cols-[44px_1fr] gap-4">
-                <span className="font-display text-lg font-bold" style={{ color: service.accent }}>
+              <li key={step.n} className="grid grid-cols-[48px_1fr] gap-6 border-b border-ax-border-subtle pb-6">
+                <span className="font-mono text-[12px] tracking-[0.1em]" style={{ color: service.accent }}>
                   {step.n}
                 </span>
-                <span className="text-[15px] leading-relaxed">{step.text}</span>
+                <span className="text-[15px] font-light leading-relaxed text-ax-text-body">{step.text}</span>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <section className="border-t border-white/8 px-5 py-14 sm:px-10">
-        <div className="mx-auto max-w-[720px]">
-          <div className="mb-6 text-[11px] font-semibold uppercase tracking-wide text-ax-text-muted">Frequently asked</div>
-          <details className="group border-t border-white/10 py-5">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-semibold">
+      <section className="ax-section-tight">
+        <div className="ax-shell max-w-[860px]">
+          <div className="ax-label mb-8">Frequently asked</div>
+          <details className="group border-t border-ax-border-subtle py-7">
+            <summary className="flex cursor-pointer list-none items-baseline justify-between gap-8 text-[17px] font-normal tracking-[-0.01em] text-ax-text-primary transition-colors hover:text-ax-violet">
               <span>{service.faqQ}</span>
               <span aria-hidden="true" className="shrink-0 text-xl font-light text-ax-text-muted transition-transform duration-300 group-open:rotate-45">
                 +
               </span>
             </summary>
-            <p className="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-ax-text-body">{service.faqA}</p>
+            <p className="ax-lede mt-5 max-w-[62ch] text-[15.5px]">{service.faqA}</p>
           </details>
         </div>
       </section>
 
-      <section className="border-t border-white/8 px-5 py-14 sm:px-10">
-        <div className="mx-auto max-w-[1000px]">
+      <section className="ax-section-tight">
+        <div className="ax-shell">
           <RelatedServices slug={service.slug} />
         </div>
       </section>
 
-      <CtaSection heading="Let's build your revenue engine." material="cobalt" className="bg-ax-ink-1" />
+      <CtaSection heading="Let's build your revenue engine." />
     </div>
   );
 }

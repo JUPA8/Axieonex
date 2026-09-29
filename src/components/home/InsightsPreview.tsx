@@ -10,24 +10,36 @@ export async function InsightsPreview() {
   if (articles.length === 0) return null;
 
   return (
-    <section id="articles" className="relative bg-ax-pearl-1 px-5 py-28 text-ax-text-primary-on-light sm:px-10 sm:py-32">
-      <div className="mx-auto max-w-[1160px]">
-        <div data-reveal className="mb-11 flex flex-wrap items-baseline justify-between gap-3.5">
-          <h2 className="text-[clamp(26px,3.2vw,36px)] font-bold tracking-tight">Insights</h2>
-          <TransitionLink href="/insights" className="text-sm text-ax-text-muted-on-light hover:text-ax-text-primary-on-light">
-            All articles →
+    <section id="articles" className="ax-section relative">
+      <div className="ax-shell">
+        <div data-reveal className="mb-16 flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="ax-label mb-6">Insights</p>
+            <h2 className="ax-headline m-0 text-ax-text-primary">Perspective on revenue systems.</h2>
+          </div>
+          <TransitionLink
+            href="/insights"
+            className="text-[12px] font-semibold uppercase tracking-[0.1em] text-ax-text-muted transition-colors hover:text-ax-text-primary"
+          >
+            All articles
           </TransitionLink>
         </div>
-        <div data-reveal="scale" className="grid gap-9" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
+        <div data-reveal="scale" className="grid gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {articles.slice(0, 6).map((article) => (
             <TransitionLink
               key={article.slug}
               href={`/insights/${article.slug}`}
-              className="block border-t-2 pt-4.5"
-              style={{ borderColor: article.color }}
+              className="group block border-t border-ax-border-subtle pt-6"
             >
-              <div className="text-[11px] font-semibold text-ax-text-muted-on-light">{article.category}</div>
-              <div className="mt-2.5 text-lg font-semibold leading-snug">{article.title}</div>
+              <div
+                className="text-[11px] font-semibold uppercase tracking-[0.12em]"
+                style={{ color: article.color }}
+              >
+                {article.category}
+              </div>
+              <div className="mt-4 text-[19px] font-normal leading-snug tracking-[-0.02em] text-ax-text-primary transition-colors group-hover:text-ax-violet">
+                {article.title}
+              </div>
             </TransitionLink>
           ))}
         </div>

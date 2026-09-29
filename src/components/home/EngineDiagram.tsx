@@ -84,7 +84,7 @@ export function EngineDiagram() {
           </div>
 
           <div className="hidden lg:block">
-            <div className="sticky top-32 h-[460px] overflow-hidden rounded-lg border border-white/8 bg-white/[0.02]">
+            <div className="sticky top-32 h-[520px] overflow-hidden">
               <ConstellationCanvas
                 mode="scroll"
                 className="absolute inset-0 h-full w-full"

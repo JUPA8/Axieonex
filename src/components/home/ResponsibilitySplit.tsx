@@ -18,18 +18,22 @@ const COLUMNS = [
 
 export function ResponsibilitySplit() {
   return (
-    <section data-reveal="scale" className="relative bg-ax-ink-0 px-5 py-28 sm:px-10 sm:py-32">
-      <div className="mx-auto max-w-[1160px]">
-        <h2 className="mb-16 text-center text-[clamp(26px,3.2vw,36px)] font-bold tracking-tight">
+    <section data-reveal="scale" className="ax-section relative">
+      <div className="ax-shell">
+        <p className="ax-label mb-6">Division of labour</p>
+        <h2 className="ax-headline ax-measure m-0 mb-20 text-ax-text-primary">
           What we automate. What humans own. What you control.
         </h2>
-        <div className="grid gap-10 sm:grid-cols-3">
+        <div className="grid gap-x-12 gap-y-14 sm:grid-cols-3">
           {COLUMNS.map((column) => (
-            <div key={column.label}>
-              <div className="mb-3.5 text-xs font-semibold" style={{ color: column.color }}>
+            <div key={column.label} className="border-t border-ax-border-subtle pt-7">
+              <div
+                className="mb-6 text-[11px] font-semibold uppercase tracking-[0.12em]"
+                style={{ color: column.color }}
+              >
                 {column.label}
               </div>
-              <ul className="m-0 flex list-disc flex-col gap-1 pl-4 text-[14.5px] leading-loose text-ax-text-muted">
+              <ul className="m-0 flex list-none flex-col gap-4 p-0 text-[15px] font-light leading-relaxed text-ax-text-body">
                 {column.items.map((item) => (
                   <li key={item}>{item}</li>
                 ))}

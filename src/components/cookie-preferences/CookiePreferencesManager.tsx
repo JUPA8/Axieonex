@@ -63,7 +63,7 @@ export function CookiePreferencesManager({ analyticsConfigured = false }: { anal
     <div>
       <div className="flex flex-col gap-4">
         {CATEGORIES.map((category) => (
-          <div key={category.key} className="rounded-lg border border-ax-border-subtle bg-white/[0.02] p-6">
+          <div key={category.key} className="border-b border-ax-border-subtle py-7">
             <div className="mb-2 flex items-center justify-between gap-6">
               <label htmlFor={`cat-${category.key}`} className="font-semibold text-ax-text-primary">
                 {category.name} {category.locked && <span className="ml-2 text-xs font-normal text-ax-text-muted">Always active</span>}

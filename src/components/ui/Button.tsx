@@ -27,19 +27,25 @@ type ButtonAsButton = CommonProps &
     href?: undefined;
   };
 
+/**
+ * One filled violet pill is the only saturated action on any view; everything
+ * secondary is a ghost text action so hierarchy stays unmistakable on the
+ * black canvas.
+ */
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
-  primary: "text-white bg-[image:var(--ax-gradient-spectral)] hover:brightness-110",
-  secondary: "text-ax-text-primary border border-ax-border-default bg-transparent hover:border-ax-text-primary",
-  ghost: "text-ax-text-primary bg-transparent hover:bg-white/5",
+  primary: "text-white bg-ax-violet-action hover:bg-ax-violet",
+  secondary:
+    "text-ax-text-primary bg-transparent border border-ax-border-default hover:border-ax-text-primary hover:bg-white/[0.04]",
+  ghost: "text-ax-text-muted bg-transparent hover:text-ax-text-primary",
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {
-  default: "px-6 py-3.5 text-sm",
-  large: "px-[30px] py-[17px] text-sm",
+  default: "px-7 py-3.5 text-[13px]",
+  large: "px-9 py-4 text-sm",
 };
 
 const BASE_CLASSES =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-sm font-semibold tracking-wide transition-transform duration-200 ease-[var(--ax-ease-standard)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--ax-focus-ring) disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full font-semibold uppercase tracking-[0.08em] transition-[transform,background-color,border-color,color] duration-200 ease-[var(--ax-ease-standard)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--ax-focus-ring) disabled:cursor-not-allowed disabled:opacity-50";
 
 export function Button(props: ButtonAsLink | ButtonAsButton) {
   const { variant = "primary", size = "default", magnetic = false, className, children } = props;
