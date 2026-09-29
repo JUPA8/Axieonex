@@ -243,7 +243,12 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* `clip` still prevents horizontal overflow but, unlike `hidden`, does not
+     turn this into a scroll container, which would silently break every
+     `position: sticky` descendant. `hidden` stays first as the fallback for
+     browsers without `clip`. */
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -253,6 +258,7 @@ body {
   font-family: var(--ax-font-body);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 a {

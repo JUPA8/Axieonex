@@ -1,22 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BrandMark } from "@/components/brand/BrandMark";
+import { ConstellationCanvas } from "@/components/motion/ConstellationCanvas";
 import { Button } from "@/components/ui/Button";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
-const SIGNAL_PATHS = [
-  { d: "M10,60 C120,20 180,150 210,210", stroke: "rgba(62,123,250,0.32)" },
-  { d: "M20,340 C120,300 160,240 210,210", stroke: "rgba(53,211,224,0.32)" },
-  { d: "M400,50 C300,90 250,140 210,210", stroke: "rgba(139,92,246,0.32)" },
-  { d: "M400,370 C300,340 250,270 210,210", stroke: "rgba(233,79,168,0.32)" },
-];
-
 const SIGNAL_LABELS = [
-  { text: "Funding signal", style: { left: "6%", top: "12%", color: "#8FA3E0" } },
-  { text: "Hiring signal", style: { left: "2%", top: "80%", color: "#7FDEE6" } },
-  { text: "Tech-stack signal", style: { right: "4%", top: "8%", color: "#B79CEF", textAlign: "right" as const } },
-  { text: "Intent signal", style: { right: "2%", top: "86%", color: "#EBA0C9", textAlign: "right" as const } },
+  { text: "Funding signal", style: { left: "2%", top: "10%", color: "#8FA3E0" } },
+  { text: "Hiring signal", style: { left: "0%", top: "82%", color: "#7FDEE6" } },
+  { text: "Tech-stack signal", style: { right: "1%", top: "7%", color: "#B79CEF", textAlign: "right" as const } },
+  { text: "Intent signal", style: { right: "0%", top: "87%", color: "#EBA0C9", textAlign: "right" as const } },
 ];
 
 export function HeroSignalReveal() {
@@ -84,47 +77,23 @@ export function HeroSignalReveal() {
           </motion.div>
         </div>
 
-        <div className="relative order-first h-72 sm:h-[440px] lg:order-none" aria-hidden="true">
-          <svg viewBox="0 0 420 420" width="100%" height="100%" className="absolute inset-0 overflow-visible">
-            {SIGNAL_PATHS.map((p) => (
-              <path key={p.d} d={p.d} fill="none" stroke={p.stroke} strokeWidth={1} />
-            ))}
-            {!reduced && (
-              <>
-                <circle r={4} fill="#3E7BFA">
-                  <animateMotion dur="6.5s" repeatCount="indefinite" path={SIGNAL_PATHS[0].d} />
-                </circle>
-                <circle r={2.4} fill="#35D3E0" opacity={0.55}>
-                  <animateMotion dur="7.8s" begin="0.9s" repeatCount="indefinite" path={SIGNAL_PATHS[1].d} />
-                </circle>
-                <circle r={3.5} fill="#8B5CF6">
-                  <animateMotion dur="7.2s" begin="1.6s" repeatCount="indefinite" path={SIGNAL_PATHS[2].d} />
-                </circle>
-                <circle r={2.8} fill="#E94FA8" opacity={0.7}>
-                  <animateMotion dur="8.4s" begin="0.4s" repeatCount="indefinite" path={SIGNAL_PATHS[3].d} />
-                </circle>
-              </>
-            )}
-          </svg>
+        <div className="relative order-first h-80 sm:h-[520px] lg:order-none" aria-hidden="true">
+          <ConstellationCanvas
+            mode="hero"
+            className="absolute inset-0 h-full w-full"
+            introSeconds={8}
+            markScale={0.74}
+          />
           {SIGNAL_LABELS.map((label) => (
             <div key={label.text} className="absolute text-[11.5px]" style={label.style}>
               {label.text}
             </div>
           ))}
           <motion.div
-            initial={{ scale: reduced ? 1 : 0.6, opacity: reduced ? 1 : 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: reduced ? 0 : 1.1, delay: reduced ? 0 : 1.4, ease: [0.2, 0.75, 0.15, 1] }}
-            className="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2"
-            style={{ filter: "drop-shadow(var(--ax-glow-accent))" }}
-          >
-            <BrandMark material="spectral" size={112} />
-          </motion.div>
-          <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: reduced ? 0 : 0.6, delay: reduced ? 0 : 2.2 }}
-            className="absolute left-1/2 top-[64%] w-56 -translate-x-1/2 text-center text-[12.5px] leading-relaxed text-ax-text-muted"
+            className="absolute bottom-1 left-1/2 w-56 -translate-x-1/2 text-center text-[12.5px] leading-relaxed text-ax-text-muted"
           >
             Orchestrated into one qualified conversation.
           </motion.div>
