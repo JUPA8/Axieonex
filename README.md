@@ -97,8 +97,10 @@ an already-applied file.
 - The article CMS stores drafts and published articles in PostgreSQL. Public
   routes only expose published records; drafts remain private and unindexed.
 - Consent is cached in local storage for immediate client gating and persisted
-  to PostgreSQL for the audit record. Plausible is inserted only after analytics
-  consent and only when configured.
+  to PostgreSQL for the audit record. Failed durable writes remain explicitly
+  pending and receive one timestamp-aware retry on a later mount. Consent writes
+  require same-origin JSON and a dedicated rate limit. Plausible is inserted
+  only after analytics consent and only when configured.
 - Sentry initialization is conditional on its DSN. No monitoring client is
   initialized when it is absent.
 - Global CSP, frame protection, nosniff, referrer, permissions, and conditional

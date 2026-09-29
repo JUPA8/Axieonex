@@ -9,34 +9,43 @@ export type RateLimitResult =
 
 type RateLimitUnavailableReason = Extract<RateLimitResult, { status: "unavailable" }>["reason"];
 
-let limiter: Ratelimit | null | undefined;
+type RateLimitNamespace = "formsubmit" | "consent";
+
+const limiterConfiguration: Record<RateLimitNamespace, { prefix: string; requests: number }> = {
+  formsubmit: { prefix: "axieonex:formsubmit", requests: 5 },
+  consent: { prefix: "axieonex:consent", requests: 10 },
+};
+
+const limiters: Partial<Record<RateLimitNamespace, Ratelimit | null>> = {};
 let configurationError: "not_configured" | "misconfigured" | null = null;
 
-function getLimiter(): Ratelimit | null {
-  if (limiter !== undefined) return limiter;
+function getLimiter(namespace: RateLimitNamespace): Ratelimit | null {
+  if (namespace in limiters) return limiters[namespace] ?? null;
   const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
   const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
   if (!url && !token) {
     configurationError = "not_configured";
-    limiter = null;
+    limiters[namespace] = null;
     return null;
   }
   if (!url || !token) {
     configurationError = "misconfigured";
-    limiter = null;
+    limiters[namespace] = null;
     return null;
   }
 
-  limiter = new Ratelimit({
+  const config = limiterConfiguration[namespace];
+  const limiter = new Ratelimit({
     redis: new Redis({ url, token, signal: () => AbortSignal.timeout(PROVIDER_TIMEOUT_MS) }),
-    limiter: Ratelimit.slidingWindow(5, "10 m"),
-    prefix: "axieonex:formsubmit",
+    limiter: Ratelimit.slidingWindow(config.requests, "10 m"),
+    prefix: config.prefix,
   });
+  limiters[namespace] = limiter;
   return limiter;
 }
 
-export async function checkRateLimit(key: string): Promise<RateLimitResult> {
-  const client = getLimiter();
+async function checkNamespacedRateLimit(namespace: RateLimitNamespace, key: string): Promise<RateLimitResult> {
+  const client = getLimiter(namespace);
   if (!client) return { status: "unavailable", reason: configurationError ?? "not_configured" };
   try {
     const result = await withTimeout(client.limit(key));
@@ -54,6 +63,14 @@ export async function checkRateLimit(key: string): Promise<RateLimitResult> {
   }
 }
 
+export async function checkRateLimit(key: string): Promise<RateLimitResult> {
+  return checkNamespacedRateLimit("formsubmit", key);
+}
+
+export async function checkConsentRateLimit(key: string): Promise<RateLimitResult> {
+  return checkNamespacedRateLimit("consent", key);
+}
+
 let warnedOnce = false;
 
 export function warnIfRateLimitUnconfigured() {
@@ -67,5 +84,7 @@ export function warnIfRateLimitUnconfigured() {
 }
 
 export function shouldFailClosedForAntiAbuse(reason: RateLimitUnavailableReason = "not_configured"): boolean {
-  return reason !== "not_configured" || process.env.NODE_ENV === "production";
+  const vercelEnvironment = process.env.VERCEL_ENV;
+  const deployedOnVercel = vercelEnvironment === "preview" || vercelEnvironment === "production";
+  return reason !== "not_configured" || process.env.NODE_ENV === "production" || deployedOnVercel;
 }

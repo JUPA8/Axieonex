@@ -22,6 +22,13 @@ describe("trusted proxy IP extraction", () => {
     expect(mocks.get).toHaveBeenCalledWith("x-platform-client-ip");
   });
 
+  it("can validate an explicit route-handler header set without using ambient request state", async () => {
+    vi.stubEnv("TRUSTED_PROXY_IP_HEADER", "x-platform-client-ip");
+    const requestHeaders = new Headers({ "x-platform-client-ip": "2001:db8::1" });
+    await expect(getClientIp(requestHeaders)).resolves.toBe("2001:db8::1");
+    expect(mocks.get).not.toHaveBeenCalled();
+  });
+
   it("rejects multiple forwarded addresses and malformed values", async () => {
     vi.stubEnv("TRUSTED_PROXY_IP_HEADER", "x-platform-client-ip");
     mocks.get.mockReturnValueOnce("203.0.113.10, 10.0.0.1").mockReturnValueOnce("not-an-ip");

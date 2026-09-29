@@ -5,9 +5,18 @@ import "@testing-library/jest-dom/vitest";
 // attempt a real network request against jsdom's fake origin during tests.
 // Individual test files can override this with their own vi.fn() when they
 // need to assert on the call.
-global.fetch = vi.fn(() =>
-  Promise.resolve(new Response(JSON.stringify({ record: null }), { status: 200, headers: { "Content-Type": "application/json" } })),
-) as unknown as typeof fetch;
+global.fetch = vi.fn((_input, init) => {
+  if (init?.method === "POST" && typeof init.body === "string") {
+    const body = JSON.parse(init.body) as { categories: Record<string, boolean> };
+    return Promise.resolve(
+      new Response(
+        JSON.stringify({ record: { version: 1, categories: body.categories, updatedAt: new Date().toISOString() } }),
+        { status: 200, headers: { "Content-Type": "application/json" } },
+      ),
+    );
+  }
+  return Promise.resolve(new Response(JSON.stringify({ record: null }), { status: 200, headers: { "Content-Type": "application/json" } }));
+}) as unknown as typeof fetch;
 
 if (typeof window !== "undefined" && !window.matchMedia) {
   window.matchMedia = (query: string) => ({

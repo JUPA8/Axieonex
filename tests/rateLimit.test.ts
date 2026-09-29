@@ -12,9 +12,10 @@ describe("checkRateLimit (unconfigured)", () => {
   });
 
   it("returns an explicit unavailable result when Upstash isn't configured", async () => {
-    const { checkRateLimit } = await import("@/lib/security/rateLimit");
+    const { checkConsentRateLimit, checkRateLimit } = await import("@/lib/security/rateLimit");
     const result = await checkRateLimit("test-key");
     expect(result).toEqual({ status: "unavailable", reason: "not_configured" });
+    await expect(checkConsentRateLimit("test-ip")).resolves.toEqual({ status: "unavailable", reason: "not_configured" });
   });
 
   it("rejects a half-configured URL/token pair", async () => {
@@ -31,6 +32,12 @@ describe("checkRateLimit (unconfigured)", () => {
     expect(shouldFailClosedForAntiAbuse("timeout")).toBe(true);
     expect(shouldFailClosedForAntiAbuse("provider_error")).toBe(true);
     expect(shouldFailClosedForAntiAbuse("not_configured")).toBe(false);
+  });
+
+  it.each(["preview", "production"])("fails closed when an unconfigured limiter is deployed to Vercel %s", async (environment) => {
+    vi.stubEnv("VERCEL_ENV", environment);
+    const { shouldFailClosedForAntiAbuse } = await import("@/lib/security/rateLimit");
+    expect(shouldFailClosedForAntiAbuse("not_configured")).toBe(true);
   });
 
   it("warns exactly once regardless of how many times it's called", async () => {
