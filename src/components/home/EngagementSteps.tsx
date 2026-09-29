@@ -11,7 +11,7 @@ const STEPS = [
 export function EngagementSteps() {
   return (
     <section data-scene="lanes" className="ax-section relative z-10">
-      <div className="ax-shell grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
+      <div className="ax-shell ax-veil grid gap-x-16 gap-y-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-start">
         <div data-reveal>
           <p className="ax-label mb-6">How engagement works</p>
           <h2 className="ax-headline-sm m-0 text-ax-text-primary">Seven steps, one accountable system.</h2>

@@ -14,7 +14,7 @@ const HOMEPAGE_ORDER: { slug: string; tagline: string }[] = [
 export function ServicesList() {
   return (
     <section id="services" data-scene="lanes" className="ax-section relative z-10">
-      <div className="ax-shell">
+      <div className="ax-shell ax-veil">
         <div data-reveal className="mb-16 flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="ax-label mb-6">Services</p>

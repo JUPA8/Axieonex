@@ -11,7 +11,7 @@ export async function InsightsPreview() {
 
   return (
     <section id="articles" data-scene="field" className="ax-section relative z-10">
-      <div className="ax-shell">
+      <div className="ax-shell ax-veil">
         <div data-reveal className="mb-16 flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="ax-label mb-6">Insights</p>

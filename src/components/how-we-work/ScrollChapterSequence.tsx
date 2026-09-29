@@ -67,7 +67,7 @@ export function ScrollChapterSequence() {
             </div>
             <div
               className={cn(
-                "border-l pl-8 transition-colors duration-500",
+                "ax-veil border-l pl-8 transition-colors duration-500",
                 activeIndex === i ? "border-ax-violet" : "border-ax-border-subtle",
               )}
             >
