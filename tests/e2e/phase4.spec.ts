@@ -159,6 +159,9 @@ test.afterAll(async () => {
 
 for (const viewport of viewports) {
   test(`all production routes render without overflow or browser failures at ${viewport.name}`, async ({ page }) => {
+    // Twenty cold navigations against an on-demand dev compiler: this sweep
+    // needs its own budget rather than the per-interaction default.
+    test.setTimeout(180_000);
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: "reduce" });
     const failures = captureUnexpectedBrowserFailures(page);
@@ -622,4 +625,198 @@ test("admin data pages are protected, truthful, paginated, persistent, accessibl
   await page.goto(`/admin/bookings/${booking.id}`);
   await expect(page).toHaveURL(/\/admin\/login$/);
   expect(failures).toEqual([]);
+});
+
+/**
+ * The pinned three-stage sequence. The rest of this suite runs with reduced
+ * motion, which deliberately renders the plain fallback, so the scroll-bound
+ * path needs its own coverage: that it pins, that the copy advances, that it
+ * releases, and that nothing about it traps scroll or breaks history.
+ */
+const STICKY_BEATS = ["Detection", "Orchestration", "Qualified conversation"] as const;
+
+async function seedConsent(page: Page) {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "axieonex-cookie-consent",
+      JSON.stringify({
+        version: 1,
+        categories: { necessary: true, functional: false, analytics: false, preferences: false, marketing: false },
+        updatedAt: "2026-09-24T00:00:00.000Z",
+      }),
+    );
+  });
+}
+
+/** Scrolls to an absolute offset the way a wheel does: in steps, across frames. */
+async function scrollTo(page: Page, target: number, steps = 14) {
+  await page.evaluate(
+    async ([to, count]) => {
+      const from = window.scrollY;
+      const frame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      for (let i = 1; i <= count; i += 1) {
+        window.scrollTo(0, from + ((to - from) * i) / count);
+        await frame();
+      }
+    },
+    [target, steps] as const,
+  );
+  await page.waitForTimeout(900);
+}
+
+async function pinGeometry(page: Page) {
+  return page.evaluate(() => {
+    const track = document.querySelector<HTMLElement>('[data-sticky-narrative="pinned"]');
+    if (!track) return null;
+    const rect = track.getBoundingClientRect();
+    return { top: rect.top + window.scrollY, height: rect.height, viewport: window.innerHeight };
+  });
+}
+
+test("the pinned narrative holds the viewport, advances all three beats, and releases cleanly", async ({ page }) => {
+  test.setTimeout(120_000);
+  await seedConsent(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const failures = captureUnexpectedBrowserFailures(page);
+
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.waitForSelector('[data-sticky-narrative="pinned"]');
+
+  const geometry = await pinGeometry(page);
+  expect(geometry).not.toBeNull();
+  const { top, height, viewport } = geometry!;
+  const pin = height - viewport;
+  // Enough distance for three beats, but not an endless scroll trap.
+  expect(pin).toBeGreaterThan(viewport * 1.5);
+  expect(pin).toBeLessThan(viewport * 3.2);
+
+  const seen: string[] = [];
+  const stage = page.locator('[data-sticky-narrative="pinned"] .ax-pin-sticky');
+
+  for (const fraction of [0.04, 0.2, 0.45, 0.7, 0.88, 0.99]) {
+    await scrollTo(page, Math.round(top + pin * fraction));
+
+    // The stage stays pinned to the top of the viewport for the whole run.
+    const box = await stage.boundingBox();
+    expect(box, `stage must be on screen at ${fraction}`).not.toBeNull();
+    expect(Math.abs(box!.y), `stage must stay pinned at ${fraction}`).toBeLessThanOrEqual(2);
+
+    const current = await page.locator('.ax-pin-beat[data-state="current"] h2').innerText();
+    expect(current.length, `a beat must be showing at ${fraction}`).toBeGreaterThan(0);
+    if (seen[seen.length - 1] !== current) seen.push(current);
+
+    // The environment never blanks out mid-sequence.
+    const painted = await page.evaluate(() => {
+      const canvas = document.querySelector("canvas");
+      return canvas ? canvas.width > 0 && canvas.height > 0 : false;
+    });
+    expect(painted, `canvas must stay live at ${fraction}`).toBe(true);
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow, `no horizontal overflow at ${fraction}`).toBeLessThanOrEqual(1);
+  }
+
+  // Every beat appeared, in order, with no repeats or restarts.
+  expect(seen).toEqual([...STICKY_BEATS]);
+
+  // The pin releases: past the track, the stage is gone and the page keeps scrolling.
+  await scrollTo(page, Math.round(top + height + viewport * 0.5));
+  const releasedBox = await stage.boundingBox();
+  expect(releasedBox === null || releasedBox.y < 0).toBe(true);
+
+  const beforeEnd = await page.evaluate(() => window.scrollY);
+  await scrollTo(page, 10_000_000);
+  const atEnd = await page.evaluate(() => ({
+    y: window.scrollY,
+    max: document.documentElement.scrollHeight - window.innerHeight,
+  }));
+  expect(atEnd.y).toBeGreaterThan(beforeEnd);
+  // Scroll is never captured: the document bottom is reachable.
+  expect(Math.abs(atEnd.y - atEnd.max)).toBeLessThanOrEqual(2);
+  await expect(page.getByRole("link", { name: "Book a strategy call" }).first()).toBeVisible();
+
+  expect(failures).toEqual([]);
+});
+
+test("the pinned narrative leaves history and direct routes alone", async ({ page }) => {
+  await seedConsent(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+
+  await page.goto("/", { waitUntil: "networkidle" });
+  const geometry = await pinGeometry(page);
+  await scrollTo(page, Math.round(geometry!.top + (geometry!.height - geometry!.viewport) * 0.5));
+  const entriesAfterScrolling = await page.evaluate(() => history.length);
+
+  await page.goto("/pricing", { waitUntil: "networkidle" });
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await page.goBack({ waitUntil: "networkidle" });
+  await expect(page).toHaveURL(/\/$/);
+  await page.waitForSelector('[data-sticky-narrative="pinned"]');
+  await page.goForward({ waitUntil: "networkidle" });
+  await expect(page).toHaveURL(/\/pricing$/);
+
+  // Scrolling the pin must not have pushed history entries of its own.
+  expect(entriesAfterScrolling).toBeLessThanOrEqual(2);
+});
+
+test("reduced motion replaces the pin with three plain, fully readable stages", async ({ page }) => {
+  await seedConsent(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+
+  await page.goto("/", { waitUntil: "networkidle" });
+  await expect(page.locator('[data-sticky-narrative="static"]')).toBeAttached();
+  await expect(page.locator('[data-sticky-narrative="pinned"]')).toHaveCount(0);
+
+  const items = page.locator('[data-sticky-narrative="static"] > li');
+  await expect(items).toHaveCount(3);
+  for (const beat of STICKY_BEATS) {
+    const heading = page.getByRole("heading", { name: beat, exact: true });
+    await expect(heading).toBeVisible();
+  }
+});
+
+test("the pinned homepage passes an accessibility scan with motion enabled", async ({ page }) => {
+  test.setTimeout(120_000);
+  await seedConsent(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.waitForSelector('[data-sticky-narrative="pinned"]');
+
+  const geometry = await pinGeometry(page);
+  const pin = geometry!.height - geometry!.viewport;
+  for (const fraction of [0.1, 0.5, 0.9]) {
+    await scrollTo(page, Math.round(geometry!.top + pin * fraction));
+    const result = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+    const violations = result.violations.map(
+      (violation) => `${fraction}: ${violation.id} ${violation.nodes.map((node) => node.target.join(" ")).join(", ")}`,
+    );
+    expect(violations).toEqual([]);
+  }
+});
+
+test("the pinned run is shorter on a phone than on a desktop", async ({ page }) => {
+  await seedConsent(page);
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.waitForSelector('[data-sticky-narrative="pinned"]');
+  const desktop = await pinGeometry(page);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/", { waitUntil: "networkidle" });
+  await page.waitForSelector('[data-sticky-narrative="pinned"]');
+  const mobile = await pinGeometry(page);
+
+  const ratio = (g: NonNullable<Awaited<ReturnType<typeof pinGeometry>>>) => g.height / g.viewport;
+  expect(ratio(mobile!)).toBeLessThan(ratio(desktop!));
+  // Still long enough for three beats to land.
+  expect(ratio(mobile!)).toBeGreaterThan(2);
+
+  const current = await page.locator('.ax-pin-beat[data-state="current"] h2').innerText();
+  expect(current).toBe("Detection");
 });

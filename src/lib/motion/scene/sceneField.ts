@@ -98,6 +98,11 @@ export function stepScene(field: SceneField, s: SceneStep): void {
   const b = field.targets[s.to];
   const blend = smooth(s.blend);
   const short = Math.min(s.width, s.height);
+  // Glyph scale follows the short edge on a wide screen, but a phone's short
+  // edge is so small that sizing from it leaves the composition looking thin.
+  // Portrait sizes from the geometric mean instead, which gives the field real
+  // presence at 390px without adding a single particle.
+  const glyphUnit = s.height / s.width > 1.15 ? Math.sqrt(s.width * s.height) * 0.84 : short;
 
   for (let i = 0; i < field.count; i += 1) {
     const depth = field.depth[i];
@@ -128,7 +133,7 @@ export function stepScene(field: SceneField, s: SceneStep): void {
 
     field.spin[i] += field.spinRate[i] * 16;
 
-    const size = (0.85 + Math.pow(depth, 2.7) * 26) * (short / 900);
+    const size = (0.85 + Math.pow(depth, 2.7) * 26) * (glyphUnit / 900);
     const twinkle = 0.82 + Math.sin(s.time * 0.0011 + phase * 2.1) * 0.18;
     const alpha = (0.16 + depth * 0.72) * twinkle * s.intensity;
 
@@ -143,9 +148,9 @@ export function stepScene(field: SceneField, s: SceneStep): void {
 export function particleBudget(width: number, height: number, coarse: boolean): number {
   const area = Math.max(width * height, 1);
   const reference = 1440 * 900;
-  const scaled = Math.round(3200 * Math.sqrt(area / reference));
+  const scaled = Math.round(3200 * Math.sqrt(area / reference) * (coarse ? 1.34 : 1));
   // Touch devices still need enough glyphs for a form to read as a form: the
   // triangle path is cheap (no per-glyph save/restore), so the ceiling is set
   // by fill rate, not by count.
-  return Math.max(320, Math.min(coarse ? 1500 : 3600, scaled));
+  return Math.max(320, Math.min(coarse ? 2100 : 3600, scaled));
 }

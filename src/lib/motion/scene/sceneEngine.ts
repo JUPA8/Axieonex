@@ -28,6 +28,13 @@ const MAX_DPR = 2;
 type Stage = { el: HTMLElement; form: FormId };
 
 /**
+ * Sections that build their stage list after mount (the pinned narrative
+ * swaps its markup once JavaScript is ready) announce it with this event, so
+ * the engine re-reads the DOM instead of holding a stale list.
+ */
+export const SCENES_CHANGED_EVENT = "axieonex:scenes-changed";
+
+/**
  * Reads the page's `[data-scene]` sections and converts the document scroll
  * position into a form-to-form morph. Scenes belong to the content, so adding
  * or reordering a section changes the environment without touching this code.
@@ -199,6 +206,11 @@ export function createSceneEngine(options: SceneEngineOptions): SceneEngine | nu
     if (reducedMotion) renderStill();
   };
 
+  const handleScenesChanged = () => {
+    stages = readStages();
+    if (reducedMotion) renderStill();
+  };
+
   stages = readStages();
   resize();
   renderStill();
@@ -208,6 +220,7 @@ export function createSceneEngine(options: SceneEngineOptions): SceneEngine | nu
   document.addEventListener("visibilitychange", handleVisibility);
   window.addEventListener("pointermove", handlePointer, { passive: true });
   window.addEventListener("scroll", handleScroll, { passive: true });
+  window.addEventListener(SCENES_CHANGED_EVENT, handleScenesChanged);
 
   if (!reducedMotion) start();
 
@@ -220,6 +233,7 @@ export function createSceneEngine(options: SceneEngineOptions): SceneEngine | nu
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("pointermove", handlePointer);
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener(SCENES_CHANGED_EVENT, handleScenesChanged);
       field = null;
     },
     setReducedMotion(next: boolean) {

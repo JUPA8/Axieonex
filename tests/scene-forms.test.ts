@@ -199,8 +199,107 @@ describe("scene field", () => {
   it("scales density with area and drops hard on coarse pointers", () => {
     expect(particleBudget(1440, 900, false)).toBeGreaterThan(2400);
     expect(particleBudget(1440, 900, false)).toBeLessThanOrEqual(3600);
-    expect(particleBudget(390, 844, true)).toBeGreaterThan(1000);
-    expect(particleBudget(390, 844, true)).toBeLessThanOrEqual(1500);
+    expect(particleBudget(390, 844, true)).toBeGreaterThan(1800);
+    expect(particleBudget(390, 844, true)).toBeLessThanOrEqual(2100);
     expect(particleBudget(8000, 4000, false)).toBeLessThanOrEqual(3600);
+  });
+});
+
+describe("the qualified-opportunity core", () => {
+  const COUNT = 4000;
+  const unit = Math.min(W, H);
+  const cx = W * 0.5;
+  const cy = H * 0.48;
+
+  function radii() {
+    const targets = new Float32Array(COUNT * 2);
+    const depth = new Float32Array(COUNT).fill(0.5);
+    FORMS.core(targets, { width: W, height: H, depth, count: COUNT }, 77);
+    const out: { rho: number; angle: number }[] = [];
+    for (let i = 0; i < COUNT; i += 1) {
+      const dx = targets[i * 2] - cx;
+      const dy = targets[i * 2 + 1] - cy;
+      out.push({ rho: Math.hypot(dx, dy) / unit, angle: Math.atan2(dy, dx) });
+    }
+    return out;
+  }
+
+  it("packs a genuine nucleus rather than spreading evenly", () => {
+    const points = radii();
+    const nucleus = points.filter((p) => p.rho < 0.16).length / COUNT;
+    // An evenly filled disc would put a few percent this close in.
+    expect(nucleus).toBeGreaterThan(0.25);
+  });
+
+  it("holds a corona out toward the frame edge", () => {
+    const points = radii();
+    const corona = points.filter((p) => p.rho > 0.5).length / COUNT;
+    expect(corona).toBeGreaterThan(0.2);
+  });
+
+  it("separates nucleus from corona with a sparser annulus between them", () => {
+    const points = radii();
+    const band = (lo: number, hi: number) =>
+      points.filter((p) => p.rho >= lo && p.rho < hi).length / (hi - lo);
+    const nucleus = band(0, 0.18);
+    const gap = band(0.28, 0.46);
+    const corona = band(0.52, 0.72);
+    // A visible trough between the two bright populations is what gives the
+    // state depth instead of reading as one blur.
+    expect(gap).toBeLessThan(nucleus * 0.5);
+    expect(gap).toBeLessThan(corona * 0.75);
+  });
+
+  it("builds convergence spokes, not uniform noise, across that annulus", () => {
+    const points = radii().filter((p) => p.rho > 0.25 && p.rho < 0.46);
+    const BINS = 66;
+    const hist = new Array<number>(BINS).fill(0);
+    for (const p of points) {
+      const bin = Math.floor(((p.angle + Math.PI) / (Math.PI * 2)) * BINS) % BINS;
+      hist[bin] += 1;
+    }
+    const mean = points.length / BINS;
+    const peak = Math.max(...hist);
+    // Uniform scatter lands near 1.3x mean; directed spokes stand well clear.
+    expect(peak / mean).toBeGreaterThan(2.2);
+  });
+
+  it("stays inside the frame it is composed for", () => {
+    const targets = new Float32Array(600 * 2);
+    const depth = new Float32Array(600).fill(0.5);
+    FORMS.core(targets, { width: W, height: H, depth, count: 600 }, 5);
+    for (let i = 0; i < 600; i += 1) {
+      expect(Number.isFinite(targets[i * 2])).toBe(true);
+      expect(Number.isFinite(targets[i * 2 + 1])).toBe(true);
+    }
+  });
+});
+
+describe("glyph scale", () => {
+  it("sizes portrait glyphs from the geometric mean so a phone does not look thin", () => {
+    const field = createSceneField(40);
+    layoutForms(field, 390, 844);
+    settle(field, "field");
+    const step = (width: number, height: number) => {
+      layoutForms(field, width, height);
+      stepScene(field, {
+        from: "field",
+        to: "field",
+        blend: 0,
+        width,
+        height,
+        time: 0,
+        pointerX: 0,
+        pointerY: 0,
+        intensity: 1,
+      });
+      return field.rs.slice(0, field.count).reduce((a, b) => a + b, 0) / field.count;
+    };
+
+    const portrait = step(390, 844);
+    const landscape = step(844, 390);
+    // Same pixel area, same particles: the portrait frame must not render the
+    // field at the same tiny scale its short edge alone would imply.
+    expect(portrait).toBeGreaterThan(landscape * 1.15);
   });
 });

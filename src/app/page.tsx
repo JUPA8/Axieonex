@@ -1,6 +1,6 @@
 import { HeroSignalReveal } from "@/components/home/HeroSignalReveal";
 import { EngineFlow } from "@/components/home/EngineFlow";
-import { EngineDiagram } from "@/components/home/EngineDiagram";
+import { StickyNarrative } from "@/components/home/StickyNarrative";
 import { ServicesList } from "@/components/home/ServicesList";
 import { EngagementSteps } from "@/components/home/EngagementSteps";
 import { ResponsibilitySplit } from "@/components/home/ResponsibilitySplit";
@@ -47,9 +47,11 @@ export default function HomePage() {
       </section>
 
       <EngineFlow />
-      <EngineDiagram />
+      <StickyNarrative />
 
-      <section data-scene="mark" className="relative z-10 flex min-h-screen items-center">
+      {/* The pin releases on the qualified-opportunity core; this section
+          holds that climax for one more viewport instead of cutting away. */}
+      <section data-scene="core" className="relative z-10 flex min-h-screen items-center">
         <div className="ax-shell">
           <p className="ax-label mb-8">The outcome</p>
           <p className="ax-headline max-w-[22ch] m-0 text-ax-text-primary">

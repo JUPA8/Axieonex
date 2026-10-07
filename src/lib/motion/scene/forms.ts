@@ -203,20 +203,49 @@ const mark: FormFiller = (targets, { width, height, count }, seed) => {
   }
 };
 
-/** 7. The qualified opportunity: one concentrated, luminous core. */
+/**
+ * 7. The qualified opportunity.
+ *
+ * Three populations, sized against what a viewport actually shows rather than
+ * against an abstract unit: a luminous nucleus, an annulus that is empty except
+ * where eleven convergence spokes cross it, and an elliptical corona that
+ * bleeds just past the top and bottom of the frame. The empty annulus is what
+ * gives the state depth, and the spokes are what make the convergence read as
+ * the orchestration lanes resolving into one opportunity.
+ */
 const core: FormFiller = (targets, { width, height, count }, seed) => {
   const rng = createRng(seed);
   const portrait = isPortrait(width, height);
-  const unit = portrait ? width : Math.min(width, height);
+  const unit = portrait ? width * 1.12 : Math.min(width, height);
   const cx = width * 0.5;
   const cy = portrait ? height * 0.3 : height * 0.48;
+  const SPOKES = 11;
+  const spokeOffset = rng() * Math.PI * 2;
+
   for (let i = 0; i < count; i += 1) {
-    // Cube-weighted radius packs most of the field into the nucleus, so the
-    // qualified opportunity reads as one bright body with a thin corona.
-    const t = Math.pow(rng(), 2.6);
+    const roll = rng();
     const a = rng() * Math.PI * 2;
-    const r = unit * (portrait ? 0.7 : 0.58) * t;
-    write(targets, i, cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.96);
+
+    if (roll < 0.4) {
+      // Nucleus: dense enough to be the brightest thing on screen, wide enough
+      // that the glyphs still read as glyphs instead of saturating to a blob.
+      const r = unit * 0.26 * Math.pow(rng(), 1.7);
+      write(targets, i, cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.97);
+    } else if (roll < 0.74) {
+      // Convergence spokes: coordinated paths still arriving at the opportunity,
+      // densest where they meet it.
+      const spoke = Math.floor(rng() * SPOKES);
+      const angle = spokeOffset + (spoke / SPOKES) * Math.PI * 2 + (rng() - 0.5) * 0.14;
+      const t = Math.pow(rng(), 1.4);
+      const r = unit * (0.17 + (1 - t) * 0.42);
+      const wobble = (rng() - 0.5) * unit * 0.028;
+      write(targets, i, cx + Math.cos(angle) * r * 1.22 + wobble, cy + Math.sin(angle) * r + wobble);
+    } else {
+      // Corona: an ellipse scaled to clear the frame's width and clip just past
+      // its height, so the core has an edge and a sense of scale.
+      const r = unit * (0.58 + (rng() - 0.5) * 0.07);
+      write(targets, i, cx + Math.cos(a) * r * 1.32, cy + Math.sin(a) * r);
+    }
   }
 };
 
