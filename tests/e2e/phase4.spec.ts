@@ -245,7 +245,7 @@ test("SEO, JSON-LD, noindex, sitemap, robots, headers, CSP, and real 404 respons
   await page.goto(`/insights/${publishedSlug}`);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", new RegExp(`/insights/${publishedSlug}$`));
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", /Phase 4 Published Article/);
-  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary");
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
   const articleJsonLd = await page.locator('script[type="application/ld+json"]').textContent();
   expect(() => JSON.parse(articleJsonLd ?? "")).not.toThrow();
   expect(await page.evaluate(() => (window as typeof window & { __xss?: boolean }).__xss)).toBeUndefined();

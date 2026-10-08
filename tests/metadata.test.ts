@@ -22,14 +22,27 @@ describe("route metadata", () => {
     for (const metadata of [aboutMetadata, privacyMetadata]) {
       expect(metadata.alternates?.canonical).toBeTruthy();
       expect(metadata.openGraph).toEqual(expect.objectContaining({ title: expect.any(String), description: expect.any(String), url: expect.any(String) }));
-      expect(metadata.twitter).toEqual(expect.objectContaining({ card: "summary", title: expect.any(String), description: expect.any(String) }));
+      expect(metadata.twitter).toEqual(expect.objectContaining({ card: "summary_large_image", title: expect.any(String), description: expect.any(String) }));
+    }
+  });
+
+  it("puts the 1200x630 preview card on every public route, not just the home segment", async () => {
+    const service = await serviceMetadata({ params: Promise.resolve({ slug: "lead-generation" }) });
+    const card = expect.arrayContaining([
+      expect.objectContaining({ url: expect.stringMatching(/image\.png$/), width: 1200, height: 630, alt: expect.any(String) }),
+    ]);
+    for (const metadata of [aboutMetadata, privacyMetadata, service]) {
+      // An opengraph-image file only attaches to its own segment, and these
+      // routes each export their own openGraph, so the image has to be named.
+      expect(metadata.openGraph).toEqual(expect.objectContaining({ images: card }));
+      expect(metadata.twitter).toEqual(expect.objectContaining({ images: card }));
     }
   });
 
   it("builds canonical social metadata for service and published article routes", async () => {
     const service = await serviceMetadata({ params: Promise.resolve({ slug: "lead-generation" }) });
     expect(service.openGraph).toEqual(expect.objectContaining({ url: expect.stringMatching(/\/services\/lead-generation$/) }));
-    expect(service.twitter).toEqual(expect.objectContaining({ card: "summary" }));
+    expect(service.twitter).toEqual(expect.objectContaining({ card: "summary_large_image" }));
 
     articleMocks.getBySlug.mockResolvedValue({ title: "Approved title", intro: "Approved intro" });
     const article = await articleMetadata({ params: Promise.resolve({ slug: "approved-article" }) });
