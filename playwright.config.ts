@@ -46,6 +46,9 @@ export default defineConfig({
           DATABASE_URL: databaseUrl,
           AUTH_SECRET: randomBytes(32).toString("hex"),
           NEXT_PUBLIC_SITE_URL: baseURL,
+          // The SEO assertions below describe the launched, crawlable site, so
+          // the suite opts in explicitly; the closed default is unit-tested.
+          SITE_INDEXING_ENABLED: "true",
           NEXT_PUBLIC_CALENDLY_URL: "https://calendly.com/phase4-isolated/strategy-call",
           CALENDLY_WEBHOOK_SIGNING_KEY: "phase4-local-webhook-fixture-key",
           CALENDLY_WEBHOOK_USER_URI: "https://api.calendly.com/users/phase4-local-user",

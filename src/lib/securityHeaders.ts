@@ -1,3 +1,7 @@
+// Relative, not the "@/" alias: next.config.ts imports this module by path and
+// transpiles it on its own, outside the alias-aware build pipeline.
+import { isIndexingEnabled } from "./indexing";
+
 const sentryOrigin = (() => {
   try {
     return process.env.ERROR_MONITORING_DSN ? new URL(process.env.ERROR_MONITORING_DSN).origin : null;
@@ -33,15 +37,18 @@ export function buildSecurityHeaders(
   environment = process.env.NODE_ENV,
   siteUrl = process.env.NEXT_PUBLIC_SITE_URL,
   deploymentEnvironment = process.env.VERCEL_ENV,
+  indexingSwitch = process.env.SITE_INDEXING_ENABLED,
 ) {
   return [
     { key: "Content-Security-Policy", value: buildContentSecurityPolicy(environment) },
     { key: "X-Content-Type-Options", value: "nosniff" },
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" },
-    ...(deploymentEnvironment === "preview"
-      ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]
-      : []),
+    // Emitted whenever indexing is not explicitly enabled, which now covers a
+    // Vercel preview and any host that sets no VERCEL_ENV at all.
+    ...(isIndexingEnabled({ switchValue: indexingSwitch, deploymentEnvironment })
+      ? []
+      : [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]),
     ...(environment === "production" && (siteUrl ?? "").startsWith("https://")
     ? [{ key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" }]
     : []),

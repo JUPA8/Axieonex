@@ -62,9 +62,13 @@ describe("route metadata", () => {
     }
   });
 
-  it("keeps the public site crawlable with a canonical sitemap", () => {
+  it("keeps the public site crawlable with a canonical sitemap once indexing is enabled", () => {
+    // Indexing is opt-in now, so this asserts the launched state rather than
+    // the default one; tests/indexing.test.ts covers the closed default.
+    vi.stubEnv("SITE_INDEXING_ENABLED", "true");
     const value = robots();
     expect(value.rules).toEqual([{ userAgent: "*", allow: "/" }]);
     expect(value.sitemap).toMatch(/\/sitemap\.xml$/);
+    vi.unstubAllEnvs();
   });
 });

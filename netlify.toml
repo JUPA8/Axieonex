@@ -1,0 +1,23 @@
+# Netlify build configuration.
+#
+# Deliberately small. Netlify detects Next.js from package.json and installs
+# its own Next runtime, so no [[plugins]] block is declared here: adding the
+# legacy Next plugin by hand would pin an older runtime than the one Netlify
+# selects. If a build ever proves it needs one, add it then, with the build
+# log that justified it.
+#
+# The command is the ordinary application build. It runs `prisma generate`,
+# which only reads prisma/schema.prisma, and never `prisma migrate deploy`:
+# migrations are a controlled, separately verified operation against the
+# Production database, not something every deployment re-runs.
+#
+# Security headers and the indexing switch live in the application
+# (src/lib/securityHeaders.ts, src/lib/indexing.ts) so they apply identically
+# on every host. They are not duplicated here, where they could drift.
+
+[build]
+  command = "pnpm run build"
+
+[build.environment]
+  # Matches the "engines.node" field in package.json.
+  NODE_VERSION = "22"
