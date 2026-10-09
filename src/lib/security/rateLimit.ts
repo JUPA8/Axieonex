@@ -35,13 +35,29 @@ function getLimiter(namespace: RateLimitNamespace): Ratelimit | null {
   }
 
   const config = limiterConfiguration[namespace];
-  const limiter = new Ratelimit({
-    redis: new Redis({ url, token, signal: () => AbortSignal.timeout(PROVIDER_TIMEOUT_MS) }),
-    limiter: Ratelimit.slidingWindow(config.requests, "10 m"),
-    prefix: config.prefix,
-  });
-  limiters[namespace] = limiter;
-  return limiter;
+  try {
+    // The Upstash client validates its URL in the constructor and throws, so a
+    // value that is present but wrong (the REST token pasted into the URL
+    // field, a redis:// TCP URI, a typo) would otherwise escape this module
+    // entirely and crash the request with a bare 500. Treat it as the
+    // configuration fault it is, so callers get the same fail-closed 503 they
+    // get for every other unavailable-provider case.
+    const limiter = new Ratelimit({
+      redis: new Redis({ url, token, signal: () => AbortSignal.timeout(PROVIDER_TIMEOUT_MS) }),
+      limiter: Ratelimit.slidingWindow(config.requests, "10 m"),
+      prefix: config.prefix,
+    });
+    limiters[namespace] = limiter;
+    return limiter;
+  } catch {
+    // Deliberately not logging the error: its message quotes the offending
+    // value, which is a credential whenever the two Upstash variables are
+    // swapped.
+    console.error("[rateLimit] Upstash client could not be initialised; anti-abuse fails closed.");
+    configurationError = "misconfigured";
+    limiters[namespace] = null;
+    return null;
+  }
 }
 
 async function checkNamespacedRateLimit(namespace: RateLimitNamespace, key: string): Promise<RateLimitResult> {
