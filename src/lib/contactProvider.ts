@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { pushToCrm } from "@/lib/crm";
-import { sendNotificationEmail } from "@/lib/email";
+import { sendContactAcknowledgementEmail, sendNotificationEmail } from "@/lib/email";
 import { providerStateFromResult } from "@/lib/providerState";
 
 export type ContactFormPayload = {
@@ -70,6 +70,15 @@ export async function sendContactForm(payload: ContactFormPayload): Promise<Send
       },
     })
     .catch(() => {});
+
+  // Acknowledgement to the submitter, strictly best effort and deliberately
+  // last among the email work. The internal notification above is what the
+  // business depends on; if this one fails the enquiry is still recorded and
+  // still delivered, so nothing about the result depends on it. Resend's own
+  // log is the audit trail for it, which is why no column tracks it here.
+  await sendContactAcknowledgementEmail({ to: payload.email, purpose: payload.purpose }).catch(() => {
+    console.error("[contactProvider] Acknowledgement email threw unexpectedly.");
+  });
 
   const crmResult = await pushToCrm({
     name: payload.name,
