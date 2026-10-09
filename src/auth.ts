@@ -20,6 +20,19 @@ const SESSION_MAX_AGE_SECONDS = 8 * 60 * 60;
 const secureCookies = process.env.NODE_ENV === "production";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Auth.js only trusts the request's Host header by default when it can
+  // recognise the platform it is running on: @auth/core checks AUTH_URL,
+  // AUTH_TRUST_HOST, VERCEL and CF_PAGES, then falls back to "are we in
+  // development?". On any other host in production all of those are unset,
+  // trustHost resolves to false, and every auth request fails with
+  // UntrustedHost behind a generic "problem with the server configuration"
+  // 500 that names nothing.
+  //
+  // Setting it here rather than through an environment variable keeps the
+  // behaviour identical on every host and makes it survive a move. The host
+  // is safe to trust because the platform edge sets it: a client cannot
+  // forge the Host header that reaches the function.
+  trustHost: true,
   session: { strategy: "jwt", maxAge: SESSION_MAX_AGE_SECONDS },
   jwt: { maxAge: SESSION_MAX_AGE_SECONDS },
   useSecureCookies: secureCookies,
